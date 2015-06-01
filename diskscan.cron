@@ -1,0 +1,10 @@
+#!/bin/sh
+# $Id: diskscan.cron 400 2014-04-08 22:39:29Z rohare $
+# $URL: https://www.ohares.us/repos/certify/trunk/diskscan.sh $
+
+# Change to 0 to disable diskscan
+enableDiskScan=1
+
+if [[ $enableDiskScan -eq 1 ]]; then
+	/usr/local/sbin/diskscan.sh
+fi

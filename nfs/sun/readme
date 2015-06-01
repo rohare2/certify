@@ -1,0 +1,36 @@
+########### certify-sun-nfs ###########
+# $Id: readme 472 2014-05-11 14:58:22Z rohare $
+# $URL: file:///usr/local/svn/certify/trunk/nfs/sun/readme $
+
+# Description
+Disk scanning tool that works with the Certify application to detect
+and track disk drives on SUN storage appliances. The sscs command is
+used to detect and report on the disk drives managed by the appliance.
+An inventory of installed disk drives is reported to /var/log/messages.
+
+# Dependencies
+
+Passwordless root access to the SUN appliance.
+
+/usr/local/sbin/sscs_report.sh script on the SUN appliance
+
+Access to the the certify "disks" database.
+
+# Install
+A sample sscs_report.sh script is included with the documentation.
+Copy it to /user/local/sbin on the SUN appliance.
+
+Configure passwordless root access to the SUN appliance. Note, if
+the appliance isn't on a private network, you might want to consider
+using a special RSA key just for performing disk scans.
+
+Persistent information is maintained in a database. The database must
+exist and be accessable from the system collecting the information.
+If the database does not exist, intall and configure certify-db.
+
+To enable scanning, edit /etc/cron.daily/sun_diskscan.cron
+
+# Contact
+	Rich O'Hare
+	ohare2@llnl.gov
+	925-422-5897

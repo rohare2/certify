@@ -1,0 +1,36 @@
+# $Id: readme 548 2014-08-13 15:14:20Z rohare $
+# $URL: file:///usr/local/svn/certify/trunk/db/readme $
+
+# Description
+The certify-db rpm package contains a mysql dump file for installing
+the "disks" database. Persistent disk information is maintained in
+this database. The database must exist and be accessable from clients
+collecting disk information.
+
+You will find the "dump.out" file in the documentation directory.
+
+# Dependencies
+Access to ahe certify "disks" database.
+
+# Install
+Locate the "dump.out" file in the certify-db documentation directory.
+
+Execute "mysql < dump.out" on the database server host.
+
+Create a hashed password for the diskscan user
+	mysql -e "SELECT password('<password>')"
+
+Create "diskscan" mysql user by executing:
+	mysql -e "CREATE USER diskscan IDENTIFIED BY PASSWORD '<pwhash>'"
+
+Grant privileges to diskscan user
+	mysql -e "GRANT SELECT, INSERT, UPDATE ON disks.inventory TO diskscan"
+	mysql -e "GRANT SELECT, INSERT ON disks.history TO diskscan"
+
+Remember to change the password entry in "/root/.my.cnf.certify", to match
+your password choice.
+
+# Contact
+	Rich O'Hare
+	ohare2@llnl.gov
+	925-422-5897

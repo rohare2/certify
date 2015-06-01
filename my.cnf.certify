@@ -1,0 +1,5 @@
+[CLIENT]
+host = corbin.llnl.gov
+database = disks
+user = diskscan
+password = 'y0wm0ma!'

@@ -1,0 +1,5 @@
+#!/bin/sh
+# $Id: certify_md5chk.cron 414 2014-04-12 14:11:11Z rohare $
+# $URL: file:///usr/local/svn/certify/trunk/certify_md5chk.cron $
+
+/usr/local/certify/check.py -cl

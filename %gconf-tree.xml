@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<gconf>
+	<dir name="apps">
+		<dir name="gnome-screensaver">
+			<entry name="lock_enabled" mtime="1341524078" type="bool" value="true"/>
+			<entry name="idle_delay" mtime="1341524054" type="int" value="10"/>
+			<entry name="idle_activation_enabled" mtime="1341524048" type="bool" value="true"/>
+			<entry name="embedded_keyboard_enabled" mtime="1341523744" type="bool" value="true"/>
+			<entry name="lock_delay" mtime="1341524061" type="schema" stype="int" owner="gnome-screensaver">
+				<local_schema locale="C">
+				</local_schema>
+			</entry>
+		</dir>
+		<dir name="gdm">
+			<dir name="simple-greeter">
+				<entry name="disable_user_list" mtime="1341508586" schema="/schemas/apps/gdm/simple-greeter/disable_user_list" type="bool" value="true"/>
+				<entry name="banner_message_text_nochooser" mtime="1300738932" schema="/schemas/apps/gdm/simple-greeter/banner_message_text_nochooser"/>
+				<entry name="banner_message_text" mtime="1341524011" schema="/schemas/apps/gdm/simple-greeter/banner_message_text" type="string">
+					<stringvalue>
+_MESSAGE_
+					</stringvalue>
+				</entry>
+				<entry name="banner_message_enable" mtime="1341524006" schema="/schemas/apps/gdm/simple-greeter/banner_message_enable" type="bool" value="true"/>
+			</dir>
+		</dir>
+	</dir>
+</gconf>

@@ -1,0 +1,13 @@
+#!/bin/sh
+# $Id: sun_diskscan.cron 503 2014-05-21 22:41:33Z rohare $
+# $URL: file:///usr/local/svn/certify/trunk/nfs/sun/sun_diskscan.cron $
+
+# Change to 1 to enable diskscan
+enableSUNdiskscan=0
+
+# Replace host with the SUN storage appliance domain name
+host=''
+
+if [[ $enableSUNdiskscan -eq 1 ]]; then
+	/usr/local/sbin/sun_diskscan.sh $host
+fi
