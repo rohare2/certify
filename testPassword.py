@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-# $Id: testPassword.py 414 2014-04-12 14:11:11Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/testPassword.py $
+# testPassword.py
+# $Id$
+# $Date: $
 
 import os
 import sys

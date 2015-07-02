@@ -1,5 +1,6 @@
-# $Id: spec 552 2014-09-10 03:45:21Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/spec $
+# spec
+# $Id$
+# $Date: $
 #
 # Author: Rich O'Hare  <rohare2@yahoo.com>
 #

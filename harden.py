@@ -1,6 +1,7 @@
 #!/bin/env python
-# $Id: harden.py 566 2014-10-29 02:49:55Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/harden.py $
+# harden.py
+# $Id$
+# $Date: $
 # System security plan certification scripts
 
 import argparse

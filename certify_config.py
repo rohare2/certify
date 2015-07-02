@@ -1,5 +1,6 @@
-# $Id: certify_config.py 565 2014-10-24 16:42:13Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/certify_config.py $
+# certify_config.py
+# $Id$
+# $Date: $
 import re
 import sys
 

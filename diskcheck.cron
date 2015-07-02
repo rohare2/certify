@@ -1,6 +1,7 @@
 #!/bin/sh
-# $Id: diskcheck.cron 505 2014-05-22 02:23:47Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/diskcheck.cron $
+# diskcheck.cron
+# $Id$
+# $Date: $
 
 # Change to 1 to enable diskcheck
 enableDiskCheck=0

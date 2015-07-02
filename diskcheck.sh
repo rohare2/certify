@@ -1,6 +1,7 @@
 #!/bin/sh
-# $Id: diskcheck.sh 558 2014-10-02 19:07:41Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/diskcheck.sh $
+# diskcheck.sh
+# $Id$
+# $Date: $
 interval='1010000' # '0000-00-00 00:00:00'
 quiet=0
 report=''

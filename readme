@@ -1,6 +1,7 @@
 ########### CERTIFY ###########
-# $Id: readme 552 2014-09-10 03:45:21Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/readme $
+# readme
+# $Id$
+# $Date: $
 
 # Description:
 Certify is a toolset for managing system security.  It includes

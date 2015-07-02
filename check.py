@@ -1,6 +1,7 @@
 #!/bin/env python
-# $Id: check.py 546 2014-08-06 03:30:18Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/check.py $
+# check.py
+# $Id$
+# $Date: $
 # System security plan certification scripts
 
 import argparse

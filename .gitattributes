@@ -1,0 +1,16 @@
+*.cron ident
+*.PL ident
+*.pl ident
+*.py ident
+*.sh ident
+*.txt ident
+readme ident
+spec ident
+*.cron filter=dater
+*.PL filter=dater
+*.pl filter=dater
+*.py filter=dater
+*.sh filter=dater
+*.txt filter=dater
+readme filter=dater
+spec filter=dater

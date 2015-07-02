@@ -1,6 +1,7 @@
 #!/bin/sh
-# $Id: diskscan.sh 400 2014-04-08 22:39:29Z rohare $
-# $URL: https://www.ohares.us/repos/certify/trunk/diskscan.sh $
+# diskscan.sh
+# $Id$
+# $Date: $
 
 # Uncomment the following line to set debug mode
 debug=0

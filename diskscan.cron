@@ -1,6 +1,7 @@
 #!/bin/sh
-# $Id: diskscan.cron 400 2014-04-08 22:39:29Z rohare $
-# $URL: https://www.ohares.us/repos/certify/trunk/diskscan.sh $
+# diskscan.cron
+# $Id$
+# $Date: $
 
 # Change to 0 to disable diskscan
 enableDiskScan=1

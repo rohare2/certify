@@ -1,5 +1,6 @@
-#$Id: Makefile 565 2014-10-24 16:42:13Z rohare $
-#$HeadURL: file:///usr/local/svn/certify/trunk/Makefile $
+# Makefile
+# $Id: $
+# $Date: $
 #
 Name= certify
 Version= 3.2

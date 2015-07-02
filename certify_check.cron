@@ -1,5 +1,6 @@
 #!/bin/sh
-# $Id: certify_check.cron 414 2014-04-12 14:11:11Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/certify_check.cron $
+# certify_check.cron
+# $Id$
+# $Date: $$
 
 /usr/local/certify/check.py -l
