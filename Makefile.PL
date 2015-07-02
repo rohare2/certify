@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
+# Makefile.PL
 # $Id: Makefile.PL 565 2014-10-24 16:42:13Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/Makefile.PL $
+# $Date: $
 #
 use strict;
 
@@ -71,17 +72,9 @@ sub changeFiles {
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
-	my $SvnVersion = `svnversion`;
-	chomp $SvnVersion;
-	($SvnVersion =~ /:/ || $SvnVersion =~ /M/) and warn "Warning: modified svn state\n";
-	$SvnVersion =~ s/:.*//;
-	$SvnVersion =~ s/M//;
-	$SvnVersion =~ s/\..*$//g;
-	if ($input_scalar =~ /^SvnVersion= /m) {
-		my $origStr = '^SvnVersion=.*$';
-		my $replStr = "SvnVersion= $SvnVersion";
-		$input_scalar =~ s/$origStr/$replStr/m;
-	}
+	-f "RELEASE" or die "No release file";
+	my $releaseNo = `cat RELEASE`;
+	chomp $releaseNo;
 
 	my $release = `lsb_release -sr`;
 	chomp $release;
@@ -92,7 +85,7 @@ sub changeFiles {
 
 	if ($input_scalar =~ /^Release= /m) {
 		my $origStr = '^Release=.*$';
-		my $replStr = "Release= ${SvnVersion}.${distro}${release}_${arch}.${net}";
+		my $replStr = "Release= ${releaseNo}.${distro}${release}_${arch}.${net}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 

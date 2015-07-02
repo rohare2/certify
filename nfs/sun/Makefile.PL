@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
-# $Id: Makefile.PL 563 2014-10-03 20:38:37Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/nfs/sun/Makefile.PL $
-#
+# Makefile.PL
+# $Id: $
+# $Date: $
 
 # check arguments
 @ARGV == 2 or die "not enough arguments: $!\n";
@@ -16,8 +16,8 @@ close(INPUT);
 my $input_scalar=join("",@input_array);
 my ($origStr, $replStr);
 
--f "VERSION" or die "No version file";
-my $version = `cat VERSION`;
+-f "../../VERSION" or die "No version file";
+my $version = `cat ../../VERSION`;
 chomp $version;
 if ($input_scalar =~ /^Version= /m) {
 	my $origStr = '^Version=.*$';
@@ -25,9 +25,13 @@ if ($input_scalar =~ /^Version= /m) {
 	$input_scalar =~ s/$origStr/$replStr/m;
 }
 
+-f "../../RELEASE" or die "No release file";
+my $releaseNo = `cat ../../RELEASE`;
+chomp $releaseNo;
+
 $SvnVersion = `svnversion`;
 chomp $SvnVersion;
-($SvnVersion =~ /:/ || $SvnVersion =~ /M/) and warn "Warning: modified svn state\n";
+($SvnVersion =~ /:/ || $releaseNo =~ /M/) and warn "Warning: modified svn state\n";
 $SvnVersion =~ s/:.*//;
 $SvnVersion =~ s/M//;
 $SvnVersion =~ s/\..*$//g;
