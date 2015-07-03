@@ -20,8 +20,6 @@ SBIN_DIR= /usr/local/sbin
 
 SCRIPT_FILES= check.py \
 	certify_config.py \
-	diskcheck.sh \
-	diskscan.sh \
 	harden.py \
 	testPassword.py
 
