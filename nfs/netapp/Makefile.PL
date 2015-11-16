@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 # Makefile.PL
-# $Id: $
+# $Id$
 # $Date: $
 #
 
