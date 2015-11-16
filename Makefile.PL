@@ -1,7 +1,6 @@
 #!/usr/bin/perl -w
-# Makefile.PL
-# $Id: Makefile.PL 565 2014-10-24 16:42:13Z rohare $
-# $Date: $
+# $Id$
+# $Date: Thu Sep 3 08:40:55 2015 -0700$
 #
 use strict;
 
@@ -15,7 +14,7 @@ chomp $domainname;
 
 # determine acceptable arguments
 my @open = ('gs');
-my @high = ('jwics','hal');
+my @high = ('jwics','hal','wnet','titan');
 my (@all,@good_args);
 if ($domainname eq "www.ohares.us") {
 	@all = ('ohares');
@@ -49,7 +48,7 @@ if ( $#ARGV >= 0 ) {
 	@net = @all;
 }
 
-system("svn log > changelog");
+system("git log > changelog");
 
 sub changeFiles {
 	my $net = shift;
@@ -75,6 +74,7 @@ sub changeFiles {
 	-f "RELEASE" or die "No release file";
 	my $releaseNo = `cat RELEASE`;
 	chomp $releaseNo;
+
 
 	my $release = `lsb_release -sr`;
 	chomp $release;
@@ -236,57 +236,14 @@ sub changeFiles {
 	}
 }
 
-# load web server
-sub loadWebServer {
-	my $net = shift;
-	my $dir = $ENV{"HOME"} . "/rpmbuild/RPMS/noarch";
-	my $BASE_DIR = "/var/www/html/software";
-
-	opendir(DIR, "$dir") or die $!;
-	while (my $file = readdir(DIR)) {
-		my ($distro,$release,$arch,$dest);
-		if ($file =~ /^certify-.*\.${net}\./) {
-			my $repoPath = ${BASE_DIR} . "/" . $net;
-			if ($file =~ /\.redhat5_/) {
-				$distro = 'redhat';
-				$release = '5';
-			}
-			if ($file =~ /\.redhat6_/) {
-				$distro = 'redhat';
-				$release = '6';
-			}
-			if ($file =~ /\.centos5_/) {
-				$distro = 'centos';
-				$release = '5';
-			}
-			if ($file =~ /\.centos6_/) {
-				$distro = 'centos';
-				$release = '6';
-			}
-			defined $distro or next;
-			$file =~ /_x86_64\./ && ($arch = 'x86_64');
-			$file =~ /_i386\./ && ($arch = 'i386');
-
-			$dest = $BASE_DIR . "/" . $net . "/" . $distro . "/" . $release . "/" . $arch;
-
-			$debug && print "install -D -m 644 $dir/$file $dest/$file\n";
-			`install -D -m 644 $dir/$file $dest/$file`;
-		} else {
-			next;
-		}
-	}
-	close DIR;
-}
-
 # Build rpms
 sub buildRPMS {
 	foreach my $entry (@net) {
 		foreach my $distro ('redhat','centos') {
-			foreach my $location ('db', 'nfs/sun', 'nfs/netapp') {
+			foreach my $location ('nfs/toss-ddn', 'nfs/sun', 'nfs/netapp') {
 				chdir "${baseDir}/${location}";
 				if ( -f "Makefile.PL" ) {
 					system("./Makefile.PL $entry $distro");
-					#$entry ne '' && system("make rpmbuild");
 				} else {
 					print "File Makefile.PL missing\n";
 				}
@@ -294,12 +251,15 @@ sub buildRPMS {
 			chdir "$baseDir";
 			changeFiles($entry,$distro);
 			$entry ne '' && system("make rpmbuild");
-			loadWebServer($entry);
 		}
 	}
 }
 
 buildRPMS();
 `rm changelog`;
+
+# PGP sign the rpms
+print "Sign RPM packages\n";
+system("rpm --addsign $ENV{HOME}/rpmbuild/RPMS/noarch/certify*.rpm");
 
 exit 0;

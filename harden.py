@@ -1,12 +1,11 @@
 #!/bin/env python
-# harden.py
 # $Id$
-# $Date: $
+# $Date: Thu Sep 3 08:40:55 2015 -0700$
 # System security plan certification scripts
 
 import argparse
-import commands, os, re, errno, sys
-import subprocess, time
+import commands, os, re, errno, sys, shutil
+import subprocess, time, filecmp
 from certify_config import *
 debug = 0
 
@@ -40,20 +39,22 @@ else:
 date = commands.getoutput('date +%m/%d/%Y')
 host = commands.getoutput('uname -n')
 domainname = commands.getoutput('dnsdomainname')
+
+# Determine os release
 OS = commands.getoutput('uname -s')
 release = commands.getoutput('uname -r')
-release = oschk(OS,release)
+release = oschk(release)
 
 fixes = { 'Audit Config':'auditConfig',
 	'Authentication Config':'authConfig',
 	'Configure Banners':'issue',
 	'Configure cron files':'cronfiles',
 	'FTP setup':'ftpusers',
+	'IPTables':'iptables',
 	'Manage Services':'serviceConfig',
 	'Init Functions':'functions',
 	'IP forwarding':'ipForward',
 	'Log rotation':'logRotate',
-	'Secure Login Defs':'loginDefs',
 	'SSH':'sshd',
 	'TCP wrappers':'wrappers',
 	'USB storage':'usbStorage' }
@@ -128,31 +129,38 @@ def updateMD5(file):
 	os.rename('temp', 'md5sums.txt')
 
 def backup(file):
-	if os.path.isfile(file):
-		s = file + ".orig"
-		if not os.path.isfile(s):
-			os.system("cp %s %s" % (file, s))
-
-		s = file + ".preharden"
-		os.system("cp %s %s" % (file, s))
+	if os.path.isfile(file):  # See if the file exists
+		fname = os.path.split(file)[1]
+		s = savefileDir + "/" + fname
+		if not os.path.isdir(savefileDir):
+			os.system("mkdir -p %s" % (savefileDir))
+		if os.path.isfile(s):  # Check for an existing backup
+			if not filecmp.cmp(file,s):
+				bkup = s + "." + str(int(time.time()))
+				os.system("cp -p %s %s" % (s, bkup))
+				os.system("cp -p %s %s" % (file, s))
+		else:  # No existing backup
+			os.system("cp -p %s %s" % (file, s))
 	else:
-		s = "No file named: " + file
+		s = "Error: there is no file named: " + file
 		pr(s)
 
 def cryptChoice():
 	if "el" in release:
-		ret = commands.getoutput('authconfig | egrep -e "--passalgo"')
+		ret = commands.getoutput('authconfig --help | egrep -e "--passalgo"')
 		if 'sha512' in ret:
-			method = 'SHA512'
+			option = 'sha512'
 		elif 'sha256' in ret:
-			method = 'SHA256'
+			option = 'sha256'
 		elif 'md5' in ret:
-			method = 'MD5'
+			option = 'md5'
 		else:
-			method = 'CRYPT'
-		return method
+			option = 'md5'
 	else:
-		return 'MD5'
+		option = 'md5'
+
+	os.system('authconfig --passalgo "%s" --update' % (option))
+	return option.upper()
 
 def alterFile(file,action,srcPattern,targetPattern,boundary):
 	"""alterFile - Add delete or modify portions of a file.
@@ -165,7 +173,6 @@ def alterFile(file,action,srcPattern,targetPattern,boundary):
 	boundary       -- string delimiting the end of the search
 
 	"""
-	backup(file)
 	f = open(file, "r")
 	temp = "/var/tmp/harden." + pid
 	f2 = open(temp, "w")
@@ -245,12 +252,23 @@ def alterFile(file,action,srcPattern,targetPattern,boundary):
 	os.system("rm %s" % (temp))
 
 def pamCracklib():
-	pr("# Cracklib config")
+	pr("# pam_cracklib config")
+	boundary = '### No boundary ###'
+	# file
+	file = '/etc/sysconfig/authconfig'
+	if os.path.isfile(file):
+		srcPattern = "USECRACKLIB=.*"
+		targetPattern = "USECRACKLIB=yes"
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+		srcPattern = "USEPASSWDQC=.*"
+		targetPattern = "USEPASSWDQC=no"
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
 	# file
 	file = '/etc/pam.d/system-auth'
 	backup(file)
 	pr(file)
-	boundary = '### No boundary ###'
 	# alterFile(file,action,srcPattern,targetPattern,boundary)
 	
 	# Remove existing cracklib entry
@@ -325,8 +343,18 @@ def pamCracklib():
 
 def pamPasswdqc():
 	pr("# pam_passwdqc config")
+	pr("Using pam_passwdqc as a replacement for the default pam_cracklib")
 	boundary = '### No boundary ###'
-	# alterFile(file,action,srcPattern,targetPattern,boundary)
+	# file
+	file = '/etc/sysconfig/authconfig'
+	if os.file.isfile(file):
+		srcPattern = "USEPASSWDQC=.*"
+		targetPattern = "USEPASSWDQC=yes"
+		alterFile(file,replace,srcPattern,targetPattern,boundary)
+
+		srcPattern = "USECRACKLIB=.*"
+		targetPattern = "USECRACKLIB=no"
+		alterFile(file,replace,srcPattern,targetPattern,boundary)
 
 	# file
 	file = '/etc/pam.d/system-auth'
@@ -349,10 +377,10 @@ def pamPasswdqc():
 	updateMD5(file)
 
 def pamTally():
-	pr("# pam_tally config")
 	boundary = '### No boundary ###'
-
 	if use_pamtally:
+		pr("# pam_tally config")
+
 		tally_rules = 'pam_tally' + pam_tally['version'] + '.so'
 		if pam_tally['deny'] and pam_tally['deny'] <> '0':
 			tally_rules = tally_rules + ' deny=' + pam_tally['deny']
@@ -495,7 +523,8 @@ def passwordAge():
 	pr('# Update minimum password age')
 	# file
 	file = "/etc/passwd"
-	pr(file)
+	backup(file)
+	backup('/etc/shadow')
 	Shells = open("/etc/shells").readlines()
 	f = open(file, "r")
 	for line in f:
@@ -507,27 +536,42 @@ def passwordAge():
 			ans, err = subprocess.Popen(["getent", "shadow", words[0]], stdout=subprocess.PIPE).communicate()
 			sfline = ans.strip()
 			sfwords = sfline.split(':')
-			if sfwords[1] == 'x' or sfwords[1] == '!':
-				cmd = 'chage -M 99999' + " " + words[0]
-			if not err:
+			if sfwords[1] == '*' or sfwords[1] == 'x':
+				if str(sfwords[4]) != '99999':
+					cmd = 'chage -M 99999' + " " + words[0]
+					pr(cmd)
+					ret = commands.getoutput(cmd)
+			elif str(sfwords[4]) != str(logindefs['PASS_MAX_DAYS']):
+				cmd = 'chage -M ' + str(logindefs['PASS_MAX_DAYS']) + " " + words[0]
 				pr(cmd)
 				ret = commands.getoutput(cmd)
 
-def auditConfig():
-	pr("# Configure auditd")
+def loginDefs():
+	pr("# Configuring login defaults")
 	# file
-	file = "/etc/audit/auditd.conf"
-	pr(file)
+	file = "/etc/login.defs"
 	backup(file)
-	
-	for key in audit_option:
-		target = key + " = " + audit_option[key]
-		pr(target)
-		srcPattern = '#*(\s*)' + key + '\s.*'
-		targetPattern = '\\1' + target
-		boundary = '### No boundary ###'
-		# alterFile(file,action,srcPattern,targetPattern,boundary)
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	pr( file)
+	srcPattern = '^PASS_MAX_DAYS.*'
+	targetPattern = 'PASS_MAX_DAYS ' + str(logindefs['PASS_MAX_DAYS'])
+	pr(targetPattern)
+	boundary = '### No boundary ###'
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+	srcPattern = '^PASS_MIN_DAYS.*'
+	targetPattern = 'PASS_MIN_DAYS ' + logindefs['PASS_MIN_DAYS']
+	pr(targetPattern)
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+	srcPattern = '^PASS_MIN_LEN.*'
+	targetPattern = 'PASS_MIN_LEN ' + str(logindefs['PASS_MIN_LEN'])
+	pr(targetPattern)
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+	srcPattern = '^UMASK.*'
+	targetPattern = 'UMASK ' + logindefs['UMASK']
+	pr(targetPattern)
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	updateMD5(file)
 
 def authConfig():
@@ -539,35 +583,50 @@ def authConfig():
 	if release in aclist:
 		s = 'authconfig --savebackup=harden_' + commands.getoutput('date +%y%m%d')
 		ret = os.system(s)
+		path = r"/var/lib/authconfig"
+		now = time.time()
+		for f in os.listdir(path):
+			f = os.path.join(path, f)
+			if os.stat(f).st_mtime < now - 90 * 86400:
+				shutil.rmtree(f)
 	else:
 		s = "--savebackup option not supported on " + str(release) + " authconfig"
 
 	pr(s)
 	cryptMethod = cryptChoice()
 	file = "/etc/login.defs"
+	backup(file)
 	boundary = '### No boundary ###'
 	srcPattern = 'ENCRYPT_METHOD.*'
 	targetPattern = 'ENCRYPT_METHOD ' + cryptMethod
 	alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-	if not use_passwdqc and not use_cracklib:
-		pr("No password strength module selected")
-		pr("Using default cracklib")
+	if use_cracklib:
 		pamCracklib()
 
-	if use_passwdqc and use_cracklib:
-		pr("Can't use passwdqc and cracklib concurrently")
-		pr("Using default cracklib")
-		pamCracklib()
-	
-	if use_cracklib and not use_passwdqc:
-		pamCracklib()
-
-	if use_passwdqc and not use_cracklib:
+	if use_passwdqc:
 		pamPasswdqc()
 	
 	pamTally()
 	passwordAge()
+	loginDefs()
+
+def auditConfig():
+	pr("# Configure auditd")
+	# file
+	file = "/etc/audit/auditd.conf"
+	pr("file: " + file)
+	backup(file)
+	
+	for key in audit_option:
+		target = key + " = " + audit_option[key]
+		pr(target)
+		srcPattern = '#*(\s*)' + key + '\s.*'
+		targetPattern = '\\1' + target
+		boundary = '### No boundary ###'
+		# alterFile(file,action,srcPattern,targetPattern,boundary)
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	updateMD5(file)
 
 def issue():
 	pr("# Banner config")
@@ -643,6 +702,28 @@ def ftpusers():
 	f.close()
 	updateMD5(file)
 
+def iptables():
+	if release in [ 'el5', 'el6' ]:
+		file = "/etc/sysconfig/iptables"
+		backup(file)
+		pr("# Hardening iptables files")
+		pr('chown root:root ' + file)
+		subprocess.call(["chown" , "root:root", file])
+
+		pr('chmod 0600 /etc/sysconfig/iptables')
+		subprocess.call(["chmod", "0400", file])
+		updateMD5(file)
+
+	if release in [ 'el7' ]:
+		file = "/etc/firewalld"
+		backup(file)
+		pr("# Hardening firewalld files")
+		pr('chown root:root ' + file)
+		subprocess.call(["chown" , "root:root", file])
+		pr('chmod 0750 ' + file)
+		subprocess.call(["chmod", "0750", file])
+		updateMD5(file)
+
 def serviceConfig():
 	pr("# List enabled services")
 	DEVNULL = open(os.devnull, 'wb')
@@ -664,6 +745,7 @@ def serviceConfig():
 			if key in allServices:
 				pr("Disabling " + key)
 				subprocess.call(["systemctl", "disable", key])
+				subprocess.call(["systemctl", "stop", key])
 
 	if release in sysvList:
 		out, err = subprocess.Popen(["chkconfig", "--list"], \
@@ -692,10 +774,11 @@ def serviceConfig():
 	pr("\n\tReview list and disable unwanted services")
 
 def functions():
-	pr("# Making function changes")
 	# file
 	file = "/etc/init.d/functions"
-	pr(file)
+	backup(file)
+	pr("# Modifying " + file)
+	pr("\tChange umask to 027")
 	srcPattern = 'umask.*'
 	targetPattern = 'umask 027'
 	pr(targetPattern)
@@ -708,6 +791,7 @@ def ipForward():
 	pr("# IP forward config")
 	# file
 	file = "/etc/sysctl.conf"
+	backup(file)
 	srcPattern = 'net.ipv4.ip_forward.*'
 	boundary = '### No boundary ###'
 	if ipfwd in ['1','y','Y','yes','Yes']:
@@ -732,6 +816,7 @@ def logRotate():
 	pr("# Modifying log rotation")
 	# file
 	file = "/etc/logrotate.conf"
+	backup(file)
 
 	srcPattern = '^#\s+rotate log files.*'
 	targetPattern = '# rotate log files ' + LOG_ROT_SCHED
@@ -750,42 +835,11 @@ def logRotate():
 	alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	updateMD5(file)
 
-def loginDefs():
-	pr("# Configuring login defaults")
-	# file
-	file = "/etc/login.defs"
-	pr( file)
-	srcPattern = '^PASS_MAX_DAYS.*'
-	targetPattern = 'PASS_MAX_DAYS ' + str(logindefs['PASS_MAX_DAYS'])
-	pr(targetPattern)
-	boundary = '### No boundary ###'
-	alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
-	srcPattern = '^PASS_MIN_DAYS.*'
-	targetPattern = 'PASS_MIN_DAYS ' + logindefs['PASS_MIN_DAYS']
-	pr(targetPattern)
-	alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
-	srcPattern = '^PASS_MIN_LEN.*'
-	targetPattern = 'PASS_MIN_LEN ' + str(logindefs['PASS_MIN_LEN'])
-	pr(targetPattern)
-	alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
-	srcPattern = '^MD5_CRYPT_ENAB.*'
-	targetPattern = 'MD5_CRYPT_ENAB ' + logindefs['MD5_CRYPT_ENAB']
-	pr(targetPattern)
-	alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
-	srcPattern = '^UMASK.*'
-	targetPattern = 'UMASK ' + logindefs['UMASK']
-	pr(targetPattern)
-	alterFile(file,'replace',srcPattern,targetPattern,boundary)
-	updateMD5(file)
-
 def sshd():
 	pr("# SSH config")
 	# file
 	file = "/etc/ssh/sshd_config"
+	backup(file)
 	pr(file)
 
 	for key in sshd_option:
@@ -831,6 +885,7 @@ def wrappers():
 	pr("# tcpwrapper config")
 	# file
 	file = "/etc/hosts.allow"
+	backup(file)
 
 	if os.path.isfile(file):
 		# delete DENY entries
@@ -838,12 +893,15 @@ def wrappers():
 		boundary = '### No boundary ###'
 		srcPattern = '^.*:\s*DENY\s*$'
 		alterFile(file,'delete',srcPattern,'targetPattern',boundary)
+		p = re.compile('^[a-zA-Z0-9].*:.*')
 		altered = 0
-		for line in open(file, 'r'):
+
+		# see if file has been altered
+		for line in open(file):
 			if not line.startswith('#'):
 				altered = 1
 
-		if not altered:
+		if not altered :
 			for entry in (hosts_allow):
 				if not entry in open(file).read():
 					f = open(file, 'a')
@@ -859,18 +917,22 @@ def wrappers():
 
 	# file
 	file = "/etc/hosts.deny"
+	backup(file)
 	pr("Add deny all to end of " + file)
 
 	if os.path.isfile(file):
 		boundary = '### No boundary ###'
 		srcPattern = '^.*:\s*DENY\s*$'
 		alterFile(file,'delete',srcPattern,'targetPattern',boundary)
+		p = re.compile('^[a-zA-Z0-9].*:.*')
 		altered = 0
-		for line in open(file, 'r'):
+
+		# see if file has been altered
+		for line in open(file):
 			if not line.startswith('#'):
 				altered = 1
 
-		if not altered:
+		if not altered :
 			for entry in (hosts_deny):
 				srcPattern = '^ALL : ALL\s*$'
 				if not entry in open(file).read():
@@ -890,6 +952,7 @@ def wrappers():
 def usbStorage():
 	pr("# USB Storage Config")
 	file = "/etc/modprobe.d/harden_usb.conf"
+	backup(file)
 	pr(file)
 	f = open(file, 'w')
 	if USB_STORAGE in ('y','Y','yes','Yes'):

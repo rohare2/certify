@@ -1,10 +1,9 @@
-# Makefile
-# $Id: $
-# $Date: $
+#$Id: 8358f4627abc6a605d650f0e3cc76828b21c88e2 $
+# $Date: Thu Sep 3 08:40:55 2015 -0700$
 #
 Name= certify
-Version= 3.2
-Release= 564.centos6_x86_64.gs
+Version= 3.5
+Release= 80.centos6_x86_64.gs
 Distro= centos6_x86_64
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
@@ -36,11 +35,11 @@ DOC_FILES= banner.png.llnl \
 	readme
 
 
+CRON_MONTHLY_FILES= certify_harden.cron
+
 CRON_WEEKLY_FILES= certify_check.cron
 
-CRON_DAILY_FILES= certify_harden.cron \
-	certify_md5chk.cron \
-	diskcheck.cron \
+CRON_DAILY_FILES= certify_md5chk.cron \
 	diskscan.cron
 
 MY_CNF= my.cnf.certify
@@ -59,10 +58,10 @@ source:
 		mkdir ${RPMBUILD}/SOURCES/${Name}; \
 	fi
 	rsync -av * ${RPMBUILD}/SOURCES/${Name}
-	tar czvf ${RPMBUILD}/SOURCES/${Source} --exclude=.svn -C ${RPMBUILD}/SOURCES ${Name}
+	tar czvf ${RPMBUILD}/SOURCES/${Source} --exclude=.git -C ${RPMBUILD}/SOURCES ${Name}
 	rm -fr ${RPMBUILD}/SOURCES/${Name}
 
-install: make_path gconf gdm doc sbin cron mysql
+install: make_path gconf gdm doc sbin cron mysql rotate
 	@for file in ${SCRIPT_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${CERTIFY_DIR}; \
 	done
@@ -80,17 +79,23 @@ make_path:
 	@if [ ! -d ${RPM_BUILD_ROOT}/${DOC_DIR} ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/${DOC_DIR}; \
 	fi;
-	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.daily ]; then \
-		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.daily; \
+	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.monthly ]; then \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.monthly; \
 	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.weekly ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.weekly; \
 	fi;
+	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.daily ]; then \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.daily; \
+	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/usr/local/sbin ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/usr/local/sbin; \
 	fi;
-	@if [ ! -d ${RPM_BUILD_ROOT}/root ]; then \
-		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/root; \
+	@if [ ! -d ${RPM_BUILD_ROOT}/etc/logrotate.d ]; then \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/logrotate.d; \
+	fi;
+	@if [ ! -d ${RPM_BUILD_ROOT}/usr/local/certify/savedfiles ]; then \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/usr/local/certify/savedfiles; \
 	fi;
 
 gconf:
@@ -116,7 +121,12 @@ sbin:
 		install -p $$file ${RPM_BUILD_ROOT}/${SBIN_DIR}; \
 	done;
 
-cron: cronweekly crondaily
+cron: cronmonthly cronweekly crondaily
+
+cronmonthly:
+	@for file in ${CRON_MONTHLY_FILES}; do \
+		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.monthly; \
+	done;
 
 cronweekly:
 	@for file in ${CRON_WEEKLY_FILES}; do \
@@ -129,6 +139,9 @@ crondaily:
 	done;
 
 mysql:
+	@install -p ${MY_CNF} ${RPM_BUILD_ROOT}/root/.my.cnf.certify;
+
+rotate:
 	@install -p ${MY_CNF} ${RPM_BUILD_ROOT}/root/.my.cnf.certify;
 
 clean:
