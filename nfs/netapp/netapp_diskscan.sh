@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: $
+# $Id$
 # $URL: $
 # netapp_diskscan.sh
 

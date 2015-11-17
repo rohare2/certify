@@ -17,7 +17,7 @@ chomp $domainname;
 my @open = ('gs');
 my @high = ('jwics','hal','wnet','titan');
 my (@all,@good_args);
-if ($domainname eq "www.ohares.us") {
+if ($domainname eq "www.ohares.us" || $domainname eq "carp.ohares.us") {
 	@all = ('ohares');
 	@good_args = ('ohares','all');
 } elsif ($domainname eq "corbin.llnl.gov" || $domainname eq "slave.llnl.gov" ||

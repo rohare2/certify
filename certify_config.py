@@ -10,7 +10,7 @@ import re
 import sys
 
 # Global settings
-minlen = 12
+minlen = 10
 pass_max_days = 180
 logfile = '/var/log/certify'
 savefileDir = '/usr/local/certify/savedfiles'
