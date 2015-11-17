@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 # Makefile.PL
-# $Id: Makefile.PL 565 2014-10-24 16:42:13Z rohare $
+# $Id$
 # $Date: $
 #
 use strict;
