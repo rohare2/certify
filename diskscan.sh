@@ -1,7 +1,6 @@
 #!/bin/sh
-# diskscan.sh
 # $Id$
-# $Date: $
+# $Date: Thu Sep 3 08:40:55 2015 -0700$
 
 # Uncomment the following line to set debug mode
 debug=0
@@ -12,102 +11,6 @@ vendor=''
 bus_list=''
 logged=0
 LSHW='/usr/sbin/lshw'
-ok=0
-mysql_options='--defaults-file=/root/.my.cnf.certify'
-
-ret=`mysql $mysql_options -Nse " \
-	select count(*) \
-	from inventory" 2>&1`
-if [[ $? -eq 0 ]]; then
-	ok=1
-else
-	echo "error: $ret"
-	logger "error: $ret"
-	ok=0
-fi
-
-dbupdate() {
-	if [[ $debug -eq 1 ]]; then echo "dbupdate()"; fi
-	vendor=''
-	product=''
-	model=''
-	serialNo=''
-
-	for arg in "$@"; do
-		case "$arg" in
-			vendor=* )
-				vendor="${arg#vendor=}"
-				;;
-
-			product=* )
-				product="${arg#product=}"
-				;;
-
-			model=* )
-				model="${arg#model=}"
-				;;
-			serialNo=* )
-				serialNo="${arg#serialNo=}"
-				;;
-		esac
-	done
-	if [[ $debug -eq 1 ]]; then echo "args: $vendor, $product, $model, $serialNo"; fi
-	cnt=$(mysql $mysql_options -Nse " \
-		SELECT count(location) \
-		FROM inventory \
-		WHERE serialNo='$serialNo'")
-	if [[ $cnt -eq 0 ]]; then
-		# new drive
-		mysql $mysql_options -se " \
-			INSERT INTO inventory \
-			VALUES ('$location','$vendor','$product','$model','$serialNo','new','',NOW())"
-	else
-		# existing drive
-		ret=($(mysql $mysql_options -Nse " \
-			SELECT location,state,vendor,product,model \
-			FROM inventory \
-			WHERE serialNo='$serialNo'"))
-		dbloc=`echo $ret | awk '{print $1}'`
-		dbstate=`echo $ret | awk '{print $2}'`
-		dbvendor=`echo $ret | awk '{print $3}'`
-		dbproduct=`echo $ret | awk '{print $4}'`
-		dbmodel=`echo $ret | awk '{print $5}'`
-		if [[ $location == $dbloc ]]; then
-			# same location, update state
-			mysql $mysql_options -se " \
-				UPDATE inventory \
-				SET state='present' \
-				WHERE serialNo='$serialNo'"
-		else
-			# location change
-			mysql $mysql_options -se " \
-				UPDATE inventory \
-				SET location='$location', state='moved' \
-				WHERE serialNo='$serialNo'"
-		fi
-		# vendor change
-		if [[ $vendor != $dbvendor ]]; then
-			mysql $mysql_options -se " \
-				UPDATE inventory \
-				SET vendor='$vendor' \
-				WHERE serialNo='$serialNo'"
-		fi
-		# product change
-		if [[ $product != $dbproduct ]]; then
-			mysql $mysql_options -se " \
-				UPDATE inventory \
-				SET product='$product' \
-				WHERE serialNo='$serialNo'"
-		fi
-		# model change
-		if [[ $model != $dbmodel ]]; then
-			mysql $mysql_options -se " \
-				UPDATE inventory \
-				SET model='$model' \
-				WHERE serialNo='$serialNo'"
-		fi
-	fi
-}
 
 lsi() {
 	if [[ $debug -eq 1 ]]; then echo "lsi($1)"; fi
@@ -154,9 +57,6 @@ lsi() {
 				fi
 				if [[ $debug -eq 1 ]]; then echo "$enclosureID, $slotID, model=${model}, serialNo=${serialNo}"; fi
 				logger "$enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
-				if [[ $ok -eq 1 ]]; then
-					dbupdate vendor=${vendor} model=${model} serialNo=${serialNo}
-				fi
 				logged=1
 			fi
 		done
@@ -195,9 +95,6 @@ dell() {
 			fi
 			if [[ $enclosureID != '' && $slotID != '' && $serialNo != '' && $logged -eq 0 ]]; then
 				logger "$enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
-				if [[ $ok -eq 1 ]]; then
-					dbupdate vendor=${vendor} model=${model} serialNo=${serialNo}
-				fi
 				logged=1
 			fi
 		done
@@ -229,9 +126,6 @@ hpac() {
 				fi
 				if [[ $drive != '' && $serialNo != '' && $model != '' && $logged -eq 0 ]]; then
 					logger "$drive vendor=HP $model $serialNo"
-					if [[ $ok -eq 1 ]]; then
-						dbupdate vendor="HP" $model $serialNo
-					fi
 					logged=1
 				fi
 			done
@@ -267,9 +161,6 @@ directAccess() {
 		fi
 		if [[ $serialNo != '' && $product != '' && ! $vendor =~ 'LSI' && ! $vendor =~ 'DELL' && $logged -eq 0 ]]; then
 			logger "$disk $product $vendor $serialNo"
-			if [[ $ok -eq 1 ]]; then
-				dbupdate $product $vendor $serialNo
-			fi
 			logged=1
 		fi
 	done
@@ -368,9 +259,6 @@ hdparm() {
 		fi
 		if [[ $model != '' && $serialNo != '' && $logged -eq 0 ]]; then
 			logger "device=$device $model $serialNo"
-			if [[ $ok -eq 1 ]]; then
-				dbupdate $model $serialNo
-			fi
 			logged=1
 		fi
 	done

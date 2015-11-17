@@ -19,7 +19,7 @@ my ($origStr, $replStr);
 -f "../../VERSION" or die "No version file";
 my $version = `cat ../../VERSION`;
 chomp $version;
-if ($input_scalar =~ /^Version= /m) {
+if ($input_scalar =~ /^Version=/m) {
 	my $origStr = '^Version=.*$';
 	my $replStr = "Version= $version";
 	$input_scalar =~ s/$origStr/$replStr/m;
@@ -28,18 +28,6 @@ if ($input_scalar =~ /^Version= /m) {
 -f "../../RELEASE" or die "No release file";
 my $releaseNo = `cat ../../RELEASE`;
 chomp $releaseNo;
-
-$SvnVersion = `svnversion`;
-chomp $SvnVersion;
-($SvnVersion =~ /:/ || $releaseNo =~ /M/) and warn "Warning: modified svn state\n";
-$SvnVersion =~ s/:.*//;
-$SvnVersion =~ s/M//;
-$SvnVersion =~ s/\..*$//g;
-if ($input_scalar =~ /^SvnVersion= /m) {
-	my $origStr = '^SvnVersion=.*$';
-	my $replStr = "SvnVersion= $SvnVersion";
-	$input_scalar =~ s/$origStr/$replStr/m;
-}
 
 my $release = `lsb_release -sr`;
 chomp $release;
@@ -50,7 +38,7 @@ chomp $arch;
 
 if ($input_scalar =~ /^Release= /m) {
 	my $origStr = '^Release=.*$';
-	my $replStr = "Release= ${SvnVersion}.${distro}${release}_${arch}.${net}";
+	my $replStr = "Release= ${releaseNo}.${distro}${release}_${arch}.${net}";
 	$input_scalar =~ s/$origStr/$replStr/m;
 }
 

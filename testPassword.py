@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-# testPassword.py
 # $Id$
-# $Date: $
+# $Date: Thu Sep 3 08:40:55 2015 -0700$
 
 import os
 import sys

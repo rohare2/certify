@@ -1,13 +1,12 @@
 ########### CERTIFY ###########
-# readme
 # $Id$
-# $Date: $
+# $Date: Thu Sep 3 08:40:55 2015 -0700$
 
 # Description:
 Certify is a toolset for managing system security.  It includes
 scripts for hardening and checking system security, as well as
 scripts for detecting and tracking disk drives.  Cron files are
-provided to automate the process.
+provided to automate reccuring tasks.
 
 Certify is intended for environments where security is routinely
 audited, such as government facilities with classified information.
@@ -23,9 +22,7 @@ while check reports on security findings.
 
 The package includes diskscan.sh, a shell script which scans the
 local system for disk drives.  The results are sent to the system
-log and posted to a mysql database.  There is also a diskcheck.sh
-shell script which reports new, relocated or missing disk drives.
-Results of the analysis are sent to the system log and emailed.
+log.  
 
 The original driving force for developing certify was an interest
 in simplifying the process of system certification.  Before certify
@@ -41,7 +38,6 @@ The following Python rpm's are required.
 	pexpect
 	python-paramiko
 	lshw
-	mysql
 
 
 # Install:
@@ -66,18 +62,15 @@ to match the mysql user, "diskscan", account password.
 
 #Package list:
 /etc/cron.daily/certify_md5chk.cron
-/etc/cron.daily/diskcheck.cron
 /etc/cron.daily/diskscan.cron
-/etc/cron.monthly/certify_harden.cron
 /etc/cron.weekly/certify_check.cron
+/etc/cron.monthly/certify_harden.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /etc/gdm/banner.png
-/root/.my.cnf.certify
 /usr/local/certify/certify_config.py
 /usr/local/certify/check.py
 /usr/local/certify/harden.py
 /usr/local/certify/testPassword.py
-/usr/local/sbin/diskcheck.sh
 /usr/local/sbin/diskscan.sh
 /usr/share/doc/certify-3.2/banner.png.llnl
 /usr/share/doc/certify-3.2/banner.png.sample
@@ -110,8 +103,6 @@ optional arguments:
   -l, --log          create log (default: False)
   --logfile LOGFILE  log file name (default: /var/log/certify)
 
-# Disk check
-./diskcheck.sh
 
 
 # Report Problems:

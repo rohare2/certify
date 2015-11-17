@@ -1,40 +1,27 @@
 # certify_config.py
 # $Id$
-# $Date: $
+# $Date: Thu Sep 3 08:40:55 2015 -0700$
+#
+# Note, the data values represented in this configuration file are samples
+# based upon common industry usage. They should be adjusted to comply with
+# secutiry policy.
+#
 import re
 import sys
 
 # Global settings
-minlen = 8
+minlen = 12
 pass_max_days = 180
 logfile = '/var/log/certify'
+savefileDir = '/usr/local/certify/savedfiles'
 
 if __name__ == '__main__':
 	print "This is the certify configuration file and is not ment to be executed directly"
 	sys.exit(0)
 
-#
-# Operating system approval codes
-#  1) approved, 2) testing, 3) waiting for ISSO approval
-REVIEW_STATUS = {
-	'5.10':'2',
-	'ch4':'2',
-	'ch5':'2',
-	'el5':'1',
-	'el6':'1',
-	'el7':'1',
-	'fc14':'2',
-	'fc15':'2',
-	'fc16':'2',
-	'fc17':'1' }
-
 # Operating system lists
-sysvList = ('5.10', 'ch4', 'ch5', 'el5', 'el6', 'fc14', 'fc15', 'fc16', 'fc17')
+sysvList = ('el5', 'el6')
 systemdList = ('el7')
-
-# General environment setup
-use_ad_auth = 0 # Using Active Directory authentication
-use_ipa_auth = 0 # Using IPA Identity Managment
 
 # PAM Stack Options
 use_cracklib = 1 # $use_cracklib instead of passwdqc
@@ -102,8 +89,9 @@ sshd_option = {
 
 # Unix services
 alwaysDisable = ('bluetooth','isdn','pcmcia')
+approvalRequired = ('httpd','mysqld','sendmail','svnserve','vmware','xinded')
 ipfwd = 'n'
-USB_STORAGE = 'y'
+USB_STORAGE = 'n'
 
 # System logs
 LOG_ROT_SCHED = "monthly"
@@ -208,7 +196,7 @@ BANNER_LLNL = """
         **WARNING**WARNING**WARNING**WARNING**WARNING**
 """
 
-def oschk(os,release):
+def oschk(release):
 	p = re.compile('\.el5\.?')
 	m = p.search(release)
 	if m:
@@ -221,22 +209,10 @@ def oschk(os,release):
 	m = p.search(release)
 	if m:
 		return 'el7'
-	p = re.compile('\.fc14\.')
+	p = re.compile('\.ch5\.')
 	m = p.search(release)
 	if m:
-		return 'fc14'
-	p = re.compile('\.fc15\.')
-	m = p.search(release)
-	if m:
-		return 'fc15'
-	p = re.compile('\.fc16\.')
-	m = p.search(release)
-	if m:
-		return 'fc16'
-	p = re.compile('\.fc17\.')
-	m = p.search(release)
-	if m:
-		return 'fc17'
+		return 'el6'
 
 cronsched = {
 	'md5check':'daily',
