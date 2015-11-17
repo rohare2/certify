@@ -115,7 +115,7 @@ sub changeFiles {
 			}
 			if ($input_scalar =~ /^pass_max_days/m) {
 				my $origStr = '^pass_max_days.*$';
-				my $replStr = "pass_max_days = 180";
+				my $replStr = "pass_max_days = 90";
 				$input_scalar =~ s/$origStr/$replStr/m;
 			}
 		} elsif ($net eq 'wnet') {
@@ -241,11 +241,13 @@ sub buildRPMS {
 	foreach my $entry (@net) {
 		foreach my $distro ('redhat','centos') {
 			foreach my $location ('nfs/toss-ddn', 'nfs/sun', 'nfs/netapp') {
-				chdir "${baseDir}/${location}";
-				if ( -f "Makefile.PL" ) {
-					system("./Makefile.PL $entry $distro");
-				} else {
-					print "File Makefile.PL missing\n";
+				if ( -d $location) { 
+					chdir "${baseDir}/${location}";
+					if ( -f "Makefile.PL" ) {
+						system("./Makefile.PL $entry $distro");
+					} else {
+						print "File Makefile.PL missing\n";
+					}
 				}
 			}
 			chdir "$baseDir";
