@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: sun_diskscan.sh 503 2014-05-21 22:41:33Z rohare $
+# $Id$
 # $URL: file:///usr/local/svn/certify/trunk/nfs/sun/sun_diskscan.sh $
 # sun_diskscan.sh
 

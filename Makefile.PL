@@ -17,7 +17,7 @@ chomp $domainname;
 my @open = ('gs');
 my @high = ('jwics','hal');
 my (@all,@good_args);
-if ($domainname eq "www.ohares.us") {
+if ($domainname eq "www.ohares.us" || $domainname eq "carp.ohares.us") {
 	@all = ('ohares');
 	@good_args = ('ohares','all');
 } elsif ($domainname eq "corbin.llnl.gov" || $domainname eq "slave.llnl.gov" ||
@@ -49,7 +49,7 @@ if ( $#ARGV >= 0 ) {
 	@net = @all;
 }
 
-system("svn log > changelog");
+system("git log > changelog");
 
 sub changeFiles {
 	my $net = shift;

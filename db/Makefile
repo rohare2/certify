@@ -3,8 +3,8 @@
 #
 Name= certify-db
 Version=1.0
-Distro= centos6_x86_64
-Release= 564.centos6_x86_64.gs
+Distro= centos7_x86_64
+Release= 1.centos7_x86_64.ohares
 Source= ${Name}-${Version}-${Release}.tgz
 
 RPMBUILD= ${HOME}/rpmbuild

@@ -3,9 +3,9 @@
 # $Date: $
 #
 Name= certify
-Version= 3.2
-Release= 564.centos6_x86_64.gs
-Distro= centos6_x86_64
+Version= 3.3
+Release= 1.centos7_x86_64.ohares
+Distro= centos7_x86_64
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -35,13 +35,13 @@ DOC_FILES= banner.png.llnl \
 	changelog \
 	readme
 
+CRON_DAILY_FILES= certify_md5chk.cron \
+	diskscan.cron
 
 CRON_WEEKLY_FILES= certify_check.cron
 
-CRON_DAILY_FILES= certify_harden.cron \
-	certify_md5chk.cron \
-	diskcheck.cron \
-	diskscan.cron
+CRON_MONTHLY_FILES= certify_harden.cron \
+	diskcheck.cron
 
 MY_CNF= my.cnf.certify
 
@@ -86,6 +86,9 @@ make_path:
 	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.weekly ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.weekly; \
 	fi;
+	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.monthly ]; then \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.monthly; \
+	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/usr/local/sbin ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/usr/local/sbin; \
 	fi;
@@ -116,16 +119,21 @@ sbin:
 		install -p $$file ${RPM_BUILD_ROOT}/${SBIN_DIR}; \
 	done;
 
-cron: cronweekly crondaily
+cron: crondaily cronweekly cronmonthly
+
+crondaily:
+	@for file in ${CRON_DAILY_FILES}; do \
+		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.daily; \
+	done;
 
 cronweekly:
 	@for file in ${CRON_WEEKLY_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.weekly; \
 	done;
 
-crondaily:
-	@for file in ${CRON_DAILY_FILES}; do \
-		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.daily; \
+cronmonthly:
+	@for file in ${CRON_MONTHLY_FILES}; do \
+		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.monthly; \
 	done;
 
 mysql:

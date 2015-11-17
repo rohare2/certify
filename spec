@@ -27,6 +27,7 @@ Requires: python-argparse >= 1.2
 Requires: pexpect >= 2.3
 Requires: python-paramiko >= 1.7
 Requires: lshw
+Requires: redhat-lsb-core
 Requires: mysql >= 5.0
 Summary: Tools for managing operating system security
 %define _unpackaged_files_terminate_build 0
@@ -65,9 +66,9 @@ exit 0
 /etc/gdm/banner.png
 %attr(744, root, root) /etc/cron.daily/certify_md5chk.cron
 %config(noreplace) %attr(744, root, root) /etc/cron.daily/diskscan.cron
-%config(noreplace) %attr(744, root, root) /etc/cron.daily/diskcheck.cron
-%attr(744, root, root) /etc/cron.daily/certify_harden.cron
+%config(noreplace) %attr(744, root, root) /etc/cron.monthly/diskcheck.cron
 %attr(744, root, root) /etc/cron.weekly/certify_check.cron
+%attr(744, root, root) /etc/cron.monthly/certify_harden.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /usr/share/doc/%{Name}-%{Version}/readme
 /usr/share/doc/%{Name}-%{Version}/changelog

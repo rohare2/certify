@@ -3,8 +3,8 @@
 #
 Name= certify-nfs-sun
 Version=1.0
-Release= 564.centos6_x86_64.gs
-Distro= centos6_x86_64
+Release= .centos7_x86_64.ohares
+Distro= centos7_x86_64
 Source= ${Name}-${Version}-${Release}.tgz
 
 RPMBUILD= ${HOME}/rpmbuild

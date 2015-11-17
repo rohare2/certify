@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: sscs_report.sh 472 2014-05-11 14:58:22Z rohare $
+# $Id$
 # $URL: file:///usr/local/svn/certify/trunk/nfs/sun/sscs_report.sh $
 
 PATH=$PATH:/opt/SUNWsesscs/cli/bin
