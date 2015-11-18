@@ -1,6 +1,6 @@
 # certify_config.py
 # $Id$
-# $Date: Thu Sep 3 08:40:55 2015 -0700$
+# $Date$
 #
 # Note, the data values represented in this configuration file are samples
 # based upon common industry usage. They should be adjusted to comply with
@@ -10,7 +10,7 @@ import re
 import sys
 
 # Global settings
-minlen = 10
+minlen = 8
 pass_max_days = 180
 logfile = '/var/log/certify'
 savefileDir = '/usr/local/certify/savedfiles'

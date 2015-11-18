@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 # Makefile.PL
 # $Id$
-# $Date: $
+# $Date$
 #
 
 @ARGV == 2 or die "not enough arguments: $!\n";

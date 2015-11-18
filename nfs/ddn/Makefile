@@ -1,9 +1,9 @@
-# $Id: Makefile 565 2014-10-24 16:42:13Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/nfs/sun/Makefile $
+# $Id: $
+# $Date: $
 #
-Name= certify-nfs-sun
+Name= certify-nfs-ddn
 Version= 3.6
-Release= 2.centos6_x86_64.gs
+Release= 1.centos6_x86_64.gs
 Distro= centos6_x86_64
 Source= ${Name}-${Version}-${Release}.tgz
 
@@ -14,12 +14,11 @@ CRON_DIR= /etc/cron.daily
 DOC_DIR= /usr/share/doc/${Name}-${Version}
 SBIN_DIR= /usr/local/sbin
 
-CRON_FILES= sun_diskscan.cron
+CRON_FILES= ddn_diskscan.cron
 
-DOC_FILES= readme \
-	sscs_report.sh
+DOC_FILES= readme
 
-SBIN_FILES= sun_diskscan.sh
+SBIN_FILES= ddn_diskscan.sh
 
 rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec

@@ -1,0 +1,57 @@
+# $Id$
+# $Date$
+#
+# Author: Rich O'Hare  <ohare2@llnl.gov>
+#
+# System security certification scripts
+#
+%define Name certify-nfs-ddn
+%define Version (version)
+%define Release (release)
+%define Source (source)
+
+Name: %{Name}
+Version: %{Version}
+Release: %{Release}
+Source: %{Source}
+License: GPLv2
+Group: Applications/System
+BuildArch: noarch
+URL: https://corbin.llnl.gov/
+Distribution: RedHat/Centos 6
+Vendor: Lawrence Livermore National Lab., GS Z-Div
+Packager: Rich O'Hare <ohare2@llnl.gov>
+Provides: ddn_diskscan.sh
+Requires: mysql >= 5.0
+Summary: Certify disk inventory tool
+%define _unpackaged_files_terminate_build 0
+
+%description
+Disk inventory tool that works with the Certify application to detect and
+track disk drives on DDN storage devices. It is currently emplemented on
+Livermore Computing TOSS HPC Clusters via the /admin/scripts/ddndsh script,
+but other tools may be incorporated in the future.
+
+A disk inventory report is sent to /var/log/messages, and peristent data
+is stored in a mysql database made available via certify-db rpm.
+
+%prep
+%setup -q -n %{Name}
+
+%build
+exit 0
+
+%install
+#rm -rf %RPM_BUILD_ROOT/*
+make install
+exit 0
+
+%clean
+#rm -fR %RPM_BUILD_ROOT/*
+exit 0
+
+%files
+%defattr(-,root, root)
+%config %attr(764, root, wheel) /etc/cron.daily/ddn_diskscan.cron
+%attr(740, root, root) /usr/local/sbin/ddn_diskscan.sh
+%attr(644, root, root) /usr/share/doc/%{Name}-%{Version}/readme

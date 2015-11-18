@@ -1,6 +1,6 @@
 #!/bin/sh
 # $Id$
-# $Date: Thu Sep 3 08:40:55 2015 -0700$
+# $Date$
 
 # Uncomment the following line to set debug mode
 debug=0

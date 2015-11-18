@@ -1,7 +1,7 @@
 #!/bin/sh
 # diskcheck.sh
 # $Id$
-# $Date: $
+# $Date$
 interval='1010000' # '0000-00-00 00:00:00'
 quiet=0
 report=''

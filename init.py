@@ -1,6 +1,6 @@
 #! /bin/env python 
 # $Id$
-# $Date: Thu Sep 3 08:40:55 2015 -0700$
+# $Date$
 # RPM scriptlet for initializing the configuration database
 
 import commands, subprocess, os, sys, re

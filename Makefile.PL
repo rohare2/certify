@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 # Makefile.PL
 # $Id$
-# $Date: Thu Sep 3 08:40:55 2015 -0700$
+# $Date$
 #
 use strict;
 

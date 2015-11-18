@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
-# Makefile.PL
 # $Id$
 # $Date$
 #
 
+# check arguments
 @ARGV == 2 or die "not enough arguments: $!\n";
 
 my $net = $ARGV[0];
@@ -19,7 +19,7 @@ my ($origStr, $replStr);
 -f "../../VERSION" or die "No version file";
 my $version = `cat ../../VERSION`;
 chomp $version;
-if ($input_scalar =~ /^Version= /m) {
+if ($input_scalar =~ /^Version=/m) {
 	my $origStr = '^Version=.*$';
 	my $replStr = "Version= $version";
 	$input_scalar =~ s/$origStr/$replStr/m;
@@ -53,4 +53,3 @@ print OUTPUT "$input_scalar";
 close OUTPUT;
 
 system("make rpmbuild");
-

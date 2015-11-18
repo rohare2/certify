@@ -1,7 +1,7 @@
 #!/bin/env python
 # check.py
 # $Id$
-# $Date: $
+# $Date$
 # System security plan certification scripts
 
 import argparse

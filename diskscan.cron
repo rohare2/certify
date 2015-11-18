@@ -1,6 +1,6 @@
 #!/bin/sh
 # $Id$
-# $Date: Thu Sep 3 08:40:55 2015 -0700$
+# $Date$
 
 # Disk scans are normally performed on every host
 # Change enableDiskScan to 0 to disable diskscan

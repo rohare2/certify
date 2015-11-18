@@ -1,6 +1,6 @@
 #! /bin/env python 
 # $Id$
-# $Date: Thu Sep 3 08:40:55 2015 -0700$
+# $Date$
 # Tool for configuring certify controls
 
 import argparse

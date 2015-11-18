@@ -1,6 +1,6 @@
 #!/bin/sh
 # certify_check.cron
 # $Id$
-# $Date: $$
+# $Date$$
 
 /usr/local/certify/check.py -l
