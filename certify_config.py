@@ -91,7 +91,7 @@ sshd_option = {
 alwaysDisable = ('bluetooth','isdn','pcmcia')
 approvalRequired = ('httpd','mysqld','sendmail','svnserve','vmware','xinded')
 ipfwd = 'n'
-USB_STORAGE = 'n'
+USB_STORAGE = 'y'
 
 # System logs
 LOG_ROT_SCHED = "monthly"

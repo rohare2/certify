@@ -2,9 +2,9 @@
 # $Date: Thu Sep 3 08:40:55 2015 -0700$
 #
 Name= certify
-Version= 3.5
-Release= 80.centos6_x86_64.gs
-Distro= centos6_x86_64
+Version= 3.6
+Release= 2.centos7_x86_64.ohares
+Distro= centos7_x86_64
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -97,6 +97,9 @@ make_path:
 	@if [ ! -d ${RPM_BUILD_ROOT}/usr/local/certify/savedfiles ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/usr/local/certify/savedfiles; \
 	fi;
+	@if [ ! -d ${RPM_BUILD_ROOT}/root ]; then \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/root; \
+	fi;
 
 gconf:
 	@for file in ${GCONF_FILES}; do \
@@ -142,7 +145,7 @@ mysql:
 	@install -p ${MY_CNF} ${RPM_BUILD_ROOT}/root/.my.cnf.certify;
 
 rotate:
-	@install -p ${MY_CNF} ${RPM_BUILD_ROOT}/root/.my.cnf.certify;
+	@install -p certify ${RPM_BUILD_ROOT}/etc/logrotate.d/certify;
 
 clean:
 	@rm -f ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec

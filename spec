@@ -59,6 +59,8 @@ exit 0
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/testPassword.py
 %attr(740, root, root) /usr/local/sbin/diskscan.sh
+%attr(740, root, root) /usr/local/sbin/diskscan.sh
+%attr(600, root, root) /root/.my.cnf.certify
 /etc/gdm/banner.png
 /etc/logrotate.d/certify
 %config(noreplace) %attr(744, root, root) /etc/cron.daily/certify_md5chk.cron

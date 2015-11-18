@@ -3,7 +3,7 @@
 #
 Name= certify-nfs-sun
 Version= 3.6
-Release= 1.centos7_x86_64.ohares
+Release= 2.centos7_x86_64.ohares
 Distro= centos7_x86_64
 Source= ${Name}-${Version}-${Release}.tgz
 
