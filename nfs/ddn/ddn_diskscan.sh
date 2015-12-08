@@ -6,7 +6,8 @@
 # set debug mode
 debug=0
 
-ddnCmd="ddndsh"
+ddnCmd="/usr/local/sbin/ddndsh"
+ddnConf="/usr/local/etc/ddnapi.conf"
 arrays='ddn-1a,ddn-2a'
 dbhost="corbin"
 pw='y0wm0ma!'
@@ -98,13 +99,8 @@ dbupdate() {
 
 ret=''
 for device in $arrays; do
-	if [ $ddnCmd = "ddndsh" ]; then
-		echo "/admin/scripts/ddndsh -w $device disk list"
-		ret=`/admin/scripts/ddndsh -w $device disk list`
-	else
-		echo "Unknown command: $ddnCmd"
-		exit
-	fi
+	echo "ddndsh -w $device disk list"
+	ret=`ddndsh -w $device disk list`
 done
 
 vendor=''

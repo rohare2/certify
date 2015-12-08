@@ -13,13 +13,16 @@ RPM_BUILD_ROOT= ${RPMBUILD}/BUILDROOT
 CRON_DIR= /etc/cron.daily
 DOC_DIR= /usr/share/doc/${Name}-${Version}
 SBIN_DIR= /usr/local/sbin
+ETC_DIR= /usr/local/etc
 
 CRON_FILES= ddn_diskscan.cron
 
 DOC_FILES= readme
 
-SBIN_FILES= ddn_diskscan.sh
+SBIN_FILES= ddn_diskscan.sh \
+	ddndsh
 
+ETC_FILES=
 rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
 
@@ -46,6 +49,11 @@ install: make_path
 	done
 	@for file in ${SBIN_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${SBIN_DIR}; \
+	done
+
+localinstall:
+	@for file in ${SBIN_FILES}; do \
+		install -p $$file ${SBIN_DIR}; \
 	done
 
 make_path:
