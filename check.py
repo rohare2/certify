@@ -33,7 +33,7 @@ date = commands.getoutput('date')
 host = commands.getoutput('uname -n')
 OS = commands.getoutput('uname -s')
 release = commands.getoutput('uname -r')
-release = oschk(OS,release)
+release = oschk(release)
 
 tests = { 'Check Baseline MD5 files':'checkMD5',
 	'Look for NULL passwords':'checkNull',
@@ -46,7 +46,8 @@ tests = { 'Check Baseline MD5 files':'checkMD5',
 	'Look for privileged users':'checkPrivUsers',
 	'Check log file perms':'checkLogPerms',
 	'Check enabled services':'checkServices',
-	'Check USB storage access status':'checkUSB' }
+	'Check USB storage access status':'checkUSB',
+	'Check sudo logging':'checkSUDO'}
 
 testNo = {}
 subNo = {}
@@ -641,6 +642,17 @@ def checkUSB():
 			pr("Invalid USB_STORAGE setting")
 	except IOError:
 		pr(file + " missing")
+
+def checkSUDO():
+	pr("# Check sudo logging")
+	file = "/etc/sudoers"
+	pr(file)
+	if 'iolog_dir' not in open(file).read():
+		pr("sudoers iolog_dir missing")
+	if 'log_input' not in open(file).read():
+		pr("sudoers log_input missing")
+	if 'log_output' not in open(file).read():
+		pr("sudoers log_output missing")
 
 done = 0
 while not done:
