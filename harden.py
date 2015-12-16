@@ -57,7 +57,8 @@ fixes = { 'Audit Config':'auditConfig',
 	'Log rotation':'logRotate',
 	'SSH':'sshd',
 	'TCP wrappers':'wrappers',
-	'USB storage':'usbStorage' }
+	'USB storage':'usbStorage',
+	'SUDO log_output':'sudoLog'}
 
 fixNo = {}
 subNo = {}
@@ -969,6 +970,38 @@ def usbStorage():
 	f.close()
 	subprocess.call(["chmod" , "0644", file])
 	updateMD5(file)
+
+def sudoLog():
+	pr("# sudo log_output")
+	boundary = '### No boundary ###'
+	#file
+	file = '/etc/sudoers'
+	if os.path.isfile(file):
+		backup(file)
+
+		# iolog_dir
+		srcPattern = "Defaults.*iolog_dir=/var/log/sudo-io/%{user}\n"
+		alterFile(file,'delete',srcPattern,'',boundary)
+
+		srcPattern = "# Defaults.*specification.*"
+		targetPattern = "Defaults	iolog_dir=/var/log/sudo-io/%{user}\n"
+		alterFile(file,'after',srcPattern,targetPattern,boundary)
+
+		# log_input
+		srcPattern = "Defaults.*log_input.*"
+		alterFile(file,'delete',srcPattern,'',boundary)
+
+		srcPattern = "Defaults.*iolog_dir=.*"
+		targetPattern = "Defaults	log_input\n"
+		alterFile(file,'after',srcPattern,targetPattern,boundary)
+
+		# log_output
+		srcPattern = "Defaults.*log_output.*"
+		alterFile(file,'delete',srcPattern,'',boundary)
+
+		srcPattern = "Defaults.*log_input.*"
+		targetPattern = "Defaults	log_output\n"
+		alterFile(file,'after',srcPattern,targetPattern,boundary)
 
 done = 0
 while not done:
