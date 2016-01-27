@@ -716,13 +716,19 @@ def iptables():
 		updateMD5(file)
 
 	if release in [ 'el7' ]:
-		file = "/etc/firewalld"
-		backup(file)
 		pr("# Hardening firewalld files")
+		file = "/etc/firewalld"
 		pr('chown root:root ' + file)
 		subprocess.call(["chown" , "root:root", file])
 		pr('chmod 0750 ' + file)
 		subprocess.call(["chmod", "0750", file])
+
+		file = "/etc/firewalld/firewalld.conf"
+		backup(file)
+		pr('chown root:root ' + file)
+		subprocess.call(["chown" , "root:root", file])
+		pr('chmod 0640 ' + file)
+		subprocess.call(["chmod", "0640", file])
 		updateMD5(file)
 
 def serviceConfig():
