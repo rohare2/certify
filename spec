@@ -25,7 +25,7 @@ Requires: python-argparse >= 1.2
 Requires: pexpect >= 2.3
 Requires: python-paramiko >= 1.7
 Requires: lshw
-Requires: redhat-lsb-core
+Requires: redhat-lsb
 Requires: mysql >= 5.0
 Summary: Tools for managing operating system security
 %define _unpackaged_files_terminate_build 0
