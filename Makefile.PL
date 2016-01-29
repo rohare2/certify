@@ -20,8 +20,11 @@ my (@all,@good_args);
 if ($domainname eq "www.ohares.us" || $domainname eq "carp.ohares.us") {
 	@all = ('ohares');
 	@good_args = ('ohares','all');
-} elsif ($domainname eq "corbin.llnl.gov" || $domainname eq "slave.llnl.gov" ||
-	 $domainname eq "zdiv-rhel5-x86-64-repo.llnl.gov") {
+} elsif ($domainname eq "captive.llnl.gov" ||
+		$domainname eq "convict.llnl.gov" ||
+		$domainname eq "corbin.llnl.gov" ||
+		$domainname eq "serf.llnl.gov" ||
+	 	$domainname eq "slave.llnl.gov") {
 	@all = ('gs','hal','jwics');
 	@good_args = ('all','gs','hal','high','jwics','open');
 } else {
