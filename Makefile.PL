@@ -10,22 +10,20 @@ my $debug = 0;
 # determine domain name
 my $hostname = `uname -n`;
 chomp $hostname;
-my $domainname = `host $hostname | cut -d " " -f1`;
-chomp $domainname;
 
 # determine acceptable arguments
 my @open = ('gs');
 my @high = ('jwics','hal','wnet','titan');
 my (@all,@good_args);
-if ($domainname eq "www.ohares.us" || $domainname eq "carp.ohares.us") {
+if ($hostname eq "www.ohares.us" || $hostname eq "carp.ohares.us") {
 	@all = ('ohares');
 	@good_args = ('ohares','all');
-} elsif ($domainname eq "corbin.llnl.gov" ||
-		$domainname eq "zdiv-rhel5-client-i386.llnl.gov" ||
-		$domainname eq "zdiv-rhel5-client-x86_64.llnl.gov" ||
-		$domainname eq "zdiv-rhel6-workstation.llnl.gov" ||
-		$domainname eq "zdiv-rhel7-server.llnl.gov" ||
-	 	$domainname eq "zdiv-rhel7-workstation.llnl.gov") {
+} elsif ($hostname eq "corbin" ||
+		$hostname eq "zdiv-rhel5-client-i386" ||
+		$hostname eq "zdiv-rhel5-client-x86_64" ||
+		$hostname eq "zdiv-rhel6-workstation" ||
+		$hostname eq "zdiv-rhel7-server" ||
+	 	$hostname eq "zdiv-rhel7-workstation") {
 	@all = ('gs','hal','jwics');
 	@good_args = ('all','gs','hal','high','jwics','open');
 } else {
