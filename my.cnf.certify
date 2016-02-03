@@ -1,5 +1,5 @@
 [CLIENT]
-host = corbin.llnl.gov
+host = www.ohares.us
 database = disks
 user = diskscan
 password = 'y0wm0ma!'

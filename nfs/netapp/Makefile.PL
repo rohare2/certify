@@ -9,6 +9,7 @@
 my $net = $ARGV[0];
 my $distro = $ARGV[1];
 
+# Makefile
 $file = 'Makefile';
 open (INPUT,"<$file") or die;
 my @input_array=<INPUT>;
@@ -19,7 +20,8 @@ my ($origStr, $replStr);
 -f "../../VERSION" or die "No version file";
 my $version = `cat ../../VERSION`;
 chomp $version;
-if ($input_scalar =~ /^Version= /m) {
+
+if ($input_scalar =~ /^Version=/m) {
 	my $origStr = '^Version=.*$';
 	my $replStr = "Version= $version";
 	$input_scalar =~ s/$origStr/$replStr/m;
@@ -36,7 +38,7 @@ $release =~ s/\..*//;
 my $arch = `uname -i`;
 chomp $arch;
 
-if ($input_scalar =~ /^Release= /m) {
+if ($input_scalar =~ /^Release=/m) {
 	my $origStr = '^Release=.*$';
 	my $replStr = "Release= ${releaseNo}.${distro}${release}_${arch}.${net}";
 	$input_scalar =~ s/$origStr/$replStr/m;

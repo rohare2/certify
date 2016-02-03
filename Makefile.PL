@@ -17,7 +17,8 @@ chomp $domainname;
 my @open = ('gs');
 my @high = ('jwics','hal','wnet','titan');
 my (@all,@good_args);
-if ($domainname eq "www.ohares.us" || $domainname eq "carp.ohares.us") {
+if ($domainname eq "www.ohares.us" ||
+		$domainname eq "master.ohares.us") {
 	@all = ('ohares');
 	@good_args = ('ohares','all');
 } elsif ($domainname eq "corbin.llnl.gov" || $domainname eq "slave.llnl.gov" ||
@@ -241,15 +242,18 @@ sub changeFiles {
 sub buildRPMS {
 	foreach my $entry (@net) {
 		foreach my $distro ('redhat','centos') {
-			foreach my $location ('nfs/toss-ddn', 'nfs/sun', 'nfs/netapp') {
-				if ( -d $location) { 
+			foreach my $location ('nfs/ddn', 'nfs/sun', 'nfs/netapp') {
+				if ( -d "$location") { 
 					chdir "${baseDir}/${location}";
 					if ( -f "Makefile.PL" ) {
 						system("./Makefile.PL $entry $distro");
 					} else {
-						print "File Makefile.PL missing\n";
+						die "File Makefile.PL missing\n";
 					}
+				} else {
+					die "$location missing\n";
 				}
+				chdir "$baseDir";
 			}
 			chdir "$baseDir";
 			changeFiles($entry,$distro);

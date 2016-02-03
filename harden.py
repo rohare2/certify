@@ -47,11 +47,11 @@ release = oschk(release)
 
 fixes = { 'Audit Config':'auditConfig',
 	'Authentication Config':'authConfig',
-	'Configure Banners':'issue',
-	'Configure cron files':'cronfiles',
+	'Banners Config':'issue',
+	'Cron Config':'cronfiles',
 	'FTP setup':'ftpusers',
-	'IPTables':'iptables',
 	'Manage Services':'serviceConfig',
+	'Firewall Config':'firewall',
 	'Init Functions':'functions',
 	'IP forwarding':'ipForward',
 	'Log rotation':'logRotate',
@@ -580,6 +580,7 @@ def authConfig():
 	pr("pam module configuration")
 	backup("/etc/pam.d/system-auth")
 	
+	# save a copy of the authconfig configuration
 	aclist = [ 'el6', 'el7' ]
 	if release in aclist:
 		s = 'authconfig --savebackup=harden_' + commands.getoutput('date +%y%m%d')
@@ -703,7 +704,7 @@ def ftpusers():
 	f.close()
 	updateMD5(file)
 
-def iptables():
+def firewall():
 	if release in [ 'el5', 'el6' ]:
 		file = "/etc/sysconfig/iptables"
 		backup(file)
