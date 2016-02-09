@@ -7,7 +7,7 @@ use strict;
 
 my $debug = 0;
 
-# determine domain name
+# determine hostname
 my $hostname = `uname -n`;
 chomp $hostname;
 
