@@ -2,9 +2,9 @@
 # $URL: file:///usr/local/svn/certify/trunk/nfs/netapp/Makefile $
 #
 Name= certify-nfs-netapp
-Version=1.0
-Release= 1.centos7_x86_64.ohares
-Distro= centos7_x86_64
+Version= 3.6
+Release= 4.centos6_x86_64.ohares
+Distro= centos6_x86_64
 Source= ${Name}-${Version}-${Release}.tgz
 
 RPMBUILD= ${HOME}/rpmbuild
