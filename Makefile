@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.6
-Release= 6.centos6_x86_64.jwics
+Release= 7.centos6_x86_64.jwics
 Distro= centos6_x86_64
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)

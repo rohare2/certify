@@ -20,11 +20,10 @@ if ($hostname eq "www.ohares.us" ||
 	@all = ('ohares');
 	@good_args = ('ohares','all');
 } elsif ($hostname eq "corbin.llnl.gov" ||
-		$hostname eq "zdiv-rhel5-client-i386" ||
-		$hostname eq "zdiv-rhel5-client-x86_64" ||
-		$hostname eq "zdiv-rhel6-workstation" ||
-		$hostname eq "zdiv-rhel7-server" ||
-	 	$hostname eq "zdiv-rhel7-workstation") {
+		$hostname eq "captive.llnl.gov" ||
+		$hostname eq "convict.llnl.gov" ||
+		$hostname eq "serf.llnl.gov" ||
+	 	$hostname eq "slave.llnl.gov") {
 	@all = ('gs','hal','jwics');
 	@good_args = ('all','gs','hal','high','jwics','open');
 } else {
