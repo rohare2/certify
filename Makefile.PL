@@ -15,11 +15,11 @@ chomp $hostname;
 my @open = ('gs');
 my @high = ('jwics','hal','wnet','titan');
 my (@all,@good_args);
-if ($domainname eq "www.ohares.us" ||
-		$domainname eq "master.ohares.us") {
+if ($hostname eq "www.ohares.us" ||
+		$hostname eq "master.ohares.us") {
 	@all = ('ohares');
 	@good_args = ('ohares','all');
-} elsif ($hostname eq "corbin" ||
+} elsif ($hostname eq "corbin.llnl.gov" ||
 		$hostname eq "zdiv-rhel5-client-i386" ||
 		$hostname eq "zdiv-rhel5-client-x86_64" ||
 		$hostname eq "zdiv-rhel6-workstation" ||

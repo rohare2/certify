@@ -3,7 +3,7 @@
 #
 Name= certify-nfs-ddn
 Version= 3.6
-Release= 4.centos6_x86_64.ohares
+Release= 6.centos6_x86_64.jwics
 Distro= centos6_x86_64
 Source= ${Name}-${Version}-${Release}.tgz
 
