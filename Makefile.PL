@@ -67,12 +67,12 @@ sub changeFiles {
 	my $swRelease = `cat RELEASE`;
 	chomp $swRelease;
 
-
-	# system architecture
+	# Linux release number
 	my $osRelease = `lsb_release -sr`;
 	chomp $osRelease;
 	$osRelease =~ s/\..*//;
 
+	# system architecture
 	my $arch = `uname -i`;
 	chomp $arch;
 
