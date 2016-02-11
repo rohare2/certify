@@ -61,11 +61,6 @@ sub changeFiles {
 	-f "VERSION" or die "No version file";
 	my $swVersion = `cat VERSION`;
 	chomp $swVersion;
-	if ($input_scalar =~ /^Version= /m) {
-		my $origStr = '^Version=.*$';
-		my $replStr = "Version= $swVersion";
-		$input_scalar =~ s/$origStr/$replStr/m;
-	}
 
 	# software release
 	-f "RELEASE" or die "No release file";
@@ -88,6 +83,12 @@ sub changeFiles {
 	close(INPUT);
 	my $input_scalar=join("",@input_array);
 	my ($origStr, $replStr);
+
+	if ($input_scalar =~ /^Version= /m) {
+		my $origStr = '^Version=.*$';
+		my $replStr = "Version= $swVersion";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
 
 	if ($input_scalar =~ /^Release= /m) {
 		my $origStr = '^Release=.*$';
