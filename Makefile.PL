@@ -57,7 +57,31 @@ sub changeFiles {
 	my $net = shift;
 	my $distro = shift;
 
-	# Makefile
+	# software version
+	-f "VERSION" or die "No version file";
+	my $swVersion = `cat VERSION`;
+	chomp $swVersion;
+	if ($input_scalar =~ /^Version= /m) {
+		my $origStr = '^Version=.*$';
+		my $replStr = "Version= $swVersion";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	# software release
+	-f "RELEASE" or die "No release file";
+	my $swRelease = `cat RELEASE`;
+	chomp $swRelease;
+
+
+	# system architecture
+	my $osRelease = `lsb_release -sr`;
+	chomp $osRelease;
+	$osRelease =~ s/\..*//;
+
+	my $arch = `uname -i`;
+	chomp $arch;
+
+	# Edit Makefile
 	my $file = 'Makefile';
 	open (INPUT,"<$file") or die;
 	my @input_array=<INPUT>;
@@ -65,36 +89,15 @@ sub changeFiles {
 	my $input_scalar=join("",@input_array);
 	my ($origStr, $replStr);
 
-	-f "VERSION" or die "No version file";
-	my $version = `cat VERSION`;
-	chomp $version;
-	if ($input_scalar =~ /^Version= /m) {
-		my $origStr = '^Version=.*$';
-		my $replStr = "Version= $version";
-		$input_scalar =~ s/$origStr/$replStr/m;
-	}
-
-	-f "RELEASE" or die "No release file";
-	my $releaseNo = `cat RELEASE`;
-	chomp $releaseNo;
-
-
-	my $release = `lsb_release -sr`;
-	chomp $release;
-	$release =~ s/\..*//;
-
-	my $arch = `uname -i`;
-	chomp $arch;
-
 	if ($input_scalar =~ /^Release= /m) {
 		my $origStr = '^Release=.*$';
-		my $replStr = "Release= ${releaseNo}.${distro}${release}_${arch}.${net}";
+		my $replStr = "Release= ${swRelease}.${distro}${osRelease}_${arch}.${net}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
 	if ($input_scalar =~ /^Distro= /m) {
 		my $origStr = '^Distro=.*$';
-		my $replStr = "Distro= ${distro}${release}_${arch}";
+		my $replStr = "Distro= ${distro}${osRelease}_${arch}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
@@ -241,13 +244,13 @@ sub changeFiles {
 
 # Build rpms
 sub buildRPMS {
-	foreach my $entry (@net) {
+	foreach my $net (@net) {
 		foreach my $distro ('redhat','centos') {
 			foreach my $location ('nfs/ddn', 'nfs/sun', 'nfs/netapp') {
 				if ( -d "$location") { 
 					chdir "${baseDir}/${location}";
 					if ( -f "Makefile.PL" ) {
-						system("./Makefile.PL $entry $distro");
+						system("./Makefile.PL $net $distro");
 					} else {
 						die "File Makefile.PL missing\n";
 					}
@@ -257,8 +260,8 @@ sub buildRPMS {
 				chdir "$baseDir";
 			}
 			chdir "$baseDir";
-			changeFiles($entry,$distro);
-			$entry ne '' && system("make rpmbuild");
+			changeFiles($net,$distro);
+			$net ne '' && system("make rpmbuild");
 		}
 	}
 }
