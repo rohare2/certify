@@ -138,7 +138,7 @@ sub changeFiles {
 
 	if ($input_scalar =~ /^%define Release/m) {
 		my $origStr = '%define Release.*$';
-		my $replStr = "%define Release ${distro}${swRelease}.${net}";
+		my $replStr = "%define Release ${swRelease}.${distro}${osRelease}.${net}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
