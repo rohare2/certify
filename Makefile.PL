@@ -72,6 +72,9 @@ sub changeFiles {
 	chomp $osRelease;
 	$osRelease =~ s/\..*//;
 
+	# distro
+	my $distro = 'rhel';
+
 	# system architecture
 	my $arch = `uname -i`;
 	chomp $arch;
@@ -91,7 +94,7 @@ sub changeFiles {
 
 	if ($input_scalar =~ /^Release=/m) {
 		my $origStr = '^Release=.*$';
-		my $replStr = "Release= ${swRelease}.${net}";
+		my $replStr = "Release= ${distro}${swRelease}.${net}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
@@ -138,7 +141,7 @@ sub changeFiles {
 
 	if ($input_scalar =~ /^%define Release/m) {
 		my $origStr = '%define Release.*$';
-		my $replStr = "%define Release ${swRelease}.${net}";
+		my $replStr = "%define Release ${distro}${swRelease}.${net}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
