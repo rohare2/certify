@@ -1,3 +1,4 @@
+#
 # $Id$
 #
 # Author: Rich O'Hare  <ohare2@llnl.gov>
@@ -5,9 +6,9 @@
 # System security certification scripts
 #
 %define Name certify
-%define Version (version)
-%define Release (release)
-%define Source (source)
+%define Version 3.6
+%define Release 7
+%define Source certify-3.6-7.centos6.gs.tgz
 
 Name: %{Name}
 Version: %{Version}
@@ -15,9 +16,9 @@ Release: %{Release}
 Source: %{Source}
 License: GPLv2
 Group: Applications/System
-BuildArch: noarch
 URL: https://corbin.llnl.gov/
-Distribution: RedHat/Centos 6
+Distribution: centos6
+BuildArch: x86_64
 Vendor: Rich O'Hare
 Packager: Rich O'Hare <ohare2@llnl.gov>
 Provides: check.py, harden.py, diskscan.sh
@@ -28,7 +29,7 @@ Requires: lshw
 Requires: redhat-lsb
 Requires: mysql >= 5.0
 Summary: Tools for managing operating system security
-%define _unpackaged_files_terminate_build 0
+#%define _unpackaged_files_terminate_build 0
 
 %description
 Certify is a toolset for managing system security.  It includes 
@@ -52,13 +53,11 @@ exit 0
 exit 0
 
 %files
-%defattr(644, root, root)
-%config(noreplace) /usr/local/certify/certify_config.py
-%attr(740, root, root) /usr/local/certify/certify_config.py
+%defattr(644, root, root, 755)
+%config(noreplace) %attr(740, root, root) /usr/local/certify/certify_config.py
 %attr(740, root, root) /usr/local/certify/check.py
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/testPassword.py
-%attr(740, root, root) /usr/local/sbin/diskscan.sh
 %attr(740, root, root) /usr/local/sbin/diskscan.sh
 %attr(600, root, root) /root/.my.cnf.certify
 /etc/gdm/banner.png

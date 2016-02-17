@@ -3,9 +3,10 @@
 #
 Name= certify
 Version= 3.6
-Release= 7.centos6_x86_64.jwics
-Distro= centos6_x86_64
-Source= ${Name}-${Version}-${Release}.tgz
+Release= 7
+Distro= centos
+Net= gs
+Source= certify-3.6-7.centos6.gs.tgz
 BASE= $(shell pwd)
 
 RPMBUILD= ${HOME}/rpmbuild
@@ -48,10 +49,7 @@ rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
 
 specfile: spec
-	@cat ./spec | sed "s/(release)/${Release}/" \
-		| sed "s?(version)?${Version}?" \
-		| sed "s?(source)?${Source}?" \
-		> ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec 
+	cat ./spec > ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
 
 source:
 	if [ ! -d ${RPMBUILD}/SOURCES/${Name} ]; then \

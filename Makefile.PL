@@ -82,23 +82,81 @@ sub changeFiles {
 	my @input_array=<INPUT>;
 	close(INPUT);
 	my $input_scalar=join("",@input_array);
-	my ($origStr, $replStr);
 
-	if ($input_scalar =~ /^Version= /m) {
-		my $origStr = '^Version=.*$';
-		my $replStr = "Version= $swVersion";
+	if ($input_scalar =~ /^Version=/m) {
+		my $origStr = 'Version=.*$';
+		my $replStr = "Version= ${swVersion}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
-	if ($input_scalar =~ /^Release= /m) {
+	if ($input_scalar =~ /^Release=/m) {
 		my $origStr = '^Release=.*$';
-		my $replStr = "Release= ${swRelease}.${distro}${osRelease}_${arch}.${net}";
+		my $replStr = "Release= ${swRelease}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
-	if ($input_scalar =~ /^Distro= /m) {
+	if ($input_scalar =~ /^Distro=/m) {
 		my $origStr = '^Distro=.*$';
-		my $replStr = "Distro= ${distro}${osRelease}_${arch}";
+		my $replStr = "Distro= ${distro}";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	if ($input_scalar =~ /^Source=/m) {
+		my $origStr = '^Source=.*$';
+		my $replStr = "Source= certify-${swVersion}-${swRelease}.${distro}${osRelease}.${net}.tgz";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	if ($input_scalar =~ /^Net=/m) {
+		my $origStr = '^Net=.*$';
+		my $replStr = "Net= ${net}";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	if ($input_scalar =~ /^Distribution=/m) {
+		my $origStr = '^Distribution=.*$';
+		my $replStr = "Distribution= ${distro}${osRelease}";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	open (OUTPUT, "> $file") or die;
+	print OUTPUT "$input_scalar";
+	close OUTPUT;
+
+	# Edit spec
+	$file = 'spec';
+	open (INPUT,"<$file") or die;
+	@input_array=<INPUT>;
+	close(INPUT);
+	$input_scalar=join("",@input_array);
+
+	if ($input_scalar =~ /^%define Version/m) {
+		my $origStr = '%define Version.*$';
+		my $replStr = "%define Version ${swVersion}";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	if ($input_scalar =~ /^%define Release/m) {
+		my $origStr = '%define Release.*$';
+		my $replStr = "%define Release ${swRelease}";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	if ($input_scalar =~ /^%define Source/m) {
+		my $origStr = '%define Source.*$';
+		my $replStr = "%define Source certify-${swVersion}-${swRelease}.${distro}${osRelease}.${net}.tgz";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	if ($input_scalar =~ /^BuildArch:/m) {
+		my $origStr = '^BuildArch:.*$';
+		my $replStr = "BuildArch: ${arch}";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	if ($input_scalar =~ /^Distribution:/m) {
+		my $origStr = '^Distribution:.*$';
+		my $replStr = "Distribution: ${distro}${osRelease}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
@@ -248,6 +306,7 @@ sub buildRPMS {
 	foreach my $net (@net) {
 		foreach my $distro ('redhat','centos') {
 			foreach my $location ('nfs/ddn', 'nfs/sun', 'nfs/netapp') {
+				next;
 				if ( -d "$location") { 
 					chdir "${baseDir}/${location}";
 					if ( -f "Makefile.PL" ) {
