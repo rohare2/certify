@@ -7,7 +7,7 @@
 use strict;
 use File::Copy;
 
-my $debug = 1;
+my $debug = 0;
 my $BASE_DIR = "/var/www/html/software";
 
 # RPMS source directory
@@ -60,6 +60,7 @@ foreach my $subdir ("i386","x86_64","noarch") {
 			$dest = $BASE_DIR . "/" . $net . "/" . $distro . "/" . $arch;
 			$debug && print "install -m 644 $dir/$file $dest/$file\n";
 			`install -m 644 $dir/$file $dest/$file`;
+			! $debug && `rm $dir/$file`;
 		}
 		close DIR;
 	}
