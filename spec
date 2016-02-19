@@ -7,18 +7,16 @@
 #
 %define Name certify
 %define Version 3.6
-%define Release 7
-%define Source certify-3.6-7.centos6.gs.tgz
 
 Name: %{Name}
 Version: %{Version}
-Release: %{Release}
-Source: %{Source}
+Release: 7.centos6.jwics
+Source: certify-3.6-7.centos6.jwics.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://corbin.llnl.gov/
 Distribution: centos6
-BuildArch: x86_64
+BuildArch: noarch
 Vendor: Rich O'Hare
 Packager: Rich O'Hare <ohare2@llnl.gov>
 Provides: check.py, harden.py, diskscan.sh
@@ -29,7 +27,7 @@ Requires: lshw
 Requires: redhat-lsb
 Requires: mysql >= 5.0
 Summary: Tools for managing operating system security
-#%define _unpackaged_files_terminate_build 0
+%define _unpackaged_files_terminate_build 0
 
 %description
 Certify is a toolset for managing system security.  It includes 

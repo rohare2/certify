@@ -3,10 +3,8 @@
 #
 Name= certify
 Version= 3.6
-Release= 7
-Distro= centos
-Net= gs
-Source= certify-3.6-7.centos6.gs.tgz
+Package= certify-3.6-7.centos6.jwics
+Source= ${Package}.tgz
 BASE= $(shell pwd)
 
 RPMBUILD= ${HOME}/rpmbuild
@@ -46,10 +44,10 @@ CRON_MONTHLY_FILES= certify_harden.cron \
 MY_CNF= my.cnf.certify
 
 rpmbuild: specfile source
-	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
+	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Package}.spec
 
 specfile: spec
-	cat ./spec > ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
+	cat ./spec > ${RPMBUILD}/SPECS/${Package}.spec
 
 source:
 	if [ ! -d ${RPMBUILD}/SOURCES/${Name} ]; then \
@@ -146,7 +144,7 @@ rotate:
 	@install -p certify ${RPM_BUILD_ROOT}/etc/logrotate.d/certify;
 
 clean:
-	@rm -f ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
+	@rm -f ${RPMBUILD}/SPECS/${Package}.spec
 	@rm -fR ${RPMBUILD}/SOURCES/${Source}
 	@rm -fR ${RPMBUILD}/BUILD/${Name}
 	@rm -fR ${RPMBUILD}/BUILDROOT/*

@@ -53,28 +53,38 @@ if ( $#ARGV >= 0 ) {
 
 system("git log > changelog");
 
+# software version
+-f "VERSION" or die "No version file";
+my $swVersion = `cat VERSION`;
+chomp $swVersion;
+
+# software release
+-f "RELEASE" or die "No release file";
+my $swRelease = `cat RELEASE`;
+chomp $swRelease;
+
+# Linux release number
+my $osRelease = `lsb_release -sr`;
+chomp $osRelease;
+$osRelease =~ s/\..*//;
+
+my $redhatDistro;
+my $centosDistro;
+
+my $releaseFile = `cat /etc/redhat-release`;
+if ($releaseFile =~ /Red ?Hat/) {
+	$releaseFile =~ /Client/ && ($redhatDistro = "redhat${osRelease}_client");
+	$releaseFile =~ /Server/ && ($redhatDistro = "redhat${osRelease}_server");
+	$releaseFile =~ /Workstation/ && ($redhatDistro = "redhat${osRelease}_workstation");
+	$centosDistro = "centos${osRelease}";
+} else {
+	print "Must be executed from a Red Hat system\n";
+	exit 1;
+}
+
 sub changeFiles {
 	my $net = shift;
 	my $distro = shift;
-
-	# software version
-	-f "VERSION" or die "No version file";
-	my $swVersion = `cat VERSION`;
-	chomp $swVersion;
-
-	# software release
-	-f "RELEASE" or die "No release file";
-	my $swRelease = `cat RELEASE`;
-	chomp $swRelease;
-
-	# Linux release number
-	my $osRelease = `lsb_release -sr`;
-	chomp $osRelease;
-	$osRelease =~ s/\..*//;
-
-	# system architecture
-	my $arch = `uname -i`;
-	chomp $arch;
 
 	# Edit Makefile
 	my $file = 'Makefile';
@@ -89,33 +99,9 @@ sub changeFiles {
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
-	if ($input_scalar =~ /^Release=/m) {
-		my $origStr = '^Release=.*$';
-		my $replStr = "Release= ${swRelease}.${distro}${osRelease}.${net}";
-		$input_scalar =~ s/$origStr/$replStr/m;
-	}
-
-	if ($input_scalar =~ /^Distro=/m) {
-		my $origStr = '^Distro=.*$';
-		my $replStr = "Distro= ${distro}";
-		$input_scalar =~ s/$origStr/$replStr/m;
-	}
-
-	if ($input_scalar =~ /^Source=/m) {
-		my $origStr = '^Source=.*$';
-		my $replStr = "Source= certify-${swVersion}-${swRelease}.${distro}${osRelease}.${net}.tgz";
-		$input_scalar =~ s/$origStr/$replStr/m;
-	}
-
-	if ($input_scalar =~ /^Net=/m) {
-		my $origStr = '^Net=.*$';
-		my $replStr = "Net= ${net}";
-		$input_scalar =~ s/$origStr/$replStr/m;
-	}
-
-	if ($input_scalar =~ /^Distribution=/m) {
-		my $origStr = '^Distribution=.*$';
-		my $replStr = "Distribution= ${distro}${osRelease}";
+	if ($input_scalar =~ /^Package=/m) {
+		my $origStr = '^Package=.*$';
+		my $replStr = "Package= certify-${swVersion}-${swRelease}.${distro}.${net}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
@@ -136,27 +122,27 @@ sub changeFiles {
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
-	if ($input_scalar =~ /^%define Release/m) {
-		my $origStr = '%define Release.*$';
-		my $replStr = "%define Release ${swRelease}.${distro}${osRelease}.${net}";
+	if ($input_scalar =~ /^Release:/m) {
+		my $origStr = '^Release:.*$';
+		my $replStr = "Release: ${swRelease}.${distro}.${net}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
-	if ($input_scalar =~ /^%define Source/m) {
-		my $origStr = '%define Source.*$';
-		my $replStr = "%define Source certify-${swVersion}-${swRelease}.${distro}${osRelease}.${net}.tgz";
-		$input_scalar =~ s/$origStr/$replStr/m;
-	}
-
-	if ($input_scalar =~ /^BuildArch:/m) {
-		my $origStr = '^BuildArch:.*$';
-		my $replStr = "BuildArch: ${arch}";
+	if ($input_scalar =~ /^Source:/m) {
+		my $origStr = '^Source:.*$';
+		my $replStr = "Source: certify-${swVersion}-${swRelease}.${distro}.${net}.tgz";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
 	if ($input_scalar =~ /^Distribution:/m) {
 		my $origStr = '^Distribution:.*$';
-		my $replStr = "Distribution: ${distro}${osRelease}";
+		my $replStr = "Distribution: ${distro}";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	if ($input_scalar =~ /^BuildArch:/m) {
+		my $origStr = '^BuildArch:.*$';
+		my $replStr = "BuildArch: noarch";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
@@ -304,8 +290,9 @@ sub changeFiles {
 # Build rpms
 sub buildRPMS {
 	foreach my $net (@net) {
-		foreach my $distro ('redhat','centos') {
+		foreach my $distro ($redhatDistro,$centosDistro) {
 			foreach my $location ('nfs/ddn', 'nfs/sun', 'nfs/netapp') {
+				######### remove when ready
 				next;
 				if ( -d "$location") { 
 					chdir "${baseDir}/${location}";
