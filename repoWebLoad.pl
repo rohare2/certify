@@ -40,12 +40,12 @@ foreach my $subdir ("i386","x86_64","noarch") {
 			$file =~ /\.jwics\./ && ($net = 'jwics');
 			defined $net or die "No net defined for: $file";
 
-			$file =~ /\.redhat5Client\./ && ($distro = 'redhat/5Client');
-			$file =~ /\.redhat5Server\./ && ($distro = 'redhat/5Server');
-			$file =~ /\.redhat6Server\./ && ($distro = 'redhat/6Server');
-			$file =~ /\.redhat6Workstation\./ && ($distro = 'redhat/6Workstation');
-			$file =~ /\.redhat7Server\./ && ($distro = 'redhat/7Server');
-			$file =~ /\.redhat7Workstation\./ && ($distro = 'redhat/7Workstation');
+			$file =~ /\.redhat5_client\./ && ($distro = 'redhat/5Client');
+			$file =~ /\.redhat5_server\./ && ($distro = 'redhat/5Server');
+			$file =~ /\.redhat6_server\./ && ($distro = 'redhat/6Server');
+			$file =~ /\.redhat6_workstation\./ && ($distro = 'redhat/6Workstation');
+			$file =~ /\.redhat7_server\./ && ($distro = 'redhat/7Server');
+			$file =~ /\.redhat7_workstation\./ && ($distro = 'redhat/7Workstation');
 			$file =~ /\.centos5\./ && ($distro = 'centos/5');
 			$file =~ /\.centos6\./ && ($distro = 'centos/6');
 			$file =~ /\.centos7\./ && ($distro = 'centos/7');
