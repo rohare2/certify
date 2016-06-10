@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+<short>simpana</short>
+<description>CommVault Simpana client port configuration</description>
+<port protocol="tcp" port="8400"/>
+<port protocol="tcp" port="8402"/>
+</service>

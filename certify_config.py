@@ -10,8 +10,8 @@ import re
 import sys
 
 # Global settings
-minlen = 12
-pass_max_days = 90
+minlen = 8
+pass_max_days = 180
 logfile = '/var/log/certify'
 savefileDir = '/usr/local/certify/savedfiles'
 
@@ -91,7 +91,7 @@ sshd_option = {
 alwaysDisable = ('bluetooth','isdn','pcmcia')
 approvalRequired = ('httpd','mysqld','sendmail','svnserve','vmware','xinded')
 ipfwd = 'n'
-USB_STORAGE = 'n'
+USB_STORAGE = 'y'
 
 # System logs
 LOG_ROT_SCHED = "monthly"

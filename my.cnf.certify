@@ -1,5 +1,5 @@
 [CLIENT]
-host = corbin.llnl-doe.ic.gov
+host = corbin.llnl.gov
 database = disks
 user = diskscan
 password = 'y0wm0ma!'

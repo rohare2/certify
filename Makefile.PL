@@ -146,6 +146,14 @@ sub changeFiles {
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
+	# Remove firewalld entries if not RHEL7 or later
+	if ($osRelease <= 7){
+		if ($input_scalar =~ /firewalld\/service/m) {
+			my $origStr = '^.*firewalld\/service.*$';
+			$input_scalar =~ s/$origStr//m;
+		}
+	}
+
 	open (OUTPUT, "> $file") or die;
 	print OUTPUT "$input_scalar";
 	close OUTPUT;

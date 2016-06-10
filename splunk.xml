@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+<short>splunk</short>
+<description>Splunk client port configuration</description>
+<port protocol="tcp" port="8089"/>
+<port protocol="tcp" port="8085"/>
+</service>

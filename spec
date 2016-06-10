@@ -10,8 +10,8 @@
 
 Name: %{Name}
 Version: %{Version}
-Release: 7.centos6.jwics
-Source: certify-3.6-7.centos6.jwics.tgz
+Release: 7.centos6.gs
+Source: certify-3.6-7.centos6.gs.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://corbin.llnl.gov/
@@ -71,3 +71,7 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
 %dir /usr/local/certify/savedfiles
+
+
+%config(noreplace) %attr(744, root, root) /etc/cron.daily/diskscan.cron
+
