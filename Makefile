@@ -15,7 +15,7 @@ GCONF_DIR= /etc/gconf/gconf.xml.mandatory
 GDM_DIR= /etc/gdm
 DOC_DIR= /usr/share/doc/${Name}-${Version}
 SBIN_DIR= /usr/local/sbin
-FIREWALLD_DIR= /etc/firewalld/service
+FIREWALLD_DIR= /etc/firewalld/services
 
 SCRIPT_FILES= check.py \
 	certify_config.py \
