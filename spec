@@ -71,7 +71,3 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
 %dir /usr/local/certify/savedfiles
-
-
-%config(noreplace) %attr(744, root, root) /etc/cron.daily/diskscan.cron
-

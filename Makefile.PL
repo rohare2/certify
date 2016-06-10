@@ -146,12 +146,21 @@ sub changeFiles {
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
-	# Remove firewalld entries if not RHEL7 or later
-	if ($osRelease < 7){
-		if ($input_scalar =~ /firewalld\/service/m) {
-			my $origStr = '^.*firewalld\/service.*$';
-			$input_scalar =~ s/$origStr//m;
-		}
+	# delete any existing firewalld entries
+	if ($input_scalar =~ /^%config.*firewalld/m) {
+		my $origStr = '^%config.*firewalld.*simpana.*$\n';
+		$input_scalar =~ s/$origStr//m;
+
+		$origStr = '^%config.*firewalld.*splunk.*$\n';
+		$input_scalar =~ s/$origStr//m;
+	}
+
+	# Add firewalld entries if RHEL7 or later
+	if ($osRelease >= 7){
+		my $simpana = '%config(noreplace) %attr(744, root, root) /etc/firewalld/service/simpana';
+		my $splunk = '%config(noreplace) %attr(744, root, root) /etc/firewalld/service/splunk';
+		$input_scalar = $input_scalar . $simpana;
+		$input_scalar = $input_scalar . "\n" . $splunk . "\n";
 	}
 
 	open (OUTPUT, "> $file") or die;
