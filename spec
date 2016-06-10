@@ -10,8 +10,8 @@
 
 Name: %{Name}
 Version: %{Version}
-Release: 7.centos6.gs
-Source: certify-3.6-7.centos6.gs.tgz
+Release: 8.centos6.gs
+Source: certify-3.6-8.centos6.gs.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://corbin.llnl.gov/

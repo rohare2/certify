@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.6
-Package= certify-3.6-7.centos6.gs
+Package= certify-3.6-8.centos6.gs
 Source= ${Package}.tgz
 BASE= $(shell pwd)
 
