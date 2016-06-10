@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.6
-Package= certify-3.6-8.centos6.gs
+Package= certify-3.6-8.centos7.jwics
 Source= ${Package}.tgz
 BASE= $(shell pwd)
 
@@ -44,8 +44,8 @@ CRON_MONTHLY_FILES= certify_harden.cron \
 
 MY_CNF= my.cnf.certify
 
-FIREWALLD_FILES= simpana \
-	splunk
+FIREWALLD_FILES= simpana.xml \
+	splunk.xml
 
 rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Package}.spec
@@ -61,7 +61,7 @@ source:
 	tar czvf ${RPMBUILD}/SOURCES/${Source} --exclude=.git -C ${RPMBUILD}/SOURCES ${Name}
 	rm -fr ${RPMBUILD}/SOURCES/${Name}
 
-install: make_path gconf gdm doc sbin cron mysql rotate
+install: make_path gconf gdm doc sbin cron mysql rotate firewalld
 	@for file in ${SCRIPT_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${CERTIFY_DIR}; \
 	done
@@ -100,7 +100,7 @@ make_path:
 	@if [ ! -d ${RPM_BUILD_ROOT}/root ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/root; \
 	fi;
-	@if [! -d ${RPM_BUILD_ROOT}/${FIREWALLD_DIR} ]; then \
+	@if [ ! -d ${RPM_BUILD_ROOT}/${FIREWALLD_DIR} ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/${FIREWALLD_DIR}; \
 	fi;
 
@@ -152,7 +152,7 @@ rotate:
 
 firewalld:
 	@for file in ${FIREWALLD_FILES}; do \
-		@install -p $$file ${RPM_BUILD_ROOT}/${FIREWALLD_DIR};
+		install -p $$file ${RPM_BUILD_ROOT}/${FIREWALLD_DIR}/; \
 	done;
 
 clean:

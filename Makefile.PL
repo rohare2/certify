@@ -106,7 +106,7 @@ sub changeFiles {
 	}
 
 	if ($osRelease >= 7){
-		if ($input_scalar =~ /^install:=/m) {
+		if ($input_scalar =~ /^install:/m) {
 			my $origStr = '^install:.*$';
 			my $replStr = "install: make_path gconf gdm doc sbin cron mysql rotate firewalld";
 			$input_scalar =~ s/$origStr/$replStr/m;
@@ -169,8 +169,8 @@ sub changeFiles {
 
 	# Add firewalld entries if RHEL7 or later
 	if ($osRelease >= 7){
-		my $simpana = '%config(noreplace) %attr(744, root, root) /etc/firewalld/services/simpana';
-		my $splunk = '%config(noreplace) %attr(744, root, root) /etc/firewalld/services/splunk';
+		my $simpana = '%config(noreplace) %attr(744, root, root) /etc/firewalld/services/simpana.xml';
+		my $splunk = '%config(noreplace) %attr(744, root, root) /etc/firewalld/services/splunk.xml';
 		$input_scalar = $input_scalar . $simpana;
 		$input_scalar = $input_scalar . "\n" . $splunk . "\n";
 	}
