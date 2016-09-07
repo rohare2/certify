@@ -1,5 +1,5 @@
 # $Id: Makefile 565 2014-10-24 16:42:13Z rohare $
-# $URL: file:///usr/local/svn/certify/trunk/db/Makefile $
+# $Date:$
 #
 Name= certify-db
 Version=1.0
@@ -14,6 +14,7 @@ DOC_DIR= /usr/share/doc/${Name}-${Version}
 
 DOC_FILES= dump.out \
 	readme
+MY_CNF= my.cnf.certify
 
 rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
@@ -32,17 +33,23 @@ source:
 	tar czvf ${RPMBUILD}/SOURCES/${Source} --exclude=.svn -C ${RPMBUILD}/SOURCES ${Name}
 	rm -fr ${RPMBUILD}/SOURCES/${Name}
 
-install: make_path doc
+install: make_path doc mysql
 
 make_path:
 	@if [ ! -d ${RPM_BUILD_ROOT}/${DOC_DIR} ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/${DOC_DIR}; \
+	fi;
+	@if [ ! -d ${RPM_BUILD_ROOT}/root ]; then \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/root; \
 	fi;
 
 doc:
 	@for file in ${DOC_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${DOC_DIR}; \
 	done
+
+mysql:
+	@install -p ${MY_CNF} ${RPM_BUILD_ROOT}/root/.my.cnf.certify;
 
 clean:
 	@rm -f ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec

@@ -12,20 +12,15 @@ my $hostname = `uname -n`;
 chomp $hostname;
 
 # determine acceptable arguments
-my @open = ('gs');
 my @high = ('jwics','hal','wnet','titan');
 my (@all,@good_args);
-if ($hostname eq "www.ohares.us" ||
-		$hostname eq "master.ohares.us") {
-	@all = ('ohares');
-	@good_args = ('ohares','all');
-} elsif ($hostname eq "corbin.llnl.gov" ||
+if ($hostname eq "corbin.llnl.gov" ||
 		$hostname eq "captive.llnl.gov" ||
 		$hostname eq "convict.llnl.gov" ||
 		$hostname eq "serf.llnl.gov" ||
 	 	$hostname eq "slave.llnl.gov") {
 	@all = ('gs','hal','jwics');
-	@good_args = ('all','gs','hal','high','jwics','open');
+	@good_args = ('all','gs','hal','high','jwics');
 } else {
 	die "Must be run from a known host";
 }
@@ -40,8 +35,6 @@ my @net;
 if ( $#ARGV >= 0 ) {
 	if ($ARGV[0] eq 'high') {
 		@net = @high;
-	} elsif ($ARGV[0] eq 'open') {
-		 @net = @open;
 	} elsif ($ARGV[0] eq 'all') {
 		@net = @all;
 	} else {
@@ -178,142 +171,6 @@ sub changeFiles {
 	open (OUTPUT, "> $file") or die;
 	print OUTPUT "$input_scalar";
 	close OUTPUT;
-
-	# certify_config.py
-	$file = 'certify_config.py';
-	if (defined $net && $net ne '') {
-		open (INPUT,"<$file") or die;
-		@input_array=<INPUT>;
-		close(INPUT);
-		$input_scalar=join("",@input_array);
-
-		if ($net eq 'hal' || $net eq 'jwics' || $net eq 'titan') {
-			if ($input_scalar =~ /^minlen/m) {
-				my $origStr = '^minlen.*$';
-				my $replStr = "minlen = 12";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-			if ($input_scalar =~ /^pass_max_days/m) {
-				my $origStr = '^pass_max_days.*$';
-				my $replStr = "pass_max_days = 90";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} elsif ($net eq 'wnet') {
-			if ($input_scalar =~ /^minlen/m) {
-				my $origStr = '^minlen.*$';
-				my $replStr = "minlen = 14";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-			if ($input_scalar =~ /^pass_max_days/m) {
-				my $origStr = '^pass_max_days.*$';
-				my $replStr = "pass_max_days = 90";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} elsif ($net eq 'gs') {
-			if ($input_scalar =~ /^minlen/m) {
-				my $origStr = '^minlen.*$';
-				my $replStr = "minlen = 8";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-			if ($input_scalar =~ /^pass_max_days/m) {
-				my $origStr = '^pass_max_days.*$';
-				my $replStr = "pass_max_days = 180";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} elsif ($net eq 'ohares') {
-			if ($input_scalar =~ /^minlen/m) {
-				my $origStr = '^minlen.*$';
-				my $replStr = "minlen = 10";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-			if ($input_scalar =~ /^pass_max_days/m) {
-				my $origStr = '^pass_max_days.*$';
-				my $replStr = "pass_max_days = 180";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} else {
-			if ($input_scalar =~ /^minlen/m) {
-				my $origStr = '^minlen.*$';
-				my $replStr = "minlen = 8";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-			if ($input_scalar =~ /^pass_max_days/m) {
-				my $origStr = '^pass_max_days.*$';
-				my $replStr = "pass_max_days = 180";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		}
-
-		if ($net eq 'hal' || $net eq 'jwics' || $net eq 'titan' || $net eq 'wnet') {
-			if ($input_scalar =~ /^USB_STORAGE/m) {
-				my $origStr = '^USB_STORAGE.*$';
-				my $replStr = "USB_STORAGE = 'n'";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} else {
-			if ($input_scalar =~ /^USB_STORAGE/m) {
-				my $origStr = '^USB_STORAGE.*$';
-				my $replStr = "USB_STORAGE = 'y'";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		}
-
-		open (OUTPUT, "> $file") or die;
-		print OUTPUT "$input_scalar";
-		close OUTPUT;
-	} else {
-		die "No network defined\n";
-	}
-
-	# my.cnf.certify
-	$file = 'my.cnf.certify';
-	if (defined $net && $net ne '') {
-		open (INPUT,"<$file") or die;
-		my @input_array=<INPUT>;
-		close(INPUT);
-		my $input_scalar=join("",@input_array);
-		my ($origStr, $replStr);
-
-		if ($net eq 'hal') {
-			if ($input_scalar =~ /^host/m) {
-				my $origStr = '^host.*$';
-				my $replStr = "host = jupiter.doe.ic.gov";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} elsif ($net eq 'jwics') {
-			if ($input_scalar =~ /^host/m) {
-				my $origStr = '^host.*$';
-				my $replStr = "host = corbin.llnl-doe.ic.gov";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} elsif ($net eq 'wnet') {
-			if ($input_scalar =~ /^host/m) {
-				my $origStr = '^host.*$';
-				my $replStr = "host = yum.wnet.gov";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} elsif ($net eq 'gs') {
-			if ($input_scalar =~ /^host/m) {
-				my $origStr = '^host.*$';
-				my $replStr = "host = corbin.llnl.gov";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} elsif ($net eq 'ohares') {
-			if ($input_scalar =~ /^host/m) {
-				my $origStr = '^host.*$';
-				my $replStr = "host = www.ohares.us";
-				$input_scalar =~ s/$origStr/$replStr/m;
-			}
-		} else {
-			die "No network defined\n";
-		}
-
-		open (OUTPUT, "> $file") or die;
-		print OUTPUT "$input_scalar";
-		close OUTPUT;
-	} else {
-		die "No network defined\n";
-	}
 }
 
 # Build rpms
