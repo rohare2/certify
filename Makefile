@@ -32,6 +32,7 @@ GDM_FILES= banner.png
 DOC_FILES= banner.png.llnl \
 	banner.png.sample \
 	changelog \
+	my.cnf.certify \
 	readme
 
 CRON_DAILY_FILES= certify_md5chk.cron \
@@ -41,8 +42,6 @@ CRON_WEEKLY_FILES= certify_check.cron
 
 CRON_MONTHLY_FILES= certify_harden.cron \
 	diskcheck.cron
-
-MY_CNF= my.cnf.certify
 
 FIREWALLD_FILES= simpana.xml \
 	splunk.xml
@@ -61,7 +60,7 @@ source:
 	tar czvf ${RPMBUILD}/SOURCES/${Source} --exclude=.git -C ${RPMBUILD}/SOURCES ${Name}
 	rm -fr ${RPMBUILD}/SOURCES/${Name}
 
-install: make_path gconf gdm doc sbin cron mysql rotate firewalld
+install: make_path gconf gdm doc sbin cron rotate firewalld
 	@for file in ${SCRIPT_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${CERTIFY_DIR}; \
 	done
@@ -96,9 +95,6 @@ make_path:
 	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/usr/local/certify/savedfiles ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/usr/local/certify/savedfiles; \
-	fi;
-	@if [ ! -d ${RPM_BUILD_ROOT}/root ]; then \
-		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/root; \
 	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/${FIREWALLD_DIR} ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/${FIREWALLD_DIR}; \
@@ -143,9 +139,6 @@ cronmonthly:
 	@for file in ${CRON_MONTHLY_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.monthly; \
 	done;
-
-mysql:
-	@install -p ${MY_CNF} ${RPM_BUILD_ROOT}/root/.my.cnf.certify;
 
 rotate:
 	@install -p certify ${RPM_BUILD_ROOT}/etc/logrotate.d/certify;

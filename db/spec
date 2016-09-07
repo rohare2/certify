@@ -55,4 +55,3 @@ exit 0
 %defattr(-,root, root)
 /usr/share/doc/%{Name}-%{Version}/readme
 /usr/share/doc/%{Name}-%{Version}/dump.out
-%config(noreplace) %attr(600, root, root) /root/.my.cnf.certify
