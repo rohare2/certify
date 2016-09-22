@@ -101,11 +101,11 @@ sub changeFiles {
 	if ($osRelease >= 7){
 		if ($input_scalar =~ /^install:/m) {
 			my $origStr = '^install:.*$';
-			my $replStr = "install: make_path gconf gdm doc sbin cron mysql rotate firewalld";
+			my $replStr = "install: make_path gconf gdm doc sbin cron rotate firewalld";
 			$input_scalar =~ s/$origStr/$replStr/m;
 		} else {
 			my $origStr = '^install:.*$';
-			my $replStr = "install: make_path gconf gdm doc sbin cron mysql rotate";
+			my $replStr = "install: make_path gconf gdm doc sbin cron rotate";
 			$input_scalar =~ s/$origStr/$replStr/m;
 		}
 	}
