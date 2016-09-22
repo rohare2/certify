@@ -10,8 +10,8 @@
 
 Name: %{Name}
 Version: %{Version}
-Release: 8.centos6.gs
-Source: certify-3.6-8.centos6.gs.tgz
+Release: 9.centos6.gs
+Source: certify-3.6-9.centos6.gs.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://corbin.llnl.gov/
@@ -69,4 +69,5 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/changelog
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
+/usr/share/doc/%{Name}-%{Version}/my.cnf.certify
 %dir /usr/local/certify/savedfiles
