@@ -27,9 +27,6 @@ my $osRelease = `lsb_release -sr`;
 chomp $osRelease;
 $osRelease =~ s/\..*//;
 
-my $redhatDistro;
-my $centosDistro;
-
 sub changeFiles {
 	# Edit Makefile
 	my $file = 'Makefile';
