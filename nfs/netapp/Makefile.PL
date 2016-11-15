@@ -7,7 +7,6 @@
 @ARGV == 2 or die "not enough arguments: $!\n";
 
 my $net = $ARGV[0];
-my $distro = $ARGV[1];
 
 # Makefile
 $file = 'Makefile';
@@ -40,13 +39,13 @@ chomp $arch;
 
 if ($input_scalar =~ /^Release=/m) {
 	my $origStr = '^Release=.*$';
-	my $replStr = "Release= ${releaseNo}.${distro}${release}_${arch}.${net}";
+	my $replStr = "Release= ${releaseNo}.${release}_${arch}.${net}";
 	$input_scalar =~ s/$origStr/$replStr/m;
 }
 
 if ($input_scalar =~ /^Distro= /m) {
 	my $origStr = '^Distro=.*$';
-	my $replStr = "Distro= ${distro}${release}_${arch}";
+	my $replStr = "Distro= ${release}_${arch}";
 	$input_scalar =~ s/$origStr/$replStr/m;
 }
 

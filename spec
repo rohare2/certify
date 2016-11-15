@@ -10,12 +10,11 @@
 
 Name: %{Name}
 Version: %{Version}
-Release: 9.centos6.gs
-Source: certify-3.6-9.centos6.gs.tgz
+Release: 10
+Source: certify-3.6-10.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://corbin.llnl.gov/
-Distribution: centos6
 BuildArch: noarch
 Vendor: Rich O'Hare
 Packager: Rich O'Hare <ohare2@llnl.gov>

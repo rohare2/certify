@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.6
-Package= certify-3.6-8.centos7.jwics
+Package= certify-3.6-10
 Source= ${Package}.tgz
 BASE= $(shell pwd)
 
