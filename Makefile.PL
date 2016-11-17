@@ -66,7 +66,7 @@ sub buildRPMS {
 			if ( -d "$location") { 
 				chdir "${baseDir}/${location}";
 				if ( -f "Makefile.PL" ) {
-					system("./Makefile.PL $entry $distro");
+					system("./Makefile.PL $distro");
 				} else {
 					die "File Makefile.PL missing\n";
 				}
@@ -76,8 +76,8 @@ sub buildRPMS {
 			chdir "$baseDir";
 		}
 		chdir "$baseDir";
-		changeFiles($entry,$distro);
-		$entry ne '' && system("make rpmbuild");
+		changeFiles($distro);
+		system("make rpmbuild");
 	}
 }
 

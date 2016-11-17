@@ -2,9 +2,9 @@
 # $Date: Thu Sep 3 08:40:55 2015 -0700$
 #
 Name= certify
-Version= 3.6
-Release= 7.centos6_x86_64.jwics
-Distro= centos6_x86_64
+Version= 4.0
+Release= 1.centos
+Distro= centos
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -42,7 +42,6 @@ CRON_WEEKLY_FILES= certify_check.cron
 CRON_MONTHLY_FILES= certify_harden.cron \
 	diskcheck.cron
 
-MY_CNF= my.cnf.certify
 
 rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
@@ -61,7 +60,7 @@ source:
 	tar czvf ${RPMBUILD}/SOURCES/${Source} --exclude=.git -C ${RPMBUILD}/SOURCES ${Name}
 	rm -fr ${RPMBUILD}/SOURCES/${Name}
 
-install: make_path gconf gdm doc sbin cron mysql rotate
+install: make_path gconf gdm doc sbin cron rotate
 	@for file in ${SCRIPT_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${CERTIFY_DIR}; \
 	done
@@ -118,6 +117,7 @@ doc:
 	@for file in ${DOC_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${DOC_DIR}; \
 	done;
+	@install -p my.cnf.certify ${RPM_BUILD_ROOT}/${DOC_DIR}/my.cnf.certify; \
 
 sbin:
 	@for file in ${SBIN_FILES}; do \
@@ -140,9 +140,6 @@ cronmonthly:
 	@for file in ${CRON_MONTHLY_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.monthly; \
 	done;
-
-mysql:
-	@install -p ${MY_CNF} ${RPM_BUILD_ROOT}/root/.my.cnf.certify;
 
 rotate:
 	@install -p certify ${RPM_BUILD_ROOT}/etc/logrotate.d/certify;
