@@ -13,8 +13,6 @@ chomp $baseDir;
 system("git log > changelog");
 
 sub changeFiles {
-	my $distro = shift;
-
 	# Makefile
 	my $file = 'Makefile';
 	open (INPUT,"<$file") or die;
@@ -36,20 +34,9 @@ sub changeFiles {
 	my $releaseNo = `cat RELEASE`;
 	chomp $releaseNo;
 
-
-	my $release = `lsb_release -sr`;
-	chomp $release;
-	$release =~ s/\..*//;
-
 	if ($input_scalar =~ /^Release= /m) {
 		my $origStr = '^Release=.*$';
-		my $replStr = "Release= ${releaseNo}.${distro}${release}";
-		$input_scalar =~ s/$origStr/$replStr/m;
-	}
-
-	if ($input_scalar =~ /^Distro= /m) {
-		my $origStr = '^Distro=.*$';
-		my $replStr = "Distro= ${distro}${release}";
+		my $replStr = "Release= ${releaseNo}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
@@ -61,24 +48,22 @@ sub changeFiles {
 
 # Build rpms
 sub buildRPMS {
-	foreach my $distro ('redhat','centos') {
-		foreach my $location ('nfs/ddn', 'nfs/sun', 'nfs/netapp') {
-			if ( -d "$location") { 
-				chdir "${baseDir}/${location}";
-				if ( -f "Makefile.PL" ) {
-					system("./Makefile.PL $distro");
-				} else {
-					die "File Makefile.PL missing\n";
-				}
+	foreach my $location ('nfs/ddn', 'nfs/sun', 'nfs/netapp') {
+		if ( -d "$location") { 
+			chdir "${baseDir}/${location}";
+			if ( -f "Makefile.PL" ) {
+				system("./Makefile.PL");
 			} else {
-				die "$location missing\n";
+				die "File Makefile.PL missing\n";
 			}
-			chdir "$baseDir";
+		} else {
+			die "$location missing\n";
 		}
 		chdir "$baseDir";
-		changeFiles($distro);
-		system("make rpmbuild");
 	}
+	chdir "$baseDir";
+	changeFiles();
+	system("make rpmbuild");
 }
 
 buildRPMS();

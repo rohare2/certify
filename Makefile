@@ -3,8 +3,7 @@
 #
 Name= certify
 Version= 4.0
-Release= 1.centos
-Distro= centos
+Release= 1
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
