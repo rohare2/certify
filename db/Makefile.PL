@@ -6,7 +6,6 @@
 
 @ARGV == 2 or die "not enough arguments: $!\n";
 
-my $net = $ARGV[0];
 my $distro = $ARGV[1];
 
 $file = 'Makefile';
@@ -33,18 +32,15 @@ my $release = `lsb_release -sr`;
 chomp $release;
 $release =~ s/\..*//;
 
-my $arch = `uname -i`;
-chomp $arch;
-
 if ($input_scalar =~ /^Release= /m) {
 	my $origStr = '^Release=.*$';
-	my $replStr = "Release= ${releaseNo}.${distro}${release}_${arch}.${net}";
+	my $replStr = "Release= ${releaseNo}.${distro}${release}";
 	$input_scalar =~ s/$origStr/$replStr/m;
 }
 
 if ($input_scalar =~ /^Distro= /m) {
 	my $origStr = '^Distro=.*$';
-	my $replStr = "Distro= ${distro}${release}_${arch}";
+	my $replStr = "Distro= ${distro}${release}";
 	$input_scalar =~ s/$origStr/$replStr/m;
 }
 

@@ -53,8 +53,6 @@ exit 0
 
 %files
 %defattr(644, root, root)
-%config(noreplace) /usr/local/certify/certify_config.py
-%attr(740, root, root) /usr/local/certify/certify_config.py
 %attr(740, root, root) /usr/local/certify/check.py
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/testPassword.py
@@ -73,4 +71,5 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/changelog
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
+/usr/share/doc/%{Name}-%{Version}/.my.cnf.certify
 %dir /usr/local/certify/savedfiles

@@ -59,23 +59,32 @@ rpm and use localinstall as follows.
 Warning, be sure to change the password entry in /root/.my.cnf.certify
 to match the mysql user, "diskscan", account password.
 
+# Configure
+Copy the sample certify_config.py from /usr/local/certify/certify_config.py
+to /usr/local/certify/, then modify the file to match your security requirments.
+Set the attributes of the file to 600.
 
 #Package list:
-/etc/cron.daily/certify_md5chk.cron
-/etc/cron.daily/diskscan.cron
-/etc/cron.weekly/certify_check.cron
-/etc/cron.monthly/certify_harden.cron
-/etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
-/etc/gdm/banner.png
 /usr/local/certify/certify_config.py
 /usr/local/certify/check.py
 /usr/local/certify/harden.py
 /usr/local/certify/testPassword.py
 /usr/local/sbin/diskscan.sh
-/usr/share/doc/certify-3.2/banner.png.llnl
-/usr/share/doc/certify-3.2/banner.png.sample
-/usr/share/doc/certify-3.2/readme
-
+/usr/local/sbin/diskscan.sh
+/etc/gdm/banner.png
+/etc/logrotate.d/certify
+/etc/cron.daily/certify_md5chk.cron
+/etc/cron.daily/diskscan.cron
+/etc/cron.weekly/certify_check.cron
+/etc/cron.monthly/certify_harden.cron
+/etc/cron.monthly/diskcheck.cron
+/etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
+/usr/share/doc/certify-%{Version}/readme
+/usr/share/doc/certify-%{Version}/changelog
+/usr/share/doc/certify-%{Version}/banner.png.llnl
+/usr/share/doc/certify-%{Version}/banner.png.sample
+/usr/share/doc/certify-%{Version}/certify_config.py
+/usr/share/doc/certify-%{Version}/.my.cnf.certify
 
 # System Hardening:
 ./harden.py -h
