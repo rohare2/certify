@@ -14,7 +14,7 @@ my ($origStr, $replStr);
 -f "../VERSION" or die "No version file";
 my $version = `cat ../VERSION`;
 chomp $version;
-if ($input_scalar =~ /^Version= /m) {
+if ($input_scalar =~ /^Version=/m) {
 	my $origStr = '^Version=.*$';
 	my $replStr = "Version= $version";
 	$input_scalar =~ s/$origStr/$replStr/m;
@@ -24,7 +24,7 @@ if ($input_scalar =~ /^Version= /m) {
 my $releaseNo = `cat ../RELEASE`;
 chomp $releaseNo;
 
-if ($input_scalar =~ /^Release= /m) {
+if ($input_scalar =~ /^Release=/m) {
 	my $origStr = '^Release=.*$';
 	my $replStr = "Release= ${releaseNo}";
 	$input_scalar =~ s/$origStr/$replStr/m;

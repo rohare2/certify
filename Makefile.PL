@@ -143,6 +143,7 @@ buildRPMS();
 
 # PGP sign the rpms
 print "Sign RPM packages\n";
-system("rpm --addsign $ENV{HOME}/rpmbuild/RPMS/*/certify*.rpm");
+system("rpm --addsign $ENV{HOME}/rpmbuild/RPMS/noarch/certify*.rpm");
 
 exit 0;
+
