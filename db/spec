@@ -22,8 +22,6 @@ Distribution: RedHat/Centos 6
 Vendor: Rich O'Hare
 Packager: Rich O'Hare <rohare2@gmail.com>
 Provides: disks.mwb
-Requires: mysql >= 5.0
-Requires: mysql-server >= 5.0
 Summary: Certify mysql database
 %define _unpackaged_files_terminate_build 0
 
