@@ -10,8 +10,8 @@
 
 Name: %{Name}
 Version: %{Version}
-Release: 10
-Source: certify-3.6-10.tgz
+Release: 11
+Source: certify-3.6-11.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://corbin.llnl.gov/
@@ -67,5 +67,4 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/changelog
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
-/usr/share/doc/%{Name}-%{Version}/my.cnf.certify
 %dir /usr/local/certify/savedfiles

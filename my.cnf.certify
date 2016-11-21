@@ -1,5 +1,0 @@
-[CLIENT]
-host = corbin.llnl.gov
-database = disks
-user = diskscan
-password = 'Changeme'

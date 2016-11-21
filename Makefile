@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.6
-Package= certify-3.6-10
+Package= certify-3.6-11
 Source= ${Package}.tgz
 BASE= $(shell pwd)
 
@@ -96,6 +96,9 @@ make_path:
 	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/${FIREWALLD_DIR} ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/${FIREWALLD_DIR}; \
+	fi;
+	@if [ ! -d ${RPM_BUILD_ROOT}/var/log/certify ]; then \
+		mkdir -m 0740 -p ${RPM_BUILD_ROOT}/var/log/certify; \
 	fi;
 
 gconf:
