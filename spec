@@ -62,7 +62,6 @@ exit 0
 %config(noreplace) %attr(744, root, root) /etc/cron.daily/diskscan.cron
 %config(noreplace) %attr(744, root, root) /etc/cron.weekly/certify_check.cron
 %config(noreplace) %attr(744, root, root) /etc/cron.monthly/certify_harden.cron
-%config(noreplace) %attr(744, root, root) /etc/cron.monthly/diskcheck.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /usr/share/doc/%{Name}-%{Version}/readme
 /usr/share/doc/%{Name}-%{Version}/changelog

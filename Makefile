@@ -22,8 +22,7 @@ SCRIPT_FILES= check.py \
 	harden.py \
 	testPassword.py
 
-SBIN_FILES= diskcheck.sh \
-	diskscan.sh
+SBIN_FILES= diskscan.sh
 
 GCONF_FILES= %gconf-tree.xml
 
@@ -32,7 +31,6 @@ GDM_FILES= banner.png
 DOC_FILES= banner.png.llnl \
 	banner.png.sample \
 	changelog \
-	my.cnf.certify \
 	readme
 
 CRON_DAILY_FILES= certify_md5chk.cron \
