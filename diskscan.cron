@@ -10,11 +10,3 @@ if [[ $enableDiskScan -eq 1 ]]; then
 	/usr/local/sbin/diskscan.sh
 fi
 
-# Normally a disk check will only be performed on one machine,
-# usually the database server
-# Change enableDiskCheck to 1 to enable diskcheck
-enableDiskCheck=0
-
-if [[ $enableDiskCheck -eq 1 ]]; then
-	/usr/local/sbin/diskcheck.sh
-fi

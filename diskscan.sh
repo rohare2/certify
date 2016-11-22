@@ -55,7 +55,7 @@ lsi() {
 					vendor=`echo $line | awk '{print $4}'`
 					model=`echo $line | awk '{print $5}'`
 				fi
-				if [[ $debug -eq 1 ]]; then echo "$enclosureID, $slotID, model=${model}, serialNo=${serialNo}"; fi
+				if [[ $debug -eq 1 ]]; then echo "$enclosureID, $slotID, model=${model}, S/N=${serialNo}"; fi
 				logger "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} S/N=${serialNo}"
 				logged=1
 			fi
@@ -119,7 +119,7 @@ hpac() {
 					logged=0
 				fi
 				if [[ $line =~ 'Serial Number:' ]]; then
-					serialNo=`echo $line | sed -e 's/\s*/ /' -e 's/\s*Serial Number:\s*/serialNo='`
+					serialNo=`echo $line | sed -e 's/\s*/ /' -e 's/\s*Serial Number:\s*//'`
 				fi
 				if [[ $line =~ 'Model:' ]]; then
 					model=`echo $line | sed -e 's/\s*/ /' -e 's/\s*Model:\s*/model=/'`
@@ -141,7 +141,7 @@ directAccess() {
 	serialNo=''
 	logged=0
 	$LSHW -class disk | while read line; do
-		if [[ $line =~ '-disk' ]]; then
+		if [[ $line =~ '-disk' || $line =~ '-cdrom' ]]; then
 			product=''
 			vendor=''
 			serialNo=''
@@ -154,7 +154,7 @@ directAccess() {
 			vendor=`echo $line | sed -e 's/\s*vendor:\s*/vendor=/'`
 		fi
 		if [[ $line =~ 'serial:' ]]; then
-			serialNo=`echo $line | sed -e 's/\s*serial:\s*/serialNo=/'`
+			serialNo=`echo $line | sed -e 's/\s*serial:\s*//'`
 		fi
 		if [[ $product =~ 'VBOX HARDDISK' || $product =~ 'VBOX CD-ROM' ]]; then
 			continue
@@ -187,7 +187,7 @@ megaRaid() {
 			bus=`echo $line | sed -e 's/: /=/' -e 's/bus info/bus_info/' -e 's/ *//'`
 		fi
 		if [[ $line =~ 'serial:' ]]; then
-			serial=`echo $line | sed -e 's/serial: /serialNo=/'`
+			serial=`echo $line | sed -e 's/serial: //'`
 		fi
 		if [[ $product =~ 'VBOX HARDDISK' || $product =~ 'VBOX CD-ROM' ]]; then
 			continue
@@ -226,7 +226,7 @@ smartArray() {
 			bus=`echo $line | sed -e 's/: /=/' -e 's/bus info/bus_info/'`
 		fi
 		if [[ $line =~ 'serial:' ]]; then
-			serial=`echo $line | sed -e 's/serial: /serialNo=/'`
+			serial=`echo $line | sed -e 's/serial: //'`
 		fi
 		if [[ $product =~ 'VBOX HARDDISK' || $product =~ 'VBOX CD-ROM' ]]; then
 			continue
@@ -255,7 +255,7 @@ hdparm() {
 			model=`echo $line | sed 's/\s*Model Number:\s*/model=/'` 
 		fi
 		if [[ $line =~ 'Serial Number:' ]]; then
-			serialNo=`echo $line | sed 's/\s*Serial Number:\s*/serialNo=/'`
+			serialNo=`echo $line | sed 's/\s*Serial Number:\s*//'`
 		fi
 		if [[ $model != '' && $serialNo != '' && $logged -eq 0 ]]; then
 			logger "diskscan: device=$device $model S/N=$serialNo"

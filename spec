@@ -10,8 +10,8 @@
 
 Name: %{Name}
 Version: %{Version}
-Release: 11
-Source: certify-3.6-11.tgz
+Release: 12
+Source: certify-3.6-12.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://corbin.llnl.gov/

@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.6
-Package= certify-3.6-11
+Package= certify-3.6-12
 Source= ${Package}.tgz
 BASE= $(shell pwd)
 
@@ -38,8 +38,7 @@ CRON_DAILY_FILES= certify_md5chk.cron \
 
 CRON_WEEKLY_FILES= certify_check.cron
 
-CRON_MONTHLY_FILES= certify_harden.cron \
-	diskcheck.cron
+CRON_MONTHLY_FILES= certify_harden.cron
 
 FIREWALLD_FILES= simpana.xml \
 	splunk.xml
