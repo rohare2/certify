@@ -3,7 +3,7 @@
 # $Date$
 
 # Uncomment the following line to set debug mode
-debug=0
+debug=1
 
 location=`uname -n`
 product=''
@@ -42,7 +42,6 @@ lsi() {
 			fi
 			if [[ $line =~ 'Inquiry Data:' ]]; then
 				inquiryData=$line
-				if [[ $debug -eq 1 ]]; then echo "$inquiryData"; fi
 			fi
 			if [[ $enclosureID != '' && $slotID != '' && $inquiryData != '' && $logged -eq 0 ]]; then
 				inquiryData=`echo $line | awk '{print $3}'`
@@ -55,8 +54,11 @@ lsi() {
 					vendor=`echo $line | awk '{print $4}'`
 					model=`echo $line | awk '{print $5}'`
 				fi
-				if [[ $debug -eq 1 ]]; then echo "$enclosureID, $slotID, model=${model}, S/N=${serialNo}"; fi
-				logger "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} S/N=${serialNo}"
+				if [[ $debug -eq 1 ]]; then
+					echo "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
+				else
+					logger "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
+				fi
 				logged=1
 			fi
 		done
@@ -94,7 +96,10 @@ dell() {
 				serialNo=`echo $line | awk '{print $5}'`
 			fi
 			if [[ $enclosureID != '' && $slotID != '' && $serialNo != '' && $logged -eq 0 ]]; then
-				logger "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} S/N=${serialNo}"
+				if [[ $debug -eq 1 ]]; then
+					echo "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
+				fi
+				logger "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
 				logged=1
 			fi
 		done
@@ -125,7 +130,10 @@ hpac() {
 					model=`echo $line | sed -e 's/\s*/ /' -e 's/\s*Model:\s*/model=/'`
 				fi
 				if [[ $drive != '' && $serialNo != '' && $model != '' && $logged -eq 0 ]]; then
-					logger "diskscan: $drive vendor=HP $model S/N=$serialNo"
+					if [[ $debug -eq 1 ]]; then
+						echo "diskscan: $drive vendor=HP model=$model serialNo=$serialNo"
+					fi
+					logger "diskscan: $drive vendor=HP model=$model serialNo=$serialNo"
 					logged=1
 				fi
 			done
@@ -148,10 +156,10 @@ directAccess() {
 			logged=0
 		fi
 		if [[ $line =~ 'product:' ]]; then
-			product=`echo $line | sed -e 's/\s*product:\s*/product=/'`
+			product=`echo $line | sed -e 's/\s*product:\s*//'`
 		fi
 		if [[ $line =~ 'vendor:' ]]; then
-			vendor=`echo $line | sed -e 's/\s*vendor:\s*/vendor=/'`
+			vendor=`echo $line | sed -e 's/\s*vendor:\s*//'`
 		fi
 		if [[ $line =~ 'serial:' ]]; then
 			serialNo=`echo $line | sed -e 's/\s*serial:\s*//'`
@@ -160,7 +168,10 @@ directAccess() {
 			continue
 		fi
 		if [[ $serialNo != '' && $product != '' && ! $vendor =~ 'LSI' && ! $vendor =~ 'DELL' && $logged -eq 0 ]]; then
-			logger "diskscan: $disk $product $vendor S/N=$serialNo"
+			if [[ $debug -eq 1 ]]; then
+				echo "diskscan: $disk vendor=${vendor} model=${product} serialNo=${serialNo}"
+			fi
+			logger "diskscan: $disk vendor=${vendor} model=${product} serialNo=${serialNo}"
 			logged=1
 		fi
 	done
@@ -258,7 +269,10 @@ hdparm() {
 			serialNo=`echo $line | sed 's/\s*Serial Number:\s*//'`
 		fi
 		if [[ $model != '' && $serialNo != '' && $logged -eq 0 ]]; then
-			logger "diskscan: device=$device $model S/N=$serialNo"
+			if [[ $debug -eq 1 ]]; then
+				echo "diskscan: device=${device} model=${model} serialNo=${serialNo}"
+			fi
+			logger "diskscan: device=${device} model=${model} serialNo=${serialNo}"
 			logged=1
 		fi
 	done
