@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # $Id$
 # $Date$
 
 # Uncomment the following line to set debug mode
-debug=1
+debug=0
 
 location=`uname -n`
 product=''
@@ -15,95 +15,52 @@ LSHW='/usr/sbin/lshw'
 lsi() {
 	if [[ $debug -eq 1 ]]; then echo "lsi($1)"; fi
 	enclosure=''
-	vendor=''
-	slot=''
 	inquiryData=''
-	fw=''
+	vendor=''
 	model=''
 	serialNo=''
 	logged=0
-	bus=`echo $1 | sed -e 's/.*bus_info= *//' -e 's/:.*//'`
+	bus=$1
 	if [[ ! $bus_list =~ $bus ]]; then 
 		bus_list="$bus_list $bus"
-		if [[ $debug -eq 1 ]]; then echo "MegaCli64 -PDList -aALL -NoLog"; fi
 		/opt/MegaRAID/MegaCli/MegaCli64 -PDList -aALL -NoLog | while read line; do
 			# Get "Inquiry Data:"
 			if [[ $line =~ 'Enclosure Device ID:' ]]; then
 				enclosureID=`echo $line | sed -e 's/Enclosure Device ID: /enclosureID=/'`
-				vendor=''
-				slot=''
 				inquiryData=''
+				vendor=''
 				model=''
 				serialNo=''
 				logged=0
-			fi
-			if [[ $line =~ 'Slot Number:' ]]; then
-				slotID=`echo $line | sed -e 's/Slot Number: /slotID=/'`
 			fi
 			if [[ $line =~ 'Inquiry Data:' ]]; then
 				inquiryData=$line
 			fi
-			if [[ $enclosureID != '' && $slotID != '' && $inquiryData != '' && $logged -eq 0 ]]; then
-				inquiryData=`echo $line | awk '{print $3}'`
+			if [[ $inquiryData =~ 'SEAGATE' ]]; then
+				vendor='SEAGATE'
+				model=`echo $inquiryData | awk '{print $4}'`
+				serialNo=`echo $inquiryData | awk '{print $5}'`
+			elif [[ $inquiryData =~ 'SAMSUNG' ]]; then
+				vendor=`echo $inquiryData | awk '{print $4}'`
+				model=`echo $inquiryData | awk '{print $5}'`
+				serialNo=`echo $inquiryData | awk '{print $3}'`
+			elif [[ $inquiryData != '' ]]; then
+				inquiryData=`echo $inquiryData | awk '{print $3}'`
+				vendor='SEAGATE'
 				model=${inquiryData:8:20}
-				if [[ $model == ST* ]]; then
-					vendor='SEAGATE'
-					serialNo=${inquiryData:0:8}
-				else 
-					serialNo=`echo $line | awk '{print $3}'`
-					vendor=`echo $line | awk '{print $4}'`
-					model=`echo $line | awk '{print $5}'`
-				fi
+				serialNo=${inquiryData:0:8}
+			fi
+
+			if [[ $inquiryData != '' && $logged -eq 0 ]]; then
+				inquiryData=`echo $inquiryData | awk '{print $3}'`
 				if [[ $debug -eq 1 ]]; then
-					echo "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
+					echo "diskscan: vendor=${vendor} model=${model} serialNo=${serialNo}"
 				else
-					logger "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
+					logger "diskscan: vendor=${vendor} model=${model} serialNo=${serialNo}"
 				fi
 				logged=1
 			fi
 		done
-
-	fi
-}
-
-dell() {
-	if [[ $debug -eq 1 ]]; then echo "dell($1)"; fi
-	enclosureID=''
-	slotID=''
-	vendor=''
-	serialNo=''
-	logged=1
-	bus=`echo $1 | sed -e 's/.*bus_info= *//' -e 's/:.*//'`
-	if [[ ! $bus_list =~ $bus ]]; then 
-		bus_list="$bus_list $bus"
-		if [[ $debug -eq 1 ]]; then echo "MegaCli64 -PDList -aALL -NoLog"; fi
-		/opt/MegaRAID/MegaCli/MegaCli64 -PDList -aALL -NoLog | while read line; do
-			# Get "Inquiry Data:"
-			if [[ $line =~ 'Enclosure Device ID:' ]]; then
-				enclosureID=`echo $line | sed -e 's/Enclosure Device ID: /enclosureID=/'`
-				slotID=''
-				vendor=''
-				model=''
-				serialNo=''
-				logged=0
-			fi
-			if [[ $line =~ 'Slot Number:' ]]; then
-				slotID=`echo $line | sed -e 's/Slot Number: /slotID=/'`
-			fi
-			if [[ $line =~ 'Inquiry Data:' ]]; then
-				vendor=`echo $line | awk '{print $3}'`
-				model=`echo $line | awk '{print $4}'`
-				serialNo=`echo $line | awk '{print $5}'`
-			fi
-			if [[ $enclosureID != '' && $slotID != '' && $serialNo != '' && $logged -eq 0 ]]; then
-				if [[ $debug -eq 1 ]]; then
-					echo "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
-				fi
-				logger "diskscan: $enclosureID $slotID vendor=${vendor} model=${model} serialNo=${serialNo}"
-				logged=1
-			fi
-		done
-
 	fi
 }
 
@@ -179,6 +136,9 @@ directAccess() {
 
 megaRaid() {
 	if [[ $debug -eq 1 ]]; then echo "megaRaid()"; fi
+	# Determine controller version
+	controller=`/opt/MegaRAID/MegaCli/MegaCli64 -AdpAllInfo -a0 -NoLog | grep 'Product Name'`
+	if [[ $debug -eq 1 ]]; then echo "controller: $controller"; fi
 	$LSHW -class disk | while read line; do
 		if [[ $line =~ '-disk:' ]]; then
 			disk=`echo $line | sed -e 's/.*-disk:/disk=/'`
@@ -189,13 +149,13 @@ megaRaid() {
 			logged=0
 		fi
 		if [[ $line =~ 'product:' ]]; then
-			product=`echo $line | sed -e 's/: /=/'`
+			product=`echo $line | sed -e 's/^\s*product: //'`
 		fi
 		if [[ $line =~ 'vendor:' ]]; then
-			vendor=`echo $line | sed -e 's/: /=/'`
+			vendor=`echo $line | sed -e 's/^\s*vendor: //'`
 		fi
 		if [[ $line =~ 'bus info:' ]]; then
-			bus=`echo $line | sed -e 's/: /=/' -e 's/bus info/bus_info/' -e 's/ *//'`
+			bus=`echo $line | sed -e 's/^\s*bus info: //' -e 's/:.*$//'`
 		fi
 		if [[ $line =~ 'serial:' ]]; then
 			serial=`echo $line | sed -e 's/serial: //'`
@@ -204,12 +164,12 @@ megaRaid() {
 			continue
 		fi
 		if [[ $serial != '' && $bus != '' && $logged -eq 0 ]]; then
-			if [[ $vendor =~ '=LSI' ]]; then
+			if [[ $controller =~ 'LSI MegaRAID SAS 9260' ||
+				$controller =~ 'MegaRAID SAS 8888ELP' ||
+				$controller =~ 'PERC' ]]; then
 				lsi $bus
-			elif [[ $vendor =~ '=DELL' ]]; then
-				dell $bus
 			else
-				echo "Oops this shouldn't happen"
+				echo "Unknown MegaRAID controller, notify Certify developer"
 			fi
 			logged=1
 		fi
