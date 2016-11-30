@@ -28,7 +28,7 @@ if (-d $dir) {
 		my $dest;
 		$file =~ /^certify-/ or next;
 
-		$dest = $BASE_DIR . "/certify";
+		$dest = $BASE_DIR . "/local";
 		$debug && print "install -m 644 $dir/$file $dest/$file\n";
 		`install -m 644 $dir/$file $dest/$file`;
 		! $debug && `rm $dir/$file`;
