@@ -6,12 +6,12 @@
 # System security certification scripts
 #
 %define Name certify
-%define Version 3.6
+%define Version 3.7
 
 Name: %{Name}
 Version: %{Version}
-Release: 13
-Source: certify-3.6-13.tgz
+Release: 2
+Source: certify-3.7-2.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://corbin.llnl.gov/

@@ -2,8 +2,8 @@
 # $Date: Thu Sep 3 08:40:55 2015 -0700$
 #
 Name= certify
-Version= 3.6
-Package= certify-3.6-13
+Version= 3.7
+Package= certify-3.7-2
 Source= ${Package}.tgz
 BASE= $(shell pwd)
 
