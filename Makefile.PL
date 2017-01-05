@@ -19,8 +19,8 @@ chomp $swVersion;
 
 # software release
 -f "RELEASE" or die "No release file";
-my $swRelease = `cat RELEASE`;
-chomp $swRelease;
+my $Release = `cat RELEASE`;
+chomp $Release;
 
 # Linux release number
 my $osRelease = `lsb_release -sr`;
@@ -43,7 +43,7 @@ sub changeFiles {
 
 	if ($input_scalar =~ /^Package=/m) {
 		my $origStr = '^Package=.*$';
-		my $replStr = "Package= certify-${swVersion}-${swRelease}";
+		my $replStr = "Package= certify-${swVersion}-${Release}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
@@ -78,13 +78,13 @@ sub changeFiles {
 
 	if ($input_scalar =~ /^Release:/m) {
 		my $origStr = '^Release:.*$';
-		my $replStr = "Release: ${swRelease}";
+		my $replStr = "Release: ${Release}%{?dist}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
 	if ($input_scalar =~ /^Source:/m) {
 		my $origStr = '^Source:.*$';
-		my $replStr = "Source: certify-${swVersion}-${swRelease}.tgz";
+		my $replStr = "Source: certify-${swVersion}-${Release}.tgz";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
