@@ -3,10 +3,9 @@
 # $Date$
 
 # Description:
-Certify is a toolset for managing system security.  It includes
-scripts for hardening and checking system security, as well as
-scripts for detecting and tracking disk drives.  Cron files are
-provided to automate reccuring tasks.
+Certify is a toolset for managing system security. It includes
+scripts for hardening and checking system security. Cron files
+are provided to automate reccuring tasks.
 
 Certify is intended for environments where security is routinely
 audited, such as government facilities with classified information.
@@ -19,10 +18,6 @@ vendor supplied tools are properly implemented.
 It contains two primary Python scripts, "harden.py" & "check.py",
 for managing security settings.  Harden applies security settings,
 while check reports on security findings.
-
-The package includes diskscan.sh, a shell script which scans the
-local system for disk drives.  The results are sent to the system
-log.  
 
 The original driving force for developing certify was an interest
 in simplifying the process of system certification.  Before certify
@@ -56,9 +51,6 @@ rpm and use localinstall as follows.
 		or
 	yum --localupdate certify<version>.rpm
 
-Warning, be sure to change the password entry in /root/.my.cnf.certify
-to match the mysql user, "diskscan", account password.
-
 # Configure
 Copy the sample certify_config.py from /usr/local/certify/certify_config.py
 to /usr/local/certify/, then modify the file to match your security requirments.
@@ -69,15 +61,11 @@ Set the attributes of the file to 600.
 /usr/local/certify/check.py
 /usr/local/certify/harden.py
 /usr/local/certify/testPassword.py
-/usr/local/sbin/diskscan.sh
-/usr/local/sbin/diskscan.sh
 /etc/gdm/banner.png
 /etc/logrotate.d/certify
 /etc/cron.daily/certify_md5chk.cron
-/etc/cron.daily/diskscan.cron
 /etc/cron.weekly/certify_check.cron
 /etc/cron.monthly/certify_harden.cron
-/etc/cron.monthly/diskcheck.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /usr/share/doc/certify-%{Version}/readme
 /usr/share/doc/certify-%{Version}/changelog
