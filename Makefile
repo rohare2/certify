@@ -14,15 +14,11 @@ CERTIFY_DIR= /usr/local/certify
 GCONF_DIR= /etc/gconf/gconf.xml.mandatory
 GDM_DIR= /etc/gdm
 DOC_DIR= /usr/share/doc/${Name}-${Version}
-SBIN_DIR= /usr/local/sbin
 
 SCRIPT_FILES= check.py \
 	certify_config.py \
 	harden.py \
 	testPassword.py
-
-SBIN_FILES= diskcheck.sh \
-	diskscan.sh
 
 GCONF_FILES= %gconf-tree.xml
 
@@ -33,14 +29,11 @@ DOC_FILES= banner.png.llnl \
 	changelog \
 	readme
 
-CRON_DAILY_FILES= certify_md5chk.cron \
-	diskscan.cron
+CRON_DAILY_FILES= certify_md5chk.cron
 
 CRON_WEEKLY_FILES= certify_check.cron
 
-CRON_MONTHLY_FILES= certify_harden.cron \
-	diskcheck.cron
-
+CRON_MONTHLY_FILES= certify_harden.cron
 
 rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
@@ -59,7 +52,7 @@ source:
 	tar czvf ${RPMBUILD}/SOURCES/${Source} --exclude=.git -C ${RPMBUILD}/SOURCES ${Name}
 	rm -fr ${RPMBUILD}/SOURCES/${Name}
 
-install: make_path gconf gdm doc sbin cron rotate
+install: make_path gconf gdm doc cron rotate
 	@for file in ${SCRIPT_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${CERTIFY_DIR}; \
 	done
@@ -85,9 +78,6 @@ make_path:
 	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.monthly ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.monthly; \
-	fi;
-	@if [ ! -d ${RPM_BUILD_ROOT}/usr/local/sbin ]; then \
-		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/usr/local/sbin; \
 	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/etc/logrotate.d ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/logrotate.d; \
@@ -117,11 +107,6 @@ doc:
 		install -p $$file ${RPM_BUILD_ROOT}/${DOC_DIR}; \
 	done;
 	@install -p my.cnf.certify ${RPM_BUILD_ROOT}/${DOC_DIR}/my.cnf.certify; \
-
-sbin:
-	@for file in ${SBIN_FILES}; do \
-		install -p $$file ${RPM_BUILD_ROOT}/${SBIN_DIR}; \
-	done;
 
 cron: crondaily cronweekly cronmonthly
 
