@@ -2,7 +2,7 @@
 # $Date: Thu Sep 3 08:40:55 2015 -0700$
 #
 Name= certify
-Version= 4.0
+Version= 5.0
 Release= 1
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
@@ -106,7 +106,6 @@ doc:
 	@for file in ${DOC_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${DOC_DIR}; \
 	done;
-	@install -p my.cnf.certify ${RPM_BUILD_ROOT}/${DOC_DIR}/my.cnf.certify; \
 
 cron: crondaily cronweekly cronmonthly
 

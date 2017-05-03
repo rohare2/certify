@@ -48,19 +48,6 @@ sub changeFiles {
 
 # Build rpms
 sub buildRPMS {
-	foreach my $location ('nfs/ddn', 'nfs/sun', 'nfs/netapp') {
-		if ( -d "$location") { 
-			chdir "${baseDir}/${location}";
-			if ( -f "Makefile.PL" ) {
-				system("./Makefile.PL");
-			} else {
-				die "File Makefile.PL missing\n";
-			}
-		} else {
-			die "$location missing\n";
-		}
-		chdir "$baseDir";
-	}
 	chdir "$baseDir";
 	changeFiles();
 	system("make rpmbuild");

@@ -72,7 +72,6 @@ Set the attributes of the file to 600.
 /usr/share/doc/certify-%{Version}/banner.png.llnl
 /usr/share/doc/certify-%{Version}/banner.png.sample
 /usr/share/doc/certify-%{Version}/certify_config.py
-/usr/share/doc/certify-%{Version}/.my.cnf.certify
 
 # System Hardening:
 ./harden.py -h
