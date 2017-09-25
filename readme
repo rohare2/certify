@@ -1,7 +1,3 @@
-########### CERTIFY ###########
-# $Id$
-# $Date$
-
 # Description:
 Certify is a toolset for managing system security. It includes
 scripts for hardening and checking system security. Cron files
@@ -98,12 +94,4 @@ optional arguments:
   -c, --check        md5 check (default: False)
   -l, --log          create log (default: False)
   --logfile LOGFILE  log file name (default: /var/log/certify)
-
-
-
-# Report Problems:
-If you run into problems contact:
-	Rich O'Hare
-	ohare2@llnl.gov
-	925-422-5897
 

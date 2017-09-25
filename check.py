@@ -122,10 +122,12 @@ def checkMD5():
 def checkNull():
 	pr("# Look for NULL passwords")
 	pr("Checking passwd entries")
-	ans = commands.getstatusoutput("""awk -F: '{if($2=="")print}' /etc/passwd""")
+	#ans = commands.getstatusoutput("""awk -F: '{if($2=="")print}' /etc/passwd""")
+	ans = subprocess.run(["awk", "-F:", "'{if($2=="")print}'", "/etc/passwd"], stdout=subprocess.PIPE)
 	pr(ans[1])
 	pr("Checking shadow entries")
-	ans = commands.getstatusoutput("""awk -F: '{if($2=="")print}' /etc/shadow""")
+	#ans = commands.getstatusoutput("""awk -F: '{if($2=="")print}' /etc/shadow""")
+	ans = subprocess.run(["awk", "-F:", "'{if($2=="")print}'", "/etc/shadow"], stdout=subprocess.PIPE)
 	pr(ans[1])
 	pr("If any accounts printed, the test failed")
 

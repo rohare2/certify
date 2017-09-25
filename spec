@@ -1,6 +1,6 @@
 # $Id$
 #
-# Author: Rich O'Hare  <ohare2@llnl.gov>
+# Author: Rich O'Hare  <ohare2@gmail.com
 #
 # System security certification scripts
 #
@@ -16,10 +16,10 @@ Source: %{Source}
 License: GPLv2
 Group: Applications/System
 BuildArch: noarch
-URL: https://corbin.llnl.gov/
+URL: https://www.ohares.us/
 Distribution: RedHat/Centos 6
 Vendor: Rich O'Hare
-Packager: Rich O'Hare <ohare2@llnl.gov>
+Packager: Rich O'Hare <ohare2@gmail.com>
 Provides: check.py, harden.py
 Requires: python-argparse >= 1.2
 Requires: pexpect >= 2.3
