@@ -28,6 +28,11 @@ use_cracklib = 1 # $use_cracklib instead of passwdqc
 use_passwdqc = 0 # $use_passwdqc instead of cracklib
 use_pamtally = 0 # $use_pam_tally
 
+# security software
+use_aide = 1
+use_clamav = 1
+use_logwatch = 1
+
 # cracklib options
 cracklib = {
 	'retry':'3',
