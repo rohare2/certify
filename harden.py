@@ -1011,20 +1011,13 @@ def yumRemove(pkg):
 		except IOError:
 			print("Unable to remove " + pkg)
 			sys.exit(2)
-
 	else:
 		print('{0} not installed'.format(pkg))
 
 
 def aideConfig():
 	pr('Configuring AIDE')
-	if use_aide == 1:
-		yumInstall('aide')
-	else:
-		yumRemove('aide')
-	
-def aideConfig():
-	pr('Configuring AIDE')
+	boundary = '### No boundary ###'
 	if use_aide == 1:
 		yumInstall('aide')
 		try:
@@ -1038,12 +1031,11 @@ def aideConfig():
 		backup(file)
 		pr(file)
 		action = 'after'
-		targetPattern = '5 3 * * * root /sbin/aide -C | /usr/bin/mailx -s "Aide Report" root'
-		boundary = '### No boundary ###'
+		targetPattern = '5 3 * * * root aide -C | mailx -s "Aide Report" root\n'
 		with open(file, 'r') as inF:
 			for line in inF:
 				if 'aide -C' in line: 
-					ction = 'replace'
+					action = 'replace'
 		if action == 'replace':
 			srcPattern = '.*aide -C.*'
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
@@ -1053,15 +1045,23 @@ def aideConfig():
 		updateMD5(file)
 	else:
 		yumRemove('aide')
-
+		file = '/etc/crontab'
+		pr(file)
+		srcPattern = '.*aide -C'
+		alterFile(file,'delete',srcPattern,'',boundary)
+		updateMD5(file)
 
 def clamavConfig():
 	pr('Configuring ClamAV')
 	if use_clamav == 1:
 		yumInstall('clamav')
 		subprocess.call(["freshclam"])
+		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "on"])
+		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "on"])
 	else:
 		yumRemove('clamav')
+		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "off"])
+		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "off"])
 	
 def logwatchConfig():
 	pr('Configuring logwatch')
@@ -1107,7 +1107,7 @@ while not done:
 	choice = ''
 	if args.interactive:
 		prntMenu()
-		choice = raw_input("Enter choice or 'q' to quit [all]: ")
+		choice = raw_input("Enter choice or 'q' to quit: ")
 	else:
 		choice = 'all'
 		done = 1
