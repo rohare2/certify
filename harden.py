@@ -1023,10 +1023,43 @@ def aideConfig():
 	else:
 		yumRemove('aide')
 	
+def aideConfig():
+	pr('Configuring AIDE')
+	if use_aide == 1:
+		yumInstall('aide')
+		try:
+			f = open("/var/lib/aide/aide.db.gz", "r")
+			f.close()
+			print("AIDE database already initialized")
+		except IOError:
+			print("Initializing AIDE database")
+			subprocess.call(["aide", "--init"])
+		file = '/etc/crontab'
+		backup(file)
+		pr(file)
+		action = 'after'
+		targetPattern = '5 3 * * * root /sbin/aide -C | /usr/bin/mailx -s "Aide Report" root'
+		boundary = '### No boundary ###'
+		with open(file, 'r') as inF:
+			for line in inF:
+				if 'aide -C' in line: 
+					ction = 'replace'
+		if action == 'replace':
+			srcPattern = '.*aide -C.*'
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+		if action == 'after':
+			srcPattern = '#.*user-name\s+command to be executed.*'
+			alterFile(file,'after',srcPattern,targetPattern,boundary)
+		updateMD5(file)
+	else:
+		yumRemove('aide')
+
+
 def clamavConfig():
 	pr('Configuring ClamAV')
 	if use_clamav == 1:
 		yumInstall('clamav')
+		subprocess.call(["freshclam"])
 	else:
 		yumRemove('clamav')
 	
