@@ -5,7 +5,7 @@
 
 import argparse
 import commands, os, re, errno, sys, shutil
-import subprocess, time, filecmp
+import subprocess, time, filecmp, yum
 from certify_config import *
 debug = 0
 
@@ -45,9 +45,11 @@ OS = commands.getoutput('uname -s')
 release = commands.getoutput('uname -r')
 release = oschk(release)
 
-fixes = { 'Audit Config':'auditConfig',
+fixes = {'AIDE':'aideConfig',
+	'Audit Config':'auditConfig',
 	'Authentication Config':'authConfig',
 	'Banners Config':'issue',
+	'ClamAV':'clamavConfig',
 	'Cron Config':'cronfiles',
 	'FTP setup':'ftpusers',
 	'Manage Services':'serviceConfig',
@@ -55,10 +57,11 @@ fixes = { 'Audit Config':'auditConfig',
 	'Init Functions':'functions',
 	'IP forwarding':'ipForward',
 	'Log rotation':'logRotate',
+	'Logwatch':'logwatchConfig',
 	'SSH':'sshd',
+	'SUDO log_output':'sudoLog',
 	'TCP wrappers':'wrappers',
-	'USB storage':'usbStorage',
-	'SUDO log_output':'sudoLog'}
+	'USB storage':'usbStorage'}
 
 fixNo = {}
 subNo = {}
@@ -977,6 +980,62 @@ def usbStorage():
 	f.close()
 	subprocess.call(["chmod" , "0644", file])
 	updateMD5(file)
+
+
+def yumInstall(pkg):
+	yb = yum.YumBase()
+	if yb.rpmdb.searchNevra(name=pkg):
+		print('{0} is already installed'.format(pkg))
+	else:
+		try:
+			print('Installing {0} '.format(pkg))
+			kwarg = { 'name':pkg}
+			yb.install(**kwarg)
+			yb.resolveDeps()
+			yb.buildTransaction()
+			yb.processTransaction()
+		except IOError:
+			print("Unable to install " + pkg)
+			sys.exit(2)
+
+def yumRemove(pkg):
+	yb = yum.YumBase()
+	if yb.rpmdb.searchNevra(name=pkg):
+		print('Removing {0} '.format(pkg))
+		try:
+			kwarg = { 'name':pkg}
+			yb.remove(**kwarg)
+			yb.resolveDeps()
+			yb.buildTransaction()
+			yb.processTransaction()
+		except IOError:
+			print("Unable to remove " + pkg)
+			sys.exit(2)
+
+	else:
+		print('{0} not installed'.format(pkg))
+
+
+def aideConfig():
+	pr('Configuring AIDE')
+	if use_aide == 1:
+		yumInstall('aide')
+	else:
+		yumRemove('aide')
+	
+def clamavConfig():
+	pr('Configuring ClamAV')
+	if use_clamav == 1:
+		yumInstall('clamav')
+	else:
+		yumRemove('clamav')
+	
+def logwatchConfig():
+	pr('Configuring logwatch')
+	if use_logwatch == 1:
+		yumInstall('logwatch')
+	else:
+		yumRemove('logwatch')
 
 def sudoLog():
 	pr("# sudo log_output")

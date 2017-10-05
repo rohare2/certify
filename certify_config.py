@@ -28,6 +28,14 @@ use_cracklib = 1 # $use_cracklib instead of passwdqc
 use_passwdqc = 0 # $use_passwdqc instead of cracklib
 use_pamtally = 0 # $use_pam_tally
 
+# Security tools
+use_aide = 1
+use_clamav = 1
+use_logwatch = 1
+
+# System administrators
+sysadmins = 'conner9,ohare2,zimmermann1,ha1,stone36'
+
 # cracklib options
 cracklib = {
 	'retry':'3',
@@ -146,16 +154,6 @@ chkdirs = (
 	'/usr',
 	'/var'
 )
-
-# Unique to Solaris
-LOCK_AFTER_RETRIES = 'YES'
-MINDIFF = 3
-MINALPHA = 1
-MINNONALPHA = 1
-MINLOWER = 1
-MAXREPEATS = 1
-MINSPECIAL = 1
-MINDIGIT = 1
 
 # Banners
 BANNER_OHARES = """
