@@ -1,6 +1,6 @@
 #!/bin/env python
 # $Id$
-# $Date$
+# $Date: Tue Feb 9 12:01:41 2016 -0800$
 # System security plan certification scripts
 
 import argparse

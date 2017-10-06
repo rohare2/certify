@@ -2,9 +2,9 @@
 # $Date: Thu Sep 3 08:40:55 2015 -0700$
 #
 Name= certify
-Version= 3.7
-Package= certify-3.7-2
-Source= ${Package}.tgz
+Version= 5.0
+Release= 1
+Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
 RPMBUILD= ${HOME}/rpmbuild

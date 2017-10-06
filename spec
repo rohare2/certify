@@ -1,7 +1,7 @@
 #
 # $Id$
 #
-# Author: Rich O'Hare  <ohare2@llnl.gov>
+# Author: Rich O'Hare  <rohare2@gmail.com
 #
 # System security certification scripts
 #
@@ -14,10 +14,10 @@ Release: 2
 Source: certify-3.7-2.tgz
 License: GPLv2
 Group: Applications/System
-URL: https://corbin.llnl.gov/
+URL: https://github.com/rohare2/certify
 BuildArch: noarch
 Vendor: Rich O'Hare
-Packager: Rich O'Hare <ohare2@llnl.gov>
+Packager: Rich O'Hare <rohare2@gmail.com>
 Provides: check.py, harden.py
 Requires: python-argparse >= 1.2
 Requires: pexpect >= 2.3
@@ -48,9 +48,10 @@ exit 0
 exit 0
 
 %files
-%defattr(644, root, root, 755)
+%defattr(644, root, root)
 %config(noreplace) %attr(740, root, root) /usr/local/certify/certify_config.py
 %attr(740, root, root) /usr/local/certify/check.py
+%attr(740, root, root) /usr/local/certify/certify_config.py
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/testPassword.py
 /etc/gdm/banner.png
@@ -63,4 +64,4 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/changelog
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
-%dir /usr/local/certify/savedfiles
+%attr(750, root, root) %dir /usr/local/certify/savedfiles
