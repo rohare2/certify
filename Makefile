@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 5.0
-Release= 1
+Release= 2
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -15,6 +15,7 @@ GCONF_DIR= /etc/gconf/gconf.xml.mandatory
 GDM_DIR= /etc/gdm
 DOC_DIR= /usr/share/doc/${Name}-${Version}
 FIREWALLD_DIR= /etc/firewalld/services
+SBIN_DIR= /usr/sbin
 
 SCRIPT_FILES= check.py \
 	certify_config.py \
@@ -39,6 +40,9 @@ CRON_MONTHLY_FILES= certify_harden.cron
 FIREWALLD_FILES= simpana.xml \
 	splunk.xml
 
+SBIN_FILES= aide_check \
+	aide_update
+
 rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Package}.spec
 
@@ -53,7 +57,7 @@ source:
 	tar czvf ${RPMBUILD}/SOURCES/${Source} --exclude=.git -C ${RPMBUILD}/SOURCES ${Name}
 	rm -fr ${RPMBUILD}/SOURCES/${Name}
 
-install: make_path gconf gdm doc cron rotate firewalld
+install: make_path gconf gdm doc cron rotate firewalld sbin
 	@for file in ${SCRIPT_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${CERTIFY_DIR}; \
 	done
@@ -91,6 +95,9 @@ make_path:
 	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/var/log/certify ]; then \
 		mkdir -m 0740 -p ${RPM_BUILD_ROOT}/var/log/certify; \
+	fi;
+	@if [ ! -d ${RPM_BUILD_ROOT}/usr/sbin ]; then \
+		mkdir -m 0555 -p ${RPM_BUILD_ROOT}/usr/sbin; \
 	fi;
 
 gconf:
@@ -134,6 +141,11 @@ rotate:
 firewalld:
 	@for file in ${FIREWALLD_FILES}; do \
 		install -p $$file ${RPM_BUILD_ROOT}/${FIREWALLD_DIR}/; \
+	done;
+
+sbin:
+	@for file in ${SBIN_FILES}; do \
+		install -p $$file ${RPM_BUILD_ROOT}/${SBIN_DIR}/; \
 	done;
 
 clean:

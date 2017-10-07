@@ -1,0 +1,25 @@
+#! /bin/bash
+# $Id: aide_check 9 2012-02-08 15:41:50Z rohare $
+# $URL: file:///usr/local/svn/admin/scripts/aide_check $
+
+LOG_DIR=/var/log/aide
+LOG_FILE=$LOG_DIR/aide.log
+RLN='9'
+rln=$RLN
+
+# Rotate logs
+while (( $rln > 1 )); do
+	newrl=$((rln - 1))
+	if [ -f ${LOG_FILE}.$newrl ]; then
+		mv ${LOG_FILE}.$newrl ${LOG_FILE}.$rln
+	fi
+	rln=$((rln - 1))
+done
+if [ -f $LOG_FILE ]; then
+	cp $LOG_FILE ${LOG_FILE}.1
+fi
+
+# Run aide check
+/usr/sbin/aide --check | mail -s "Aide Report" root
+#chown root:root $LOG_FILE
+#chmod 440 $LOG_FILE
