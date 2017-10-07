@@ -5,25 +5,28 @@
 #
 # System security certification scripts
 #
-%define Name certify
 %define Version 3.7
+%define Release 1
 
-Name: %{Name}
+Name: certify
 Version: %{Version}
-Release: 2
-Source: certify-3.7-2.tgz
+Release: %{Release}
+Source: certify-%{Version}-${Release}.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
 BuildArch: noarch
 Vendor: Rich O'Hare
 Packager: Rich O'Hare <rohare2@gmail.com>
-Provides: check.py, harden.py
+Provides: check.py, harden.py, aide_check, aide_update
 Requires: python-argparse >= 1.2
 Requires: pexpect >= 2.3
 Requires: python-paramiko >= 1.7
 Requires: lshw
 Requires: redhat-lsb
+Requires: aide
+Requires: clamav
+Requires: logwatch
 Summary: Tools for managing operating system security
 %define _unpackaged_files_terminate_build 0
 
@@ -65,3 +68,5 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
+%attr(750, root, root) /usr/sbin/aide_check
+%attr(750, root, root) /usr/sbin/aide_update

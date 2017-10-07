@@ -14,8 +14,8 @@ system("git log > changelog");
 
 # software version
 -f "VERSION" or die "No version file";
-my $swVersion = `cat VERSION`;
-chomp $swVersion;
+my $Version = `cat VERSION`;
+chomp $Version;
 
 # software release
 -f "RELEASE" or die "No release file";
@@ -37,24 +37,30 @@ sub changeFiles {
 
 	if ($input_scalar =~ /^Version=/m) {
 		my $origStr = 'Version=.*$';
-		my $replStr = "Version= ${swVersion}";
+		my $replStr = "Version= ${Version}";
+		$input_scalar =~ s/$origStr/$replStr/m;
+	}
+
+	if ($input_scalar =~ /^Release=/m) {
+		my $origStr = 'Release=.*$';
+		my $replStr = "Release= ${Release}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
 	if ($input_scalar =~ /^Package=/m) {
 		my $origStr = '^Package=.*$';
-		my $replStr = "Package= certify-${swVersion}-${Release}";
+		my $replStr = "Package= certify-${Version}-${Release}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
 	if ($osRelease >= 7){
 		if ($input_scalar =~ /^install:/m) {
 			my $origStr = '^install:.*$';
-			my $replStr = "install: make_path gconf gdm doc cron rotate firewalld";
+			my $replStr = "install: make_path gconf gdm doc cron rotate firewalld sbin";
 			$input_scalar =~ s/$origStr/$replStr/m;
 		} else {
 			my $origStr = '^install:.*$';
-			my $replStr = "install: make_path gconf gdm doc cron rotate";
+			my $replStr = "install: make_path gconf gdm doc cron rotate sbin";
 			$input_scalar =~ s/$origStr/$replStr/m;
 		}
 	}
@@ -72,19 +78,19 @@ sub changeFiles {
 
 	if ($input_scalar =~ /^%define Version/m) {
 		my $origStr = '%define Version.*$';
-		my $replStr = "%define Version ${swVersion}";
+		my $replStr = "%define Version ${Version}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
-	if ($input_scalar =~ /^Release:/m) {
-		my $origStr = '^Release:.*$';
-		my $replStr = "Release: ${Release}%{?dist}";
+	if ($input_scalar =~ /^%define Release:/m) {
+		my $origStr = '%define Release:.*$';
+		my $replStr = "%define Release: ${Release}%{?dist}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
 	if ($input_scalar =~ /^Source:/m) {
 		my $origStr = '^Source:.*$';
-		my $replStr = "Source: certify-${swVersion}-${Release}.tgz";
+		my $replStr = "Source: certify-${Version}-${Release}.tgz";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 

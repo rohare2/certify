@@ -22,6 +22,9 @@ System Administrator, several hours to complete.  With certify only
 the ISSO is required, and by using tools such as Splunk, all of the
 logs can be quickly reviewed.
 
+#Latest additions to certify:
+Installation and configuration of AIDE, CLAMAV and LogWatch.
+Systemd files for Simpana and Splunk
 
 # Dependencies:
 The following Python rpm's are required.
@@ -64,6 +67,8 @@ rpm and use localinstall as follows.
 /etc/cron.weekly/certify_check.cron
 /etc/cron.monthly/certify_harden.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
+/usr/sbin/aide_check
+/usr/sbin/aide_update
 /usr/share/doc/certify-%{Version}/readme
 /usr/share/doc/certify-%{Version}/changelog
 /usr/share/doc/certify-%{Version}/banner.png.llnl
