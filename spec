@@ -5,13 +5,14 @@
 #
 # System security certification scripts
 #
-%define Version 3.7
+%define Name certify
+%define Version 3.8
 %define Release 1
 
-Name: certify
+Name: %{Name}
 Version: %{Version}
 Release: %{Release}
-Source: certify-%{Version}-${Release}.tgz
+Source: certify-3.8-1.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
@@ -70,3 +71,5 @@ exit 0
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
 %attr(750, root, root) /usr/sbin/aide_check
 %attr(750, root, root) /usr/sbin/aide_update
+%config(noreplace) %attr(744, root, root) /etc/firewalld/services/simpana.xml
+%config(noreplace) %attr(744, root, root) /etc/firewalld/services/splunk.xml

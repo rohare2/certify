@@ -2,8 +2,8 @@
 # $Date: Thu Sep 3 08:40:55 2015 -0700$
 #
 Name= certify
-Version= 5.0
-Release= 2
+Version= 3.8
+Release= 1
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -44,10 +44,10 @@ SBIN_FILES= aide_check \
 	aide_update
 
 rpmbuild: specfile source
-	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Package}.spec
+	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
 
 specfile: spec
-	cat ./spec > ${RPMBUILD}/SPECS/${Package}.spec
+	cat ./spec > ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
 
 source:
 	if [ ! -d ${RPMBUILD}/SOURCES/${Name} ]; then \
@@ -97,7 +97,7 @@ make_path:
 		mkdir -m 0740 -p ${RPM_BUILD_ROOT}/var/log/certify; \
 	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/usr/sbin ]; then \
-		mkdir -m 0555 -p ${RPM_BUILD_ROOT}/usr/sbin; \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/usr/sbin; \
 	fi;
 
 gconf:
@@ -149,7 +149,7 @@ sbin:
 	done;
 
 clean:
-	@rm -f ${RPMBUILD}/SPECS/${Package}.spec
+	@rm -f ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec
 	@rm -fR ${RPMBUILD}/SOURCES/${Source}
 	@rm -fR ${RPMBUILD}/BUILD/${Name}
 	@rm -fR ${RPMBUILD}/BUILDROOT/*
