@@ -15,7 +15,7 @@ GCONF_DIR= /etc/gconf/gconf.xml.mandatory
 GDM_DIR= /etc/gdm
 DOC_DIR= /usr/share/doc/${Name}-${Version}
 FIREWALLD_DIR= /etc/firewalld/services
-SBIN_DIR= /usr/sbin
+SBIN_DIR= /usr/local/sbin
 
 SCRIPT_FILES= check.py \
 	certify_config.py \
@@ -96,8 +96,8 @@ make_path:
 	@if [ ! -d ${RPM_BUILD_ROOT}/var/log/certify ]; then \
 		mkdir -m 0740 -p ${RPM_BUILD_ROOT}/var/log/certify; \
 	fi;
-	@if [ ! -d ${RPM_BUILD_ROOT}/usr/sbin ]; then \
-		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/usr/sbin; \
+	@if [ ! -d ${RPM_BUILD_ROOT}/usr/local/sbin ]; then \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/usr/local/sbin; \
 	fi;
 
 gconf:

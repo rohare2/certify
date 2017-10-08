@@ -69,7 +69,7 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
-%attr(750, root, root) /usr/sbin/aide_check
-%attr(750, root, root) /usr/sbin/aide_update
+%attr(750, root, root) /usr/local/sbin/aide_check
+%attr(750, root, root) /usr/local/sbin/aide_update
 %config(noreplace) %attr(744, root, root) /etc/firewalld/services/simpana.xml
 %config(noreplace) %attr(744, root, root) /etc/firewalld/services/splunk.xml
