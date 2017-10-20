@@ -82,9 +82,9 @@ sub changeFiles {
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
-	if ($input_scalar =~ /^%define Release:/m) {
-		my $origStr = '%define Release:.*$';
-		my $replStr = "%define Release: ${Release}%{?dist}";
+	if ($input_scalar =~ /^%define Release/m) {
+		my $origStr = '%define Release.*$';
+		my $replStr = "%define Release ${Release}%{?dist}";
 		$input_scalar =~ s/$origStr/$replStr/m;
 	}
 
