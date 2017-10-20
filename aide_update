@@ -23,6 +23,4 @@ fi
 
 # Run aide update
 /usr/sbin/aide -u 
-#/usr/sbin/aide -u > ${DB_FILE} 2>&1
-#rm ${DB_DIR}/${OLD_DB}
-#mv ${DB_DIR}/${NEW_DB} ${DB_DIR}/${OLD_DB}
+mv ${DB_DIR}/${NEW_DB} ${DB_DIR}/${DB_FILE}
