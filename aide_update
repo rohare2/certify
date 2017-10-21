@@ -2,8 +2,7 @@
 # $Id: aide_update 13 2012-02-08 16:06:31Z rohare $
 # $URL: file:///usr/local/svn/admin/scripts/aide_update $
 
-RLN='9'
-rln=$RLN
+rln='9'
 DB_DIR=/var/lib/aide
 DB_FILE=${DB_DIR}/aide.db.gz
 NEW_DB_FILE=${DB_DIR}/aide.db.new.gz
@@ -23,4 +22,3 @@ fi
 
 # Run aide update
 /usr/sbin/aide -u 
-mv ${DB_DIR}/${NEW_DB} ${DB_DIR}/${DB_FILE}

@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.8
-Release= 1
+Release= 2
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
