@@ -25,9 +25,6 @@ Requires: pexpect >= 2.3
 Requires: python-paramiko >= 1.7
 Requires: lshw
 Requires: redhat-lsb
-Requires: aide
-Requires: clamav
-Requires: logwatch
 Summary: Tools for managing operating system security
 %define _unpackaged_files_terminate_build 0
 

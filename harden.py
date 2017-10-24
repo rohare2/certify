@@ -1031,13 +1031,13 @@ def aideConfig():
 		backup(file)
 		pr(file)
 		action = 'after'
-		targetPattern = '5 3 * * * root aide -C | mailx -s "Aide Report" root\n'
+		targetPattern = '5 3 * * * root /usr/local/sbin/aide_update\n'
 		with open(file, 'r') as inF:
 			for line in inF:
-				if 'aide -C' in line: 
+				if 'aide -' in line: 
 					action = 'replace'
 		if action == 'replace':
-			srcPattern = '.*aide -C.*'
+			srcPattern = '.*aide -.*'
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 		if action == 'after':
 			srcPattern = '#.*user-name\s+command to be executed.*'
@@ -1047,7 +1047,7 @@ def aideConfig():
 		yumRemove('aide')
 		file = '/etc/crontab'
 		pr(file)
-		srcPattern = '.*aide -C'
+		srcPattern = '.*aide -'
 		alterFile(file,'delete',srcPattern,'',boundary)
 		updateMD5(file)
 
