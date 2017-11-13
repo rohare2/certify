@@ -3,12 +3,12 @@
 # $Date$
 #
 # repoWebLoad.pl
-#
+# Copy our FIE rpms to the webserver
 use strict;
 use File::Copy;
 
 my $debug = 0;
-my $BASE_DIR = "/var/www/html/software";
+my $BASE_DIR = "/var/www/html/software/zdiv";
 
 # RPMS source directory
 my $dir = $ARGV[0];
@@ -26,21 +26,48 @@ if (not defined $dir) {
 my $basedir = $dir;
 
 # Push rpms to web server
-foreach my $subdir ("noarch") {
+foreach my $subdir ("i386","x86_64","noarch") {
 	$dir = $basedir . "/" . $subdir;
 	if (-d $dir) { 
-		print "$dir\n";
+		$debug && print "$dir\n";
 		opendir(DIR, "$dir") or warn "Can't open $dir";
 		while (my $file = readdir(DIR)) {
-			my ($distro,$arch,$dest);
 			$file =~ /^certify-/ or next;
+			-d $dir or die "missing destination directory";
 
-			foreach my $distro ("redhat/5Client","redhat/5Server","redhat/6Server",
-				"redhat/6Workstation","redhat/7Server","redhat/7Workstation",
-				"centos/5","centos/6","centos/7") {
-				$arch = 'noarch';
-				-d $dir or die "missing destination directory";
-				$dest = $BASE_DIR . "/" . $distro . "/" . $arch;
+			my $distro = "centos";
+			if ($file =~ "el5") { 
+				my $dest = $BASE_DIR . "//centos/5/noarch";
+				$debug && print "install -m 644 $dir/$file $dest/$file\n";
+				`install -m 644 $dir/$file $dest/$file`;
+			}
+			if ($file =~ "el6") { 
+				my $dest = $BASE_DIR . "//centos/6/noarch";
+				$debug && print "install -m 644 $dir/$file $dest/$file\n";
+				`install -m 644 $dir/$file $dest/$file`;
+			}
+			if ($file =~ "el7") { 
+				my $dest = $BASE_DIR . "//centos/7/noarch";
+				$debug && print "install -m 644 $dir/$file $dest/$file\n";
+				`install -m 644 $dir/$file $dest/$file`;
+			}
+			$distro = "redhat";
+			if ($file =~ "el5") { 
+				my $dest = $BASE_DIR . "//redhat/5/noarch";
+				$debug && print "install -m 644 $dir/$file $dest/$file\n";
+				`install -m 644 $dir/$file $dest/$file`;
+			}
+			if ($file =~ "el6") { 
+				my $dest = $BASE_DIR . "//redhat/6/noarch";
+				$debug && print "install -m 644 $dir/$file $dest/$file\n";
+				`install -m 644 $dir/$file $dest/$file`;
+			}
+			if ($file =~ "el7") { 
+				my $dest = $BASE_DIR . "//redhat/7Server/noarch";
+				$debug && print "install -m 644 $dir/$file $dest/$file\n";
+				`install -m 644 $dir/$file $dest/$file`;
+
+				$dest = $BASE_DIR . "//redhat/7Workstation/noarch";
 				$debug && print "install -m 644 $dir/$file $dest/$file\n";
 				`install -m 644 $dir/$file $dest/$file`;
 			}
@@ -48,3 +75,4 @@ foreach my $subdir ("noarch") {
 		close DIR;
 	}
 }
+
