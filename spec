@@ -7,12 +7,12 @@
 #
 %define Name certify
 %define Version 3.8
-%define Release 2%{?dist}
+%define Release 4%{?dist}
 
 Name: %{Name}
 Version: %{Version}
 Release: %{Release}
-Source: certify-3.8-2.tgz
+Source: certify-3.8-4.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
@@ -51,8 +51,6 @@ exit 0
 %files
 %defattr(644, root, root)
 %config(noreplace) %attr(740, root, root) /usr/local/certify/certify_config.py
-%attr(740, root, root) /usr/local/certify/check.py
-%attr(740, root, root) /usr/local/certify/certify_config.py
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/testPassword.py
 /etc/gdm/banner.png
@@ -68,5 +66,3 @@ exit 0
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
 %attr(750, root, root) /usr/local/sbin/aide_check
 %attr(750, root, root) /usr/local/sbin/aide_update
-%config(noreplace) %attr(744, root, root) /etc/firewalld/services/simpana.xml
-%config(noreplace) %attr(744, root, root) /etc/firewalld/services/splunk.xml

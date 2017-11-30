@@ -29,9 +29,9 @@ use_passwdqc = 0 # $use_passwdqc instead of cracklib
 use_pamtally = 0 # $use_pam_tally
 
 # Security tools
-use_aide = 1
-use_clamav = 1
-use_logwatch = 1
+use_aide = 0
+use_clamav = 0
+use_logwatch = 0
 
 # System administrators
 sysadmins = 'conner9,ohare2,zimmermann1,ha1,stone36'
