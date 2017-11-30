@@ -7,12 +7,12 @@
 #
 %define Name certify
 %define Version 3.8
-%define Release 4%{?dist}
+%define Release 5%{?dist}
 
 Name: %{Name}
 Version: %{Version}
 Release: %{Release}
-Source: certify-3.8-4.tgz
+Source: certify-3.8-5.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
@@ -52,10 +52,16 @@ exit 0
 %defattr(644, root, root)
 %config(noreplace) %attr(740, root, root) /usr/local/certify/certify_config.py
 %attr(740, root, root) /usr/local/certify/harden.py
+%attr(740, root, root) /usr/local/certify/check.py
+%attr(750, root, root) /usr/local/sbin/aide_check
+%attr(750, root, root) /usr/local/sbin/aide_update
+%attr(750, root, root) /usr/local/sbin/clamscan.sh
 %attr(740, root, root) /usr/local/certify/testPassword.py
+%attr(750, root, root) %dir /usr/local/certify/savedfiles
 /etc/gdm/banner.png
 /etc/logrotate.d/certify
 %config(noreplace) %attr(744, root, root) /etc/cron.daily/certify_md5chk.cron
+%config(noreplace) %attr(744, root, root) /etc/cron.daily/clamscan.cron
 %config(noreplace) %attr(744, root, root) /etc/cron.weekly/certify_check.cron
 %config(noreplace) %attr(744, root, root) /etc/cron.monthly/certify_harden.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
@@ -63,6 +69,3 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/changelog
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
-%attr(750, root, root) %dir /usr/local/certify/savedfiles
-%attr(750, root, root) /usr/local/sbin/aide_check
-%attr(750, root, root) /usr/local/sbin/aide_update

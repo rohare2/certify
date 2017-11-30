@@ -1,6 +1,4 @@
 #! /bin/bash
-# $Id: aide_check 9 2012-02-08 15:41:50Z rohare $
-# $URL: file:///usr/local/svn/admin/scripts/aide_check $
 
 LOG_DIR=/var/log/aide
 LOG_FILE=$LOG_DIR/aide.log
@@ -21,5 +19,3 @@ fi
 
 # Run aide check
 /usr/sbin/aide --check | mail -s "Aide Report" root
-#chown root:root $LOG_FILE
-#chmod 440 $LOG_FILE

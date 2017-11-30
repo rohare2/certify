@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.8
-Release= 4
+Release= 5
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -31,7 +31,8 @@ DOC_FILES= banner.png.llnl \
 	changelog \
 	readme
 
-CRON_DAILY_FILES= certify_md5chk.cron
+CRON_DAILY_FILES= certify_md5chk.cron \
+	clamscan.cron
 
 CRON_WEEKLY_FILES= certify_check.cron
 
@@ -41,7 +42,8 @@ FIREWALLD_FILES= simpana.xml \
 	splunk.xml
 
 SBIN_FILES= aide_check \
-	aide_update
+	aide_update \
+	clamscan.sh
 
 rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec

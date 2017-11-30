@@ -1,0 +1,4 @@
+#!/bin/bash
+for i in /bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var; do
+	/usr/local/sbin/clamscan.sh $i &
+done
