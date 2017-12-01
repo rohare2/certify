@@ -24,14 +24,13 @@ logs can be quickly reviewed.
 
 #Latest additions to certify:
 Installation and configuration of AIDE, CLAMAV and LogWatch.
-Systemd files for Simpana and Splunk
+Firewalld files for Simpana and Splunk
 
 # Dependencies:
 The following Python rpm's are required.
-	python-argparse (EPEL)
+	python-argparse
 	pexpect
-	python-paramiko
-	lshw
+	python-paramiko (EPEL)
 
 
 # Install:
@@ -53,22 +52,22 @@ rpm and use localinstall as follows.
 
 #Package list:
 /etc/cron.daily/certify_md5chk.cron
+/etc/cron.daily/clamscan.cron
 /etc/cron.weekly/certify_check.cron
 /etc/cron.monthly/certify_harden.cron
+/etc/firewalld/services/simpana.xml (rhel7)
+/etc/firewalld/services/splunk.xml (rhel7)
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /etc/gdm/banner.png
 /usr/local/certify/certify_config.py
 /usr/local/certify/check.py
 /usr/local/certify/harden.py
 /usr/local/certify/testPassword.py
-/etc/gdm/banner.png
+/usr/local/certify/savedfiles
 /etc/logrotate.d/certify
-/etc/cron.daily/certify_md5chk.cron
-/etc/cron.weekly/certify_check.cron
-/etc/cron.monthly/certify_harden.cron
-/etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /usr/sbin/aide_check
 /usr/sbin/aide_update
+/usr/local/sbin/clamscan.sh
 /usr/share/doc/certify-%{Version}/readme
 /usr/share/doc/certify-%{Version}/changelog
 /usr/share/doc/certify-%{Version}/banner.png.llnl

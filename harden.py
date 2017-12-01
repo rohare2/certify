@@ -1053,15 +1053,31 @@ def aideConfig():
 
 def clamavConfig():
 	pr('Configuring ClamAV')
+	file = "/etc/cron.daily/clamscan.cron"
+	try:
+		f = open(file. "r")
+	except IOError:
+		print("Unable to read " file)
+		sys.exit(2)
+
+	backup(file)
+	srcPattern = '^enabled=.*'
 	if use_clamav == 1:
+		pr("Enabling clamscan cron job")
+		targetPattern = 'enabled=1'
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 		yumInstall('clamav')
 		subprocess.call(["freshclam"])
 		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "on"])
 		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "on"])
 	else:
+		pr("Disabling clamscan cron job")
+		targetPattern = 'enabled=0'
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 		yumRemove('clamav')
 		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "off"])
 		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "off"])
+	updateMD5(file)
 	
 def logwatchConfig():
 	pr('Configuring logwatch')
