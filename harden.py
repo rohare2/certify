@@ -1052,7 +1052,7 @@ def aideConfig():
 		updateMD5(file)
 
 def clamavConfig():
-	pr('Configuring ClamAV')
+	# File
 	file = "/etc/cron.daily/clamscan.cron"
 	try:
 		f = open(file. "r")
@@ -1060,7 +1060,9 @@ def clamavConfig():
 		print("Unable to read " file)
 		sys.exit(2)
 
+	pr('Configuring ClamAV')
 	backup(file)
+	boundary = '### No boundary ###'
 	srcPattern = '^enabled=.*'
 	if use_clamav == 1:
 		pr("Enabling clamscan cron job")
@@ -1078,7 +1080,35 @@ def clamavConfig():
 		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "off"])
 		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "off"])
 	updateMD5(file)
-	
+
+	# File
+	file = "/etc/freshclam.conf"
+	try:
+		f = open(file. "r")
+	except IOError:
+		print("Unable to read " file)
+		sys.exit(2)
+
+	backup(file)
+
+	# Remove previous customizations
+	srcPattern = '^ScriptedUpdates'
+	alterFile(file,'delete',srcPattern,'',boundary)
+
+	srcPattern = '^DatabaseCustomURL'
+	alterFile(file,'delete',srcPattern,'',boundary)
+
+	if customSource == 1:
+		pr("Disabling scripted updates")
+		srcPattern = '^#ScriptedUpdates'
+		targetPattern = 'ScriptedUpdates no'
+		alterFile(file,'after',srcPattern,targetPattern,boundary)
+
+		pr("Adding custom URL")
+		srcPattern = '^#DatabaseCustomURL'
+		targetPattern = "DatabaseCustomURL file://${customSourcedir}"
+		alterFile(file,'after',srcPattern,targetPattern,boundary)
+
 def logwatchConfig():
 	pr('Configuring logwatch')
 	if use_logwatch == 1:

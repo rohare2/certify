@@ -1,7 +1,8 @@
 # Description:
 Certify is a toolset for managing system security.  It includes
-scripts for hardening and checking system security.  Cron files
-are provided to automate reccuring tasks.
+scripts for hardening and checking system security. It can also
+optionally install and configure Aide and Clamav.  Cron files
+are provided to automate recurring tasks.
 
 Certify is intended for environments where security is routinely
 audited, such as government facilities with classified information.

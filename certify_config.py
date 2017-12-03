@@ -10,7 +10,7 @@ import re
 import sys
 
 # Global settings
-minlen = 8
+minlen = 12
 pass_max_days = 180
 logfile = '/var/log/certify'
 savefileDir = '/usr/local/certify/savedfiles'
@@ -30,15 +30,12 @@ use_pamtally = 0 # $use_pam_tally
 
 # Security tools
 use_aide = 0
-use_clamav = 0
 use_logwatch = 0
 
-# Freshclam.conf
-CustomSource = 1
-CustomSourceDir "/var/tmp/clamav"
-
-# System administrators
-sysadmins = 'conner9,ohare2,zimmermann1,ha1,stone36'
+# clamav
+use_clamav = 0
+customSource = 1
+customSourceDir "/var/tmp/clamav"
 
 # cracklib options
 cracklib = {

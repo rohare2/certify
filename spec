@@ -30,8 +30,9 @@ Summary: Tools for managing operating system security
 
 %description
 Certify is a toolset for managing system security.  It includes 
-scripts for hardening and checking system security.  Cron files
-are provided to automate the process.
+scripts for hardening and checking system security.  It can also 
+optionally install and configure Aide and Clamav.  Cron files
+are provided to automate recurring tasks.
 
 %prep
 %setup -q -n %{Name}
@@ -53,7 +54,6 @@ exit 0
 %config(noreplace) %attr(740, root, root) /usr/local/certify/certify_config.py
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/check.py
-%attr(750, root, root) /usr/local/sbin/aide_check
 %attr(750, root, root) /usr/local/sbin/aide_update
 %attr(750, root, root) /usr/local/sbin/clamscan.sh
 %attr(740, root, root) /usr/local/certify/testPassword.py
