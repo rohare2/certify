@@ -1,8 +1,11 @@
 #!/bin/bash
-enabled=1
+enabled=0
+customSource=0
 
 if [ $enabled == "1" ]; then
-	wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate "https://zdiv-yum/software/VendorSoftware/clam" -P /var/tmp/clamav -A "*.cvd"
+	if [ $customSource == "1" ]; then
+		wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate "https://zdiv-yum/software/VendorSoftware/clam" -P /var/tmp/clamav -A "*.cvd"
+	fi
 
-	/usr/local/sbin/clamscan.sh $i &
+	/usr/local/sbin/clamscan.sh &
 fi

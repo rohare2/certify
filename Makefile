@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.8
-Release= 5
+Release= 8
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -41,8 +41,7 @@ CRON_MONTHLY_FILES= certify_harden.cron
 FIREWALLD_FILES= simpana.xml \
 	splunk.xml
 
-SBIN_FILES= aide_check \
-	aide_update \
+SBIN_FILES= aide_update \
 	clamscan.sh
 
 rpmbuild: specfile source

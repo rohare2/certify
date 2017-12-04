@@ -34,8 +34,10 @@ use_logwatch = 0
 
 # clamav
 use_clamav = 0
-customSource = 1
-customSourceDir "/var/tmp/clamav"
+customSource = 0
+customSourceDir = "/var/tmp/clamav"
+dirs = "/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
+jobsAtOnce = 4
 
 # cracklib options
 cracklib = {

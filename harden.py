@@ -258,22 +258,23 @@ def alterFile(file,action,srcPattern,targetPattern,boundary):
 def pamCracklib():
 	pr("# pam_cracklib config")
 	boundary = '### No boundary ###'
+
 	# file
 	file = '/etc/sysconfig/authconfig'
-	if os.path.isfile(file):
-		srcPattern = "USECRACKLIB=.*"
-		targetPattern = "USECRACKLIB=yes"
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	backup(file)
+	pr(file)
+	srcPattern = "USECRACKLIB=.*"
+	targetPattern = "USECRACKLIB=yes"
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-		srcPattern = "USEPASSWDQC=.*"
-		targetPattern = "USEPASSWDQC=no"
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	srcPattern = "USEPASSWDQC=.*"
+	targetPattern = "USEPASSWDQC=no"
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 	# file
 	file = '/etc/pam.d/system-auth'
 	backup(file)
 	pr(file)
-	# alterFile(file,action,srcPattern,targetPattern,boundary)
 	
 	# Remove existing cracklib entry
 	srcPattern = '#?password\s+\w+\s+pam_cracklib.so.*'
@@ -351,14 +352,15 @@ def pamPasswdqc():
 	boundary = '### No boundary ###'
 	# file
 	file = '/etc/sysconfig/authconfig'
-	if os.file.isfile(file):
-		srcPattern = "USEPASSWDQC=.*"
-		targetPattern = "USEPASSWDQC=yes"
-		alterFile(file,replace,srcPattern,targetPattern,boundary)
+	pr(file)
+	backup(file)
+	srcPattern = "USEPASSWDQC=.*"
+	targetPattern = "USEPASSWDQC=yes"
+	alterFile(file,replace,srcPattern,targetPattern,boundary)
 
-		srcPattern = "USECRACKLIB=.*"
-		targetPattern = "USECRACKLIB=no"
-		alterFile(file,replace,srcPattern,targetPattern,boundary)
+	srcPattern = "USECRACKLIB=.*"
+	targetPattern = "USECRACKLIB=no"
+	alterFile(file,replace,srcPattern,targetPattern,boundary)
 
 	# file
 	file = '/etc/pam.d/system-auth'
@@ -530,7 +532,7 @@ def passwordAge():
 	backup(file)
 	backup('/etc/shadow')
 	Shells = open("/etc/shells").readlines()
-	f = open(file, "r")
+	f = open(file, 'r')
 	for line in f:
 		line = line.strip()
 		words = line.split(':')
@@ -554,8 +556,8 @@ def loginDefs():
 	pr("# Configuring login defaults")
 	# file
 	file = "/etc/login.defs"
-	backup(file)
 	pr( file)
+	backup(file)
 	srcPattern = '^PASS_MAX_DAYS.*'
 	targetPattern = 'PASS_MAX_DAYS ' + str(logindefs['PASS_MAX_DAYS'])
 	pr(targetPattern)
@@ -652,7 +654,7 @@ def issue():
 			s = "Updating " + file
 			pr(s)
 			backup(file)
-			f = open(file, "w")
+			f = open(file, 'w')
 			f.write(BANNER)
 			f.close()
 			updateMD5(file)
@@ -663,13 +665,13 @@ def issue():
 		s = "Updating " + file
 		pr(s)
 		backup(file)
-		f = open(file, "r")
+		f = open(file, 'r')
 		test = f.read()
 		f.close()
 		ret = re.sub(r"(<stringvalue>\n).*(\n\s+</stringvalue>)", \
 			r'\g<1>'+BANNER+r'\g<2>', \
 			test, re.MULTILINE)
-		f = open(file, "w")
+		f = open(file, 'w')
 		f.write(ret)
 		f.close()
 		updateMD5(file)
@@ -693,7 +695,7 @@ def ftpusers():
 	file = "/etc/ftpusers"
 	pr(file)
 	backup(file)
-	f = open(file, "w")
+	f = open(file, 'w')
 	pw = open("/etc/passwd", "r")
 	list = []
 	for line in pw:
@@ -963,7 +965,6 @@ def wrappers():
 def usbStorage():
 	pr("# USB Storage Config")
 	file = "/etc/modprobe.d/harden_usb.conf"
-	backup(file)
 	pr(file)
 	f = open(file, 'w')
 	if USB_STORAGE in ('y','Y','yes','Yes'):
@@ -1054,29 +1055,36 @@ def aideConfig():
 def clamavConfig():
 	# File
 	file = "/etc/cron.daily/clamscan.cron"
-	try:
-		f = open(file. "r")
-	except IOError:
-		print("Unable to read " file)
-		sys.exit(2)
-
 	pr('Configuring ClamAV')
 	backup(file)
 	boundary = '### No boundary ###'
-	srcPattern = '^enabled=.*'
 	if use_clamav == 1:
 		pr("Enabling clamscan cron job")
+		yumInstall('clamav')
+
+		srcPattern = '^enabled=.*$'
 		targetPattern = 'enabled=1'
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
-		yumInstall('clamav')
-		subprocess.call(["freshclam"])
+
+		if customSource == 1:
+			srcPattern = '^customSource=.*'
+			targetPattern = "customSource=1"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
 		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "on"])
 		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "on"])
 	else:
 		pr("Disabling clamscan cron job")
+		yumRemove('clamav')
+
+		srcPattern = '^enabled=.*$'
 		targetPattern = 'enabled=0'
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
-		yumRemove('clamav')
+
+		srcPattern = '^customSource=.*'
+		targetPattern = "customSource=0"
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
 		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "off"])
 		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "off"])
 	updateMD5(file)
@@ -1084,30 +1092,47 @@ def clamavConfig():
 	# File
 	file = "/etc/freshclam.conf"
 	try:
-		f = open(file. "r")
+		f = open(file, 'r')
 	except IOError:
-		print("Unable to read " file)
+		print("Unable to read " + file)
 		sys.exit(2)
-
 	backup(file)
 
 	# Remove previous customizations
-	srcPattern = '^ScriptedUpdates'
+	srcPattern = '^ScriptedUpdates.*$'
 	alterFile(file,'delete',srcPattern,'',boundary)
 
-	srcPattern = '^DatabaseCustomURL'
+	srcPattern = '^DatabaseCustomURL.*$'
 	alterFile(file,'delete',srcPattern,'',boundary)
 
 	if customSource == 1:
-		pr("Disabling scripted updates")
-		srcPattern = '^#ScriptedUpdates'
+		pr("Disabling freshclam")
+		srcPattern = '^#ScriptedUpdates.*$'
 		targetPattern = 'ScriptedUpdates no'
 		alterFile(file,'after',srcPattern,targetPattern,boundary)
 
 		pr("Adding custom URL")
-		srcPattern = '^#DatabaseCustomURL'
-		targetPattern = "DatabaseCustomURL file://${customSourcedir}"
+		srcPattern = '^#DatabaseCustomURL.*$'
+		targetPattern = "DatabaseCustomURL file://" + customSourceDir
 		alterFile(file,'after',srcPattern,targetPattern,boundary)
+
+	# File
+	file = "/usr/local/sbin/clamscan.sh"
+	try:
+		f = open(file, 'r')
+	except IOError:
+		print("Unable to read " + file)
+		sys.exit(2)
+	backup(file)
+
+	srcPattern = '^dirs=.*$'
+	targetPattern = "dirs=" + dirs
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+	srcPattern = '^jobsAtOnce=.*$'
+	targetPattern = "jobsAtOnce=" + str(jobsAtOnce)
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
 
 def logwatchConfig():
 	pr('Configuring logwatch')

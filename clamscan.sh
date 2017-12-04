@@ -6,7 +6,7 @@
 dirs="/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
 
 #how many jobs to run at one time
-JOBS_AT_ONCE=1
+jobsAtOnce=2
 
 bgxupdate() {
     bgxoldgrp=${bgxgrp}
