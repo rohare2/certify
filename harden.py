@@ -1106,7 +1106,7 @@ def clamavConfig():
 
 		pr("Adding custom URL")
 		srcPattern = '^#DatabaseCustomURL'
-		targetPattern = "DatabaseCustomURL file://${customSourcedir}"
+		targetPattern = "DatabaseCustomURL file://${customSourceDir}"
 		alterFile(file,'after',srcPattern,targetPattern,boundary)
 
 def logwatchConfig():
