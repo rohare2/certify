@@ -1,4 +1,0 @@
-#!/bin/sh
-
-## Update the clam .cvd files on the web server
-/usr/local/sbin/clamdownloader.pl

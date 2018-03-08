@@ -7,7 +7,7 @@
 import argparse
 import commands, subprocess, time, string, sys
 import random , crypt , os, pwd, stat, grp
-import paramiko, getpass, pexpect, re
+import pexpect, re
 from os.path import join, getsize
 from certify_config import *
 debug = 0
@@ -42,7 +42,6 @@ tests = { 'Check Baseline MD5 files':'checkMD5',
 	'Look for shared accounts':'checkSharedAccnts',
 	'Look for world writable files':'checkWorldWritable',
 	'Look for unowned files':'checkUnowned',
-	'Check authentication & auditing':'checkAuthentication',
 	'Look for privileged users':'checkPrivUsers',
 	'Check log file perms':'checkLogPerms',
 	'Check enabled services':'checkServices',
@@ -306,19 +305,6 @@ def checkWorldWritable():
 	pr("# World writeable file search results")
 	pr(ans)
 
-def runSSH(host,user,password,command):
-	try:
-		client = paramiko.SSHClient()
-		client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-		pr("ssh " + host + " " + command)
-		client.connect(host,username=user,password=password, look_for_keys=False)
-		stdin, stdout, stderr = client.exec_command(command)
-		data = stdout.readlines()
-		for line in data:
-			pr(line)
-	except paramiko.AuthenticationException, e:
-		pr("Authentication failed")
-
 def setMinDays():
 	pr("Temporarally changing PASS_MIN_DAYS to 0")
 	file = "/etc/login.defs"
@@ -476,43 +462,6 @@ def checkPWrules():
 		os.system("rm %s" % (save))
 	except IOError:
 		pass
-
-def checkAuthentication():
-	pr("# Check authentication & auditing")
-	pr("Creating sectester account")
-	createUserAccnt('test account','sectester')
-	uid = pwd.getpwnam('sectester')[2]
-	classes = checkClasses()
-	password, length = passgen(int(logindefs['PASS_MIN_LEN']), classes)
-	pr("Set sectester password")
-	assignPassword('sectester', password)
-
-	# Correct password attempt
-	pr("Correct password attempt")
-	s = "password: " + password + "  classes: " + classes
-	pr(s)
-	runSSH('localhost','sectester',password,'id')
-
-	# Null password attempt
-	pr("Null password attempt")
-	runSSH('localhost','sectester',"",'id')
-
-	# Test failed attempt account locking
-	if use_pamtally:
-		attemp = 0
-		while attemp < int(pam_tally['deny']):
-			attemp = attemp + 1
-			runSSH('localhost','sectester',"xxxxx",'id')
-			s = "Bad password attempt number " + str(attemp)
-			pr(s)
-
-		# Check for locked account
-		ans, err = subprocess.Popen(["pam_tally2", "--user", "sectester", "-r"], stdout=subprocess.PIPE).communicate()
-		pr(ans)
-	else:
-		pr('If failed login attempt account locking is desired, enable pam_tally')
-
-	removeUserAccnt('sectester')
 
 def checkUnowned():
 	pr("# Searching for unowned files")

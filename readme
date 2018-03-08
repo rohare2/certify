@@ -31,8 +31,6 @@ Firewalld files for Simpana and Splunk
 The following Python rpm's are required.
 	python-argparse
 	pexpect
-	python-paramiko (EPEL)
-
 
 # Install:
 Install or upgrade the rpm:

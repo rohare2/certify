@@ -32,7 +32,8 @@ DOC_FILES= banner.png.llnl \
 	readme
 
 CRON_DAILY_FILES= certify_md5chk.cron \
-	clamscan.cron
+	clamscan.cron \
+	cvdcopy
 
 CRON_WEEKLY_FILES= certify_check.cron
 
