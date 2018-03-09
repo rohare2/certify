@@ -1035,10 +1035,10 @@ def aideConfig():
 		targetPattern = '5 3 * * * root /usr/local/sbin/aide_update\n'
 		with open(file, 'r') as inF:
 			for line in inF:
-				if 'aide -' in line: 
+				if 'aide_update' in line: 
 					action = 'replace'
 		if action == 'replace':
-			srcPattern = '.*aide -.*'
+			srcPattern = '.*aide_update.*'
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 		if action == 'after':
 			srcPattern = '#.*user-name\s+command to be executed.*'
