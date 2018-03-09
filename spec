@@ -7,12 +7,12 @@
 #
 %define Name certify
 %define Version 3.8
-%define Release 9%{?dist}
+%define Release 10%{?dist}
 
 Name: %{Name}
 Version: %{Version}
 Release: %{Release}
-Source: certify-3.8-9.tgz
+Source: certify-3.8-10.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
@@ -54,7 +54,7 @@ exit 0
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/check.py
 %attr(750, root, root) /usr/local/sbin/aide_update
-%attr(750, root, root) /usr/local/sbin/clamscan.sh
+%config(noreplace) %attr(750, root, root) /usr/local/sbin/clamscan.sh
 %attr(740, root, root) /usr/local/certify/testPassword.py
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
 /etc/gdm/banner.png
