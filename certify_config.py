@@ -32,12 +32,20 @@ use_pamtally = 0 # $use_pam_tally
 use_aide = 0
 use_logwatch = 0
 
-# clamav
-use_clamav = 0
-customSource = 0
-customSourceDir = "/var/tmp/clamav"
-dirs = "/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
-jobsAtOnce = 4
+## ClamAV Config
+# Enable ClamAV service
+enableClamav = 0
+
+# clamav database location
+# Default: /var/lib/clamav
+# Custom: /var/tmp/clamav
+clamavDataDir = "/var/lib/clamav"
+
+# Is this an HTTP server that provides virus signatures to clients.
+clamavServer = 0
+
+# Check these directories
+clamDirs = "/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
 
 # cracklib options
 cracklib = {

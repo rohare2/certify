@@ -1053,23 +1053,22 @@ def aideConfig():
 		updateMD5(file)
 
 def clamavConfig():
+	pr('Configuring ClamAV')
 	# File
 	file = "/etc/cron.daily/clamscan.cron"
-	pr('Configuring ClamAV')
 	backup(file)
 	boundary = '### No boundary ###'
-	if use_clamav == 1:
+	if enableClamav == 1:
 		pr("Enabling clamscan cron job")
 		yumInstall('clamav')
 
-		srcPattern = '^enabled=.*$'
-		targetPattern = 'enabled=1'
+		srcPattern = '^enableClamav=.*$'
+		targetPattern = 'enableClamav=1'
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-		if customSource == 1:
-			srcPattern = '^customSource=.*'
-			targetPattern = "customSource=1"
-			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+		srcPattern = '^clamavDataDir=.*'
+		targetPattern = '^clamavDataDir="${clamavDataDir}"'
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "on"])
 		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "on"])
@@ -1077,12 +1076,12 @@ def clamavConfig():
 		pr("Disabling clamscan cron job")
 		yumRemove('clamav')
 
-		srcPattern = '^enabled=.*$'
-		targetPattern = 'enabled=0'
+		srcPattern = '^enableClamav=.*$'
+		targetPattern = '^enableClamav=0'
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-		srcPattern = '^customSource=.*'
-		targetPattern = "customSource=0"
+		srcPattern = '^clamavDataDir=.*'
+		targetPattern = '^clamavDataDir="/var/lib/clamav"'
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "off"])
@@ -1090,48 +1089,34 @@ def clamavConfig():
 	updateMD5(file)
 
 	# File
-	file = "/etc/freshclam.conf"
-	try:
-		f = open(file, 'r')
-	except IOError:
-		print("Unable to read " + file)
-		sys.exit(2)
-	backup(file)
-
-	# Remove previous customizations
-	srcPattern = '^ScriptedUpdates.*$'
-	alterFile(file,'delete',srcPattern,'',boundary)
-
-	srcPattern = '^DatabaseCustomURL.*$'
-	alterFile(file,'delete',srcPattern,'',boundary)
-
-	if customSource == 1:
-		pr("Disabling freshclam")
-		srcPattern = '^#ScriptedUpdates.*$'
-		targetPattern = 'ScriptedUpdates no'
-		alterFile(file,'after',srcPattern,targetPattern,boundary)
-
-		pr("Adding custom URL")
-		srcPattern = '^#DatabaseCustomURL.*$'
-		targetPattern = "DatabaseCustomURL file://" + customSourceDir
-		alterFile(file,'after',srcPattern,targetPattern,boundary)
-
-	# File
 	file = "/usr/local/sbin/clamscan.sh"
-	try:
-		f = open(file, 'r')
-	except IOError:
-		print("Unable to read " + file)
-		sys.exit(2)
 	backup(file)
 
 	srcPattern = '^dirs=.*$'
-	targetPattern = "dirs=" + dirs
-	alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	targetPattern = '^dirs="${clamDirs}"'
+	alterFile(file,'replace',srcPattern,'',boundary)
 
-	srcPattern = '^jobsAtOnce=.*$'
-	targetPattern = "jobsAtOnce=" + str(jobsAtOnce)
-	alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	# File
+	file = "/etc/cron.daily/cvdcopy.sh"
+	backup(file)
+
+	if $enableClamav == 0:
+		srcPattern = '^enableClamav=.*$'
+		targetPattern = '^enableClamav=0'
+		alterFile(file,'replace',srcPattern,'',boundary)
+	else:
+		srcPattern = '^enableClamav=.*$'
+		targetPattern = '^enableClamav=1'
+		alterFile(file,'replace',srcPattern,'',boundary)
+
+	if $clamavServer == 0:
+		srcPattern = '^clamavServer=.*$'
+		targetPattern = '^clamavServer=0'
+		alterFile(file,'replace',srcPattern,'',boundary)
+	else:
+		srcPattern = '^clamavServer=.*$'
+		targetPattern = '^clamavServer=1'
+		alterFile(file,'replace',srcPattern,'',boundary)
 
 
 def logwatchConfig():
