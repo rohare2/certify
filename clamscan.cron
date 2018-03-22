@@ -1,11 +1,11 @@
 #!/bin/bash
-enabled=0
-customSource=0
+# clamscan.cron
+#
+enableClamav=0
+clamavDataDir="/var/lib/clamav"
 
-if [ $enabled == "1" ]; then
-	if [ $customSource == "1" ]; then
-		wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate "https://zdiv-yum/software/VendorSoftware/clam" -P /var/tmp/clamav -A "*.cvd"
-	fi
+if [ ${clamavDataDir} != "/var/lib/clamav" ]; then
+		wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate "https://zdiv-yum/software/VendorSoftware/clam" -P ${clamavDataDir} -A "*.cvd"
 
 	/usr/local/sbin/clamscan.sh &
 fi
