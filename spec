@@ -7,12 +7,12 @@
 #
 %define Name certify
 %define Version 3.8
-%define Release 10%{?dist}
+%define Release 11%{?dist}
 
 Name: %{Name}
 Version: %{Version}
 Release: %{Release}
-Source: certify-3.8-10.tgz
+Source: certify-3.8-11.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
@@ -61,7 +61,7 @@ exit 0
 /etc/logrotate.d/certify
 %attr(744, root, root) /etc/cron.daily/certify_md5chk.cron
 %config(noreplace) %attr(744, root, root) /etc/cron.daily/clamscan.cron
-%attr(744, root, root) /etc/cron.daily/cvdcopy
+%attr(744, root, root) /etc/cron.daily/cvdcopy.sh
 %attr(744, root, root) /etc/cron.weekly/certify_check.cron
 %attr(744, root, root) /etc/cron.monthly/certify_harden.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
