@@ -1,24 +1,13 @@
 #! /bin/bash
-# $Id: aide_update 13 2012-02-08 16:06:31Z rohare $
-# $URL: file:///usr/local/svn/admin/scripts/aide_update $
+# /usr/local/sbin/aide_update
 
-rln='9'
 DB_DIR=/var/lib/aide
 DB_FILE=${DB_DIR}/aide.db.gz
 NEW_DB_FILE=${DB_DIR}/aide.db.new.gz
 
-# Rotate logs
-while (( $rln > 1 )); do
-	newrl=$((rln - 1))
-	if [ -f ${DB_FILE}.$newrl ]; then
-		mv ${DB_FILE}.$newrl ${DB_FILE}.$rln
-	fi
-	rln=$((rln - 1))
-done
 if [ -f $NEW_DB_FILE ]; then
 	mv ${DB_FILE} ${DB_FILE}.1
 	mv ${NEW_DB_FILE} ${DB_FILE}
+else
+	echo "Nothing to update"
 fi
-
-# Run aide update
-/usr/sbin/aide -u 

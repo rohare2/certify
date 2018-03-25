@@ -1031,7 +1031,7 @@ def aideConfig():
 		backup(file)
 		pr(file)
 		action = 'after'
-		targetPattern = '5 3 * * * root /usr/local/sbin/aide_update\n'
+		targetPattern = '5 3 * * * root /sbin/aide -C > /dev/null 2>&1\n'
 		with open(file, 'r') as inF:
 			for line in inF:
 				if 'aide -' in line: 
@@ -1055,9 +1055,9 @@ def clamavConfig():
 	# File
 	file = "/etc/cron.daily/clamscan.cron"
 	try:
-		f = open(file. "r")
+		f = open(file, "r")
 	except IOError:
-		print("Unable to read " file)
+		print("Unable to read " + file)
 		sys.exit(2)
 
 	pr('Configuring ClamAV')
@@ -1084,7 +1084,7 @@ def clamavConfig():
 	# File
 	file = "/etc/freshclam.conf"
 	try:
-		f = open(file. "r")
+		f = open(file, "r")
 	except IOError:
 		print("Unable to read " file)
 		sys.exit(2)

@@ -35,7 +35,7 @@ use_logwatch = 0
 # clamav
 use_clamav = 0
 customSource = 1
-customSourceDir "/var/tmp/clamav"
+customSourceDir = "/var/tmp/clamav"
 
 # cracklib options
 cracklib = {
@@ -98,7 +98,6 @@ sshd_option = {
 
 # Unix services
 alwaysDisable = ('bluetooth','isdn','pcmcia')
-approvalRequired = ('httpd','mysqld','sendmail','svnserve','vmware','xinded')
 ipfwd = 'n'
 USB_STORAGE = 'y'
 

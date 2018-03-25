@@ -648,7 +648,6 @@ def checkUSB():
 def checkSUDO():
 	pr("# Check sudo logging")
 	file = "/etc/sudoers"
-	pr(file)
 	if 'iolog_dir' not in open(file).read():
 		pr("sudoers iolog_dir missing")
 	if 'log_input' not in open(file).read():

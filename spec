@@ -7,19 +7,19 @@
 #
 %define Name certify
 %define Version 3.8
-%define Release 5%{?dist}
+%define Release 10%{?dist}
 
 Name: %{Name}
 Version: %{Version}
 Release: %{Release}
-Source: certify-3.8-5.tgz
+Source: certify-3.8-10.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
 BuildArch: noarch
 Vendor: Rich O'Hare
 Packager: Rich O'Hare <rohare2@gmail.com>
-Provides: check.py, harden.py, aide_check, aide_update
+Provides: check.py, harden.py, aide_update
 Requires: python-argparse >= 1.2
 Requires: pexpect >= 2.3
 Requires: python-paramiko >= 1.7
@@ -62,10 +62,11 @@ exit 0
 /etc/logrotate.d/certify
 %config(noreplace) %attr(744, root, root) /etc/cron.daily/certify_md5chk.cron
 %config(noreplace) %attr(744, root, root) /etc/cron.daily/clamscan.cron
-%config(noreplace) %attr(744, root, root) /etc/cron.weekly/certify_check.cron
 %config(noreplace) %attr(744, root, root) /etc/cron.monthly/certify_harden.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /usr/share/doc/%{Name}-%{Version}/readme
 /usr/share/doc/%{Name}-%{Version}/changelog
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
+%config(noreplace) %attr(744, root, root) /etc/firewalld/services/simpana.xml
+%config(noreplace) %attr(744, root, root) /etc/firewalld/services/splunk.xml
