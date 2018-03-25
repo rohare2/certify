@@ -1099,7 +1099,7 @@ def clamavConfig():
 	try:
 		f = open(file, "r")
 	except IOError:
-		print("Unable to read " file)
+		print("Unable to read " + file)
 		sys.exit(2)
 
 	backup(file)
@@ -1112,22 +1112,22 @@ def clamavConfig():
 	file = "/etc/cron.daily/cvdcopy.sh"
 	backup(file)
 
-	if $enableClamav == 0:
+	if enableClamav == 0:
 		srcPattern = '^enableClamav=.*$'
-		targetPattern = '^enableClamav=0'
+		targetPattern = 'enableClamav=0'
 		alterFile(file,'replace',srcPattern,'',boundary)
 	else:
 		srcPattern = '^enableClamav=.*$'
-		targetPattern = '^enableClamav=1'
+		targetPattern = 'enableClamav=1'
 		alterFile(file,'replace',srcPattern,'',boundary)
 
-	if $clamavServer == 0:
+	if clamavServer == 0:
 		srcPattern = '^clamavServer=.*$'
-		targetPattern = '^clamavServer=0'
+		targetPattern = 'clamavServer=0'
 		alterFile(file,'replace',srcPattern,'',boundary)
 	else:
 		srcPattern = '^clamavServer=.*$'
-		targetPattern = '^clamavServer=1'
+		targetPattern = 'clamavServer=1'
 		alterFile(file,'replace',srcPattern,'',boundary)
 
 def logwatchConfig():
