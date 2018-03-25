@@ -22,7 +22,6 @@ Packager: Rich O'Hare <rohare2@gmail.com>
 Provides: check.py, harden.py, aide_update
 Requires: python-argparse >= 1.2
 Requires: pexpect >= 2.3
-Requires: python-paramiko >= 1.7
 Requires: lshw
 Requires: redhat-lsb
 Summary: Tools for managing operating system security
@@ -60,9 +59,11 @@ exit 0
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
 /etc/gdm/banner.png
 /etc/logrotate.d/certify
-%config(noreplace) %attr(744, root, root) /etc/cron.daily/certify_md5chk.cron
+%attr(744, root, root) /etc/cron.daily/certify_md5chk.cron
 %config(noreplace) %attr(744, root, root) /etc/cron.daily/clamscan.cron
-%config(noreplace) %attr(744, root, root) /etc/cron.monthly/certify_harden.cron
+%attr(744, root, root) /etc/cron.daily/cvdcopy
+%attr(744, root, root) /etc/cron.weekly/certify_check.cron
+%attr(744, root, root) /etc/cron.monthly/certify_harden.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /usr/share/doc/%{Name}-%{Version}/readme
 /usr/share/doc/%{Name}-%{Version}/changelog
