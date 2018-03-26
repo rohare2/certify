@@ -1054,6 +1054,7 @@ def aideConfig():
 		updateMD5(file)
 
 def clamavConfig():
+	# Add or remove RPMs as needed
 	if enableClamav == 1:
 		pr("Installing ClamAV")
 		yumInstall('clamav')
@@ -1068,6 +1069,33 @@ def clamavConfig():
 		else:
 			pr("Removing clamav-update")
 			yumRemove('clamav-update')
+	
+	# Build clamav cron job
+	if enableClamav == 1:
+		file = "/etc/cron.daily/clamav"
+		f = open(file, 'w')
+
+		s = "#!/bin/bash\n"
+		f.write(s)
+
+		s = "# clamav\n\n"
+		f.write(s)
+
+		if enableFreshclam == 1:
+			s = 'wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate '
+			s = s + '"https://zdiv-yum/software/VendorSoftware/clam "'
+			s = s + '-P "/var/lib/clamav" -A "*.cvd"'
+			s = s + "\n\n"
+			f.write(s)
+
+		if clamavServer == 1:
+			s = "cp /var/lib/clamav/*.cvd /var/www/html/software/VendorSoftware/clam/\n\n"
+			f.write(s)
+
+		s = "/usr/local/sbin/clamscan.sh &\n"
+		f.write(s)
+
+		f.close()
 
 
 def logwatchConfig():
