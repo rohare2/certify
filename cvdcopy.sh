@@ -7,10 +7,11 @@
 # location to a local web server. ClamAV clients than use wget
 # aquire the files.
 #
-enableClamav=0
-clamavServer=0
 
-if [ $enabled == "1" ]; then
+enableClamav= 0
+clamavServer= 0
+
+if [ $enableClamav == "1" ]; then
 	if [ $clamavServer == "1" ]; then
 		cp /var/lib/clamav/*.cvd /var/www/html/software/VendorSoftware/clam/
 	fi

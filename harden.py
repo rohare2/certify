@@ -1067,7 +1067,7 @@ def clamavConfig():
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 		srcPattern = '^clamavDataDir=.*'
-		targetPattern = '^clamavDataDir="${clamavDataDir}"'
+		targetPattern = 'clamavDataDir="' + clamavDataDir + '"'
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "on"])
@@ -1077,11 +1077,11 @@ def clamavConfig():
 		yumRemove('clamav')
 
 		srcPattern = '^enableClamav=.*$'
-		targetPattern = '^enableClamav=0'
+		targetPattern = 'enableClamav=0'
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 		srcPattern = '^clamavDataDir=.*'
-		targetPattern = '^clamavDataDir="/var/lib/clamav"'
+		targetPattern = 'clamavDataDir="/var/lib/clamav"'
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "off"])
@@ -1093,30 +1093,30 @@ def clamavConfig():
 	backup(file)
 
 	srcPattern = '^dirs=.*$'
-	targetPattern = '^dirs="${clamDirs}"'
-	alterFile(file,'replace',srcPattern,'',boundary)
+	targetPattern = 'dirs="' + clamDirs + '"'
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 	# File
 	file = "/etc/cron.daily/cvdcopy.sh"
 	backup(file)
 
-	if $enableClamav == 0:
+	if enableClamav == 0:
 		srcPattern = '^enableClamav=.*$'
-		targetPattern = '^enableClamav=0'
-		alterFile(file,'replace',srcPattern,'',boundary)
+		targetPattern = 'enableClamav=0'
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	else:
 		srcPattern = '^enableClamav=.*$'
-		targetPattern = '^enableClamav=1'
-		alterFile(file,'replace',srcPattern,'',boundary)
+		targetPattern = 'enableClamav=1'
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-	if $clamavServer == 0:
+	if clamavServer == 0:
 		srcPattern = '^clamavServer=.*$'
-		targetPattern = '^clamavServer=0'
-		alterFile(file,'replace',srcPattern,'',boundary)
+		targetPattern = 'clamavServer=0'
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	else:
 		srcPattern = '^clamavServer=.*$'
-		targetPattern = '^clamavServer=1'
-		alterFile(file,'replace',srcPattern,'',boundary)
+		targetPattern = 'clamavServer=1'
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 
 def logwatchConfig():
