@@ -1032,7 +1032,7 @@ def aideConfig():
 		backup(file)
 		pr(file)
 		action = 'after'
-		targetPattern = '5 3 * * * root /usr/local/sbin/aide_update\n'
+		targetPattern = '5 3 * * * root /sbin/aide -C > /dev/null 2>&1\n'
 		with open(file, 'r') as inF:
 			for line in inF:
 				if 'aide -' in line: 
@@ -1056,6 +1056,12 @@ def clamavConfig():
 	pr('Configuring ClamAV')
 	# File
 	file = "/etc/cron.daily/clamscan.cron"
+	try:
+		f = open(file, "r")
+	except IOError:
+		print("Unable to read " + file)
+		sys.exit(2)
+
 	backup(file)
 	boundary = '### No boundary ###'
 	if enableClamav == 1:
@@ -1089,7 +1095,13 @@ def clamavConfig():
 	updateMD5(file)
 
 	# File
-	file = "/usr/local/sbin/clamscan.sh"
+	file = "/etc/freshclam.conf"
+	try:
+		f = open(file, "r")
+	except IOError:
+		print("Unable to read " + file)
+		sys.exit(2)
+
 	backup(file)
 
 	srcPattern = '^dirs=.*$'
@@ -1117,7 +1129,6 @@ def clamavConfig():
 		srcPattern = '^clamavServer=.*$'
 		targetPattern = 'clamavServer=1'
 		alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
 
 def logwatchConfig():
 	pr('Configuring logwatch')

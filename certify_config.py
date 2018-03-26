@@ -108,7 +108,6 @@ sshd_option = {
 
 # Unix services
 alwaysDisable = ('bluetooth','isdn','pcmcia')
-approvalRequired = ('httpd','mysqld','sendmail','svnserve','vmware','xinded')
 ipfwd = 'n'
 USB_STORAGE = 'y'
 

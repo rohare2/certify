@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.8
-Release= 9
+Release= 11
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -33,7 +33,7 @@ DOC_FILES= banner.png.llnl \
 
 CRON_DAILY_FILES= certify_md5chk.cron \
 	clamscan.cron \
-	cvdcopy
+	cvdcopy.sh
 
 CRON_WEEKLY_FILES= certify_check.cron
 

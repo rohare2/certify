@@ -1,9 +1,7 @@
 #!/usr/bin/perl -w
-# $Id$
-# $Date$
 #
 # repoWebLoad.pl
-# Copy our FIE rpms to the webserver
+# Copy rpms to the webserver
 use strict;
 use File::Copy;
 use File::Path qw(make_path remove_tree);
