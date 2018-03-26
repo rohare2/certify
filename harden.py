@@ -1028,6 +1028,7 @@ def aideConfig():
 		except IOError:
 			print("Initializing AIDE database")
 			subprocess.call(["aide", "--init"])
+
 		file = '/etc/crontab'
 		backup(file)
 		pr(file)
@@ -1035,10 +1036,10 @@ def aideConfig():
 		targetPattern = '5 3 * * * root /sbin/aide -C > /dev/null 2>&1\n'
 		with open(file, 'r') as inF:
 			for line in inF:
-				if 'aide -' in line: 
+				if 'aide' in line: 
 					action = 'replace'
 		if action == 'replace':
-			srcPattern = '.*aide -.*'
+			srcPattern = '.*/sbin/aide.*'
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 		if action == 'after':
 			srcPattern = '#.*user-name\s+command to be executed.*'
@@ -1048,87 +1049,26 @@ def aideConfig():
 		yumRemove('aide')
 		file = '/etc/crontab'
 		pr(file)
-		srcPattern = '.*aide -'
+		srcPattern = '.*aide.*'
 		alterFile(file,'delete',srcPattern,'',boundary)
 		updateMD5(file)
 
 def clamavConfig():
-	pr('Configuring ClamAV')
-	# File
-	file = "/etc/cron.daily/clamscan.cron"
-	try:
-		f = open(file, "r")
-	except IOError:
-		print("Unable to read " + file)
-		sys.exit(2)
-
-	backup(file)
-	boundary = '### No boundary ###'
 	if enableClamav == 1:
-		pr("Enabling clamscan cron job")
+		pr("Installing ClamAV")
 		yumInstall('clamav')
-
-		srcPattern = '^enableClamav=.*$'
-		targetPattern = 'enableClamav=1'
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
-		srcPattern = '^clamavDataDir=.*'
-		targetPattern = 'clamavDataDir="' + clamavDataDir + '"'
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
-		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "on"])
-		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "on"])
 	else:
-		pr("Disabling clamscan cron job")
-		yumRemove('clamav')
+		pr("Removing ClamAV")
+		subprocess.call(["/bin/yum", "-yq", "remove", "clamav*"])
 
-		srcPattern = '^enableClamav=.*$'
-		targetPattern = 'enableClamav=0'
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	if release in [ 'el7']:
+		if enableFreshclam == 1 and enableClamav == 1:
+			pr("Installing clamav-update")
+			yumInstall('clamav-update')
+		else:
+			pr("Removing clamav-update")
+			yumRemove('clamav-update')
 
-		srcPattern = '^clamavDataDir=.*'
-		targetPattern = 'clamavDataDir="/var/lib/clamav"'
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
-		subprocess.call(["setsebool", "-P", "antivirus_can_scan_system", "off"])
-		subprocess.call(["setsebool", "-P", "antivirus_use_jit", "off"])
-	updateMD5(file)
-
-	# File
-	file = "/etc/freshclam.conf"
-	try:
-		f = open(file, "r")
-	except IOError:
-		print("Unable to read " + file)
-		sys.exit(2)
-
-	backup(file)
-
-	srcPattern = '^dirs=.*$'
-	targetPattern = 'dirs="' + clamDirs + '"'
-	alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
-	# File
-	file = "/etc/cron.daily/cvdcopy.sh"
-	backup(file)
-
-	if enableClamav == 0:
-		srcPattern = '^enableClamav=.*$'
-		targetPattern = 'enableClamav=0'
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
-	else:
-		srcPattern = '^enableClamav=.*$'
-		targetPattern = 'enableClamav=1'
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
-
-	if clamavServer == 0:
-		srcPattern = '^clamavServer=.*$'
-		targetPattern = 'clamavServer=0'
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
-	else:
-		srcPattern = '^clamavServer=.*$'
-		targetPattern = 'clamavServer=1'
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 def logwatchConfig():
 	pr('Configuring logwatch')

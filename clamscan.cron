@@ -2,10 +2,16 @@
 # clamscan.cron
 #
 enableClamav=0
-clamavDataDir="/var/lib/clamav"
+enableFreshclam=0
 
-if [ ${clamavDataDir} != "/var/lib/clamav" ]; then
-		wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate "https://zdiv-yum/software/VendorSoftware/clam" -P ${clamavDataDir} -A "*.cvd"
+if [ $enableClamav == 0 ]; then
+	exit
+fi
+
+if [ $enableFreshclam == 0 ]; then
+		wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate "https://zdiv-yum/software/VendorSoftware/clam" -P "/var/lib/clamav" -A "*.cvd"
 
 	/usr/local/sbin/clamscan.sh &
+else
+	freshclam &
 fi
