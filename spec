@@ -67,3 +67,5 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/changelog
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
+%config(noreplace) %attr(744, root, root) /etc/firewalld/services/simpana.xml
+%config(noreplace) %attr(744, root, root) /etc/firewalld/services/splunk.xml
