@@ -1096,6 +1096,7 @@ def clamavConfig():
 		f.write(s)
 
 		f.close()
+		os.chmod(file, 0700)
 	else:
 		os.remove(file)
 
