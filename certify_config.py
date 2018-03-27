@@ -34,10 +34,10 @@ use_logwatch = 0
 
 #### ClamAV Config ####
 # Enable ClamAV service
-enableClamav = 1
+enableClamav = 0
 
 # Can the host get updates from the internet
-enableFreshclam = 1
+enableFreshclam = 0
 
 # Is this an HTTP server that provides virus signatures to clients.
 clamavServer = 0
