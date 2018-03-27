@@ -3,7 +3,7 @@
 # By: Rich O'Hare
 
 # Directories to check
-dirs="/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
+clamscanDirs="/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
 
 dscan() {
 	dir=$1
@@ -14,7 +14,7 @@ dscan() {
 	fi
 }
 
-for LINE in ${dirs}
+for LINE in ${clamscanDirs}
 do
 	dscan ${LINE}
 done

@@ -60,8 +60,6 @@ exit 0
 /etc/gdm/banner.png
 /etc/logrotate.d/certify
 %attr(744, root, root) /etc/cron.daily/certify_md5chk.cron
-%config(noreplace) %attr(744, root, root) /etc/cron.daily/clamscan.cron
-%attr(744, root, root) /etc/cron.daily/cvdcopy.sh
 %attr(744, root, root) /etc/cron.weekly/certify_check.cron
 %attr(744, root, root) /etc/cron.monthly/certify_harden.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml

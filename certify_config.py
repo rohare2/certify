@@ -37,7 +37,7 @@ use_logwatch = 0
 enableClamav = 1
 
 # Can the host get updates from the internet
-enableFreshclam = 0
+enableFreshclam = 1
 
 # Is this an HTTP server that provides virus signatures to clients.
 clamavServer = 0

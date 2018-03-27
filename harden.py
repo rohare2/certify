@@ -1071,8 +1071,8 @@ def clamavConfig():
 			yumRemove('clamav-update')
 	
 	# Build clamav cron job
+	file = "/etc/cron.daily/clamav"
 	if enableClamav == 1:
-		file = "/etc/cron.daily/clamav"
 		f = open(file, 'w')
 
 		s = "#!/bin/bash\n"
@@ -1081,7 +1081,7 @@ def clamavConfig():
 		s = "# clamav\n\n"
 		f.write(s)
 
-		if enableFreshclam == 1:
+		if enableFreshclam == 0:
 			s = 'wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate '
 			s = s + '"https://zdiv-yum/software/VendorSoftware/clam "'
 			s = s + '-P "/var/lib/clamav" -A "*.cvd"'
@@ -1096,6 +1096,19 @@ def clamavConfig():
 		f.write(s)
 
 		f.close()
+	else:
+		os.remove(file)
+
+	# Identify which directories to scan
+	if enableClamav == 1:
+		# file
+		file = "/usr/local/sbin/clamscan.sh"
+		backup(file)
+		pr(file)
+		boundary = '### No boundary ###'
+		srcPattern = '^clamscanDirs.*'
+		targetPattern = 'clamscanDirs="' + clamscanDirs + '"'
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 
 def logwatchConfig():
