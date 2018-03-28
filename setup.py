@@ -6,6 +6,7 @@
 # Certify setup script
 
 import os, sys, commands, argparse, re
+from certify_config import *
 
 # prevent concurrent execution
 pid = commands.getoutput('echo $$')
@@ -140,32 +141,69 @@ def clamavConfig():
 	file = "certify_config.py"
 	boundary = '### No boundary ###'
 	
-	choice = raw_input("Enable ClamAV [Y]: ")
-	if choice == '':
-		choice = 'Y'
-	print "enableClamav: " + choice + "\n"
-	srcPattern = '^enableClamav.*'
-	if choice == 'Y':
-		targetPattern = "enableClamav = 1"
+	if enableClamav == 1:
+		print "## ClamAV ##"
+		print "ClamAV is currently enabled"
+		print "By default ClamAV is disabled";
+		choice = raw_input("Disable ClamAV [Y/N]: ")
+		if choice.upper() == 'Y':
+			srcPattern = '^enableClamav.*'
+			targetPattern = "enableClamav = 0"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	else:
-		targetPattern = "enableClamav = 0"
-	alterFile(file,'replace',srcPattern,targetPattern,boundary)
+		print "ClamAV is currently disabled (default)"
+		choice = raw_input("Enable ClamAV [Y/N]: ")
+		if choice.upper() == 'Y':
+			srcPattern = '^enableClamav.*'
+			targetPattern = "enableClamav = 1"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
+	if enableFreshclam == 1:
+		print "\n## Freshclam ##"
+		print "Freshclam is enabled"
+		print "By default Freshclam is disabled"
+		choice = raw_input("Disable Freshclam [Y/N]: ")
+		if choice.upper() == 'Y':
+			srcPattern = '^enableFreshclam.*'
+			targetPattern = "enableFreshclam = 0"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	else:
+		print "Freshclam is currently disabled (default)"
+		choice = raw_input("Enable Freshclam [Y/N]: ")
+		if choice.upper() == 'Y':
+			srcPattern = '^enableFreshclam.*'
+			targetPattern = "enableFreshclam = 1"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-	choice = raw_input("User Freshclam [Y]: ")
-	if choice == '':
-		choice = 'Y'
-	print "enableFreshclam: " + choice + "\n"
+	if clamavServer == 1:
+		print "\n## ClamAV Server ##"
+		print "ClamAV Server is enabled"
+		print "By default ClamAV Server is disabled"
+		choice = raw_input("Disable ClamAV Server [Y/N]: ")
+		if choice.upper() == 'Y':
+			srcPattern = '^clamavServer.*'
+			targetPattern = "clamavServer = 0"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	else:
+		print "ClamAV Server is currently disabled (default)"
+		choice = raw_input("Enable ClamAV Server [Y/N]: ")
+		if choice.upper() == 'Y':
+			srcPattern = '^clamavServer.*'
+			targetPattern = "clamavServer = 1"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-	choice = raw_input("Virus signature server [N]: ")
-	if choice == '':
-		choice = 'N'
-	print "clamavServer: " + choice + "\n"
-
-	choice = raw_input("Directories to scan [/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var]: ")
-	if choice == '':
-		choice = "/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
-	print "clamscanDirs: " + choice + "\n"
+	if enableClamav == 1:
+		print "\n## Directories to scan ##"
+		print "By default these directories are scanned:"
+		print "/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
+		print "Current configuration::"
+		print clamscanDirs
+		choice = raw_input("Do you want to make a change [Y/N]: ")
+		if choice.upper() == 'Y':
+			choice = raw_input("List directories to scan: ")
+			srcPattern = '^clamscanDirs.*'
+			targetPattern = 'clamscanDirs = "' + choice + '"'
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	
 
 done = 0
