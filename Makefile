@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.8
-Release= 13
+Release= 14
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -71,14 +71,8 @@ make_path:
 	@if [ ! -d ${RPM_BUILD_ROOT}/${DOC_DIR} ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/${DOC_DIR}; \
 	fi;
-	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.daily ]; then \
-		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.daily; \
-	fi;
-	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.weekly ]; then \
-		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.weekly; \
-	fi;
-	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.monthly ]; then \
-		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.monthly; \
+	@if [ ! -d ${RPM_BUILD_ROOT}/etc/cron.d ]; then \
+		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/cron.d; \
 	fi;
 	@if [ ! -d ${RPM_BUILD_ROOT}/etc/logrotate.d ]; then \
 		mkdir -m 0755 -p ${RPM_BUILD_ROOT}/etc/logrotate.d; \
