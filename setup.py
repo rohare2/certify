@@ -132,73 +132,99 @@ def alterFile(file,action,srcPattern,targetPattern,boundary):
 	os.system("cp %s %s" % (temp, file))
 	os.system("rm %s" % (temp))
 
+
 def aideConfig():
-	print "in aideConfig\n";
+	print "\n ### AIDE Setup ###\n";
+	file = "certify_config.py"
+	boundary = '### No boundary ###'
+
+	print "## AIDE ##"
+	if use_aide == 1:
+		print "AIDE is currently enabled"
+		print "By default AIDE is disabled"
+		choice = raw_input("Disable AIDE [y/N]: ")
+		if choice.upper() == 'Y':
+			srcPattern = '^use_aide.*'
+			targetPattern = "use_aide = 0"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	else:
+		print "AIDE is currently disabled (default)"
+		choice = raw_input("Enable AIDE [y/N]: ")
+		if choice.upper() == 'Y':
+			srcPattern = '^use_aide.*'
+			targetPattern = "use_aide = 1"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 
 def clamavConfig():
 	print "\n  #### ClamAV Setup ####\n"
 	file = "certify_config.py"
 	boundary = '### No boundary ###'
+	set_dirs = 1
 	
+	print "## ClamAV ##"
 	if enableClamav == 1:
-		print "## ClamAV ##"
 		print "ClamAV is currently enabled"
-		print "By default ClamAV is disabled";
-		choice = raw_input("Disable ClamAV [Y/N]: ")
+		print "By default ClamAV is disabled"
+		choice = raw_input("Disable ClamAV [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableClamav.*'
 			targetPattern = "enableClamav = 0"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+			set_dirs = 0
 	else:
 		print "ClamAV is currently disabled (default)"
-		choice = raw_input("Enable ClamAV [Y/N]: ")
+		choice = raw_input("Enable ClamAV [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableClamav.*'
 			targetPattern = "enableClamav = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+			set_dirs = 1
 
+	print "\n## Freshclam ##"
 	if enableFreshclam == 1:
-		print "\n## Freshclam ##"
 		print "Freshclam is enabled"
 		print "By default Freshclam is disabled"
-		choice = raw_input("Disable Freshclam [Y/N]: ")
+		choice = raw_input("Disable Freshclam [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableFreshclam.*'
 			targetPattern = "enableFreshclam = 0"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	else:
 		print "Freshclam is currently disabled (default)"
-		choice = raw_input("Enable Freshclam [Y/N]: ")
+		print "If this host can get updates from the internet you may want to enable Freshclam"
+		choice = raw_input("Enable Freshclam [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableFreshclam.*'
 			targetPattern = "enableFreshclam = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
+	print "\n## ClamAV Server ##"
 	if clamavServer == 1:
-		print "\n## ClamAV Server ##"
 		print "ClamAV Server is enabled"
 		print "By default ClamAV Server is disabled"
-		choice = raw_input("Disable ClamAV Server [Y/N]: ")
+		choice = raw_input("Disable ClamAV Server [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^clamavServer.*'
 			targetPattern = "clamavServer = 0"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	else:
 		print "ClamAV Server is currently disabled (default)"
-		choice = raw_input("Enable ClamAV Server [Y/N]: ")
+		print "If this host is an HTTP server configured to provide virus signatures to ClamAV clients,"
+		print "you may want to enable ClamAV Server"
+		choice = raw_input("Enable ClamAV Server [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^clamavServer.*'
 			targetPattern = "clamavServer = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-	if enableClamav == 1:
+	if set_dirs == 1:
 		print "\n## Directories to scan ##"
 		print "By default these directories are scanned:"
 		print "/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
 		print "Current configuration::"
 		print clamscanDirs
-		choice = raw_input("Do you want to make a change [Y/N]: ")
+		choice = raw_input("Do you want to make a change [y/N]: ")
 		if choice.upper() == 'Y':
 			choice = raw_input("List directories to scan: ")
 			srcPattern = '^clamscanDirs.*'
