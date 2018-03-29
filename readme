@@ -61,6 +61,7 @@ rpm and use localinstall as follows.
 /usr/local/certify/certify_config.py
 /usr/local/certify/check.py
 /usr/local/certify/harden.py
+/usr/local/certify/setup.py
 /usr/local/certify/testPassword.py
 /usr/local/certify/savedfiles
 /etc/logrotate.d/certify

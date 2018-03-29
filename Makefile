@@ -3,7 +3,7 @@
 #
 Name= certify
 Version= 3.8
-Release= 12
+Release= 13
 Source= ${Name}-${Version}-${Release}.tgz
 BASE= $(shell pwd)
 
@@ -20,6 +20,7 @@ SBIN_DIR= /usr/local/sbin
 SCRIPT_FILES= check.py \
 	certify_config.py \
 	harden.py \
+	setup.py \
 	testPassword.py
 
 GCONF_FILES= %gconf-tree.xml

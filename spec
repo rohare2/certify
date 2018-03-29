@@ -7,19 +7,19 @@
 #
 %define Name certify
 %define Version 3.8
-%define Release 12%{?dist}
+%define Release 13%{?dist}
 
 Name: %{Name}
 Version: %{Version}
 Release: %{Release}
-Source: certify-3.8-12.tgz
+Source: certify-3.8-13.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
 BuildArch: noarch
 Vendor: Rich O'Hare
 Packager: Rich O'Hare <rohare2@gmail.com>
-Provides: check.py, harden.py
+Provides: check.py, harden.py, setup.py
 Requires: python-argparse >= 1.2
 Requires: pexpect >= 2.3
 Requires: lshw
@@ -53,6 +53,7 @@ exit 0
 %config(noreplace) %attr(740, root, root) /usr/local/certify/certify_config.py
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/check.py
+%attr(740, root, root) /usr/local/certify/setup.py
 %config(noreplace) %attr(750, root, root) /usr/local/sbin/clamscan.sh
 %attr(740, root, root) /usr/local/certify/testPassword.py
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
@@ -66,5 +67,3 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/changelog
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
-%config(noreplace) %attr(744, root, root) /etc/firewalld/services/simpana.xml
-%config(noreplace) %attr(744, root, root) /etc/firewalld/services/splunk.xml
