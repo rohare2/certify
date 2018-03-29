@@ -19,7 +19,7 @@ URL: https://github.com/rohare2/certify
 BuildArch: noarch
 Vendor: Rich O'Hare
 Packager: Rich O'Hare <rohare2@gmail.com>
-Provides: check.py, harden.py, aide_update
+Provides: check.py, harden.py
 Requires: python-argparse >= 1.2
 Requires: pexpect >= 2.3
 Requires: lshw
@@ -53,7 +53,6 @@ exit 0
 %config(noreplace) %attr(740, root, root) /usr/local/certify/certify_config.py
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/check.py
-%attr(750, root, root) /usr/local/sbin/aide_update
 %config(noreplace) %attr(750, root, root) /usr/local/sbin/clamscan.sh
 %attr(740, root, root) /usr/local/certify/testPassword.py
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
