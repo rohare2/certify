@@ -1,4 +1,0 @@
-#!/bin/sh
-# certify_check.cron
-
-/usr/local/certify/check.py -l

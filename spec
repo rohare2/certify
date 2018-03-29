@@ -59,9 +59,7 @@ exit 0
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
 /etc/gdm/banner.png
 /etc/logrotate.d/certify
-%attr(744, root, root) /etc/cron.daily/certify_md5chk.cron
-%attr(744, root, root) /etc/cron.weekly/certify_check.cron
-%attr(744, root, root) /etc/cron.monthly/certify_harden.cron
+%attr(744, root, root) /etc/cron.d/certify.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /usr/share/doc/%{Name}-%{Version}/readme
 /usr/share/doc/%{Name}-%{Version}/changelog

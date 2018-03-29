@@ -32,11 +32,7 @@ DOC_FILES= banner.png.llnl \
 	changelog \
 	readme
 
-CRON_DAILY_FILES= certify_md5chk.cron
-
-CRON_WEEKLY_FILES= certify_check.cron
-
-CRON_MONTHLY_FILES= certify_harden.cron
+CRON_FILES= certify.cron
 
 FIREWALLD_FILES= simpana.xml \
 	splunk.xml
@@ -118,21 +114,9 @@ doc:
 		install -p $$file ${RPM_BUILD_ROOT}/${DOC_DIR}; \
 	done;
 
-cron: crondaily cronweekly cronmonthly
-
-crondaily:
-	@for file in ${CRON_DAILY_FILES}; do \
-		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.daily; \
-	done;
-
-cronweekly:
-	@for file in ${CRON_WEEKLY_FILES}; do \
-		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.weekly; \
-	done;
-
-cronmonthly:
-	@for file in ${CRON_MONTHLY_FILES}; do \
-		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.monthly; \
+cron:
+	@for file in ${CRON_FILES}; do \
+		install -p $$file ${RPM_BUILD_ROOT}/etc/cron.d; \
 	done;
 
 rotate:

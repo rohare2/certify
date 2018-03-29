@@ -1,6 +1,0 @@
-#!/bin/sh
-# certify_md5chk.cron
-# $Id$
-# $Date$
-
-/usr/local/certify/check.py -cl

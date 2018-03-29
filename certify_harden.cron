@@ -1,6 +1,0 @@
-#!/bin/sh
-# certify_harden.cron
-# $Id$
-# $Date$
-
-/usr/local/certify/harden.py -l
