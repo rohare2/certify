@@ -7,12 +7,12 @@
 #
 %define Name certify
 %define Version 3.8
-%define Release 13%{?dist}
+%define Release 15%{?dist}
 
 Name: %{Name}
 Version: %{Version}
 Release: %{Release}
-Source: certify-3.8-13.tgz
+Source: certify-3.8-15.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
@@ -65,3 +65,5 @@ exit 0
 /usr/share/doc/%{Name}-%{Version}/changelog
 /usr/share/doc/%{Name}-%{Version}/banner.png.llnl
 /usr/share/doc/%{Name}-%{Version}/banner.png.sample
+%config(noreplace) %attr(744, root, root) /etc/firewalld/services/simpana.xml
+%config(noreplace) %attr(744, root, root) /etc/firewalld/services/splunk.xml
