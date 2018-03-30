@@ -25,6 +25,7 @@ except:
 	sys.exit(2)
 
 fixes = {'AIDE':'aideConfig',
+	'Authentication':'authConfig',
 	'ClamAV':'clamavConfig'}
 
 fixNo = {}
@@ -134,7 +135,7 @@ def alterFile(file,action,srcPattern,targetPattern,boundary):
 
 
 def aideConfig():
-	print "\n ### AIDE Setup ###\n";
+	print "\n ### AIDE Setup ###\n"
 	file = "certify_config.py"
 	boundary = '### No boundary ###'
 
@@ -142,18 +143,41 @@ def aideConfig():
 	if use_aide == 1:
 		print "AIDE is currently enabled"
 		print "By default AIDE is disabled"
-		choice = raw_input("Disable AIDE [y/N]: ")
+		choice = raw_input("\tDisable AIDE [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^use_aide.*'
 			targetPattern = "use_aide = 0"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	else:
 		print "AIDE is currently disabled (default)"
-		choice = raw_input("Enable AIDE [y/N]: ")
+		choice = raw_input("\tEnable AIDE [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^use_aide.*'
 			targetPattern = "use_aide = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+
+def authConfig():
+	print "\n ### Authentication Setup ###\n"
+	file = "certify_config.py"
+	boundary = '### No boundary ###'
+
+	print "## Password Rules ##"
+	print "The current minumum password length is " + str(minlen)
+	print "The default minumum is 12"
+	choice = raw_input("\tNew minimum length [" + str(minlen) + "]: ")
+	if choice != '':
+		srcPattern = '^minlen.*'
+		targetPattern = "minlen = " + str(choice)
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+	print "\nThe current password age limit is " + str(pass_max_days) + " days"
+	print "The default age limit is 180 days"
+	choice = raw_input("\tNew age limit [" + str(pass_max_days) + "]: ")
+	if choice != '':
+		srcPattern = '^pass_max_days.*'
+		targetPattern = "pass_max_days = " + str(choice)
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 
 def clamavConfig():
@@ -166,7 +190,7 @@ def clamavConfig():
 	if enableClamav == 1:
 		print "ClamAV is currently enabled"
 		print "By default ClamAV is disabled"
-		choice = raw_input("Disable ClamAV [y/N]: ")
+		choice = raw_input("\tDisable ClamAV [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableClamav.*'
 			targetPattern = "enableClamav = 0"
@@ -174,7 +198,7 @@ def clamavConfig():
 			set_dirs = 0
 	else:
 		print "ClamAV is currently disabled (default)"
-		choice = raw_input("Enable ClamAV [y/N]: ")
+		choice = raw_input("\tEnable ClamAV [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableClamav.*'
 			targetPattern = "enableClamav = 1"
@@ -185,7 +209,7 @@ def clamavConfig():
 	if enableFreshclam == 1:
 		print "Freshclam is enabled"
 		print "By default Freshclam is disabled"
-		choice = raw_input("Disable Freshclam [y/N]: ")
+		choice = raw_input("\tDisable Freshclam [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableFreshclam.*'
 			targetPattern = "enableFreshclam = 0"
@@ -193,26 +217,26 @@ def clamavConfig():
 	else:
 		print "Freshclam is currently disabled (default)"
 		print "If this host can get updates from the internet you may want to enable Freshclam"
-		choice = raw_input("Enable Freshclam [y/N]: ")
+		choice = raw_input("\tEnable Freshclam [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableFreshclam.*'
 			targetPattern = "enableFreshclam = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-	print "\n## ClamAV Server ##"
+	print "\n## ClamAV Proxy Server ##"
 	if clamavServer == 1:
-		print "ClamAV Server is enabled"
-		print "By default ClamAV Server is disabled"
-		choice = raw_input("Disable ClamAV Server [y/N]: ")
+		print "ClamAV Proxy Server is enabled"
+		print "By default Proxy Server is disabled"
+		choice = raw_input("\tDisable Proxy Server [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^clamavServer.*'
 			targetPattern = "clamavServer = 0"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 	else:
-		print "ClamAV Server is currently disabled (default)"
+		print "ClamAV Proxy Server is currently disabled (default)"
 		print "If this host is an HTTP server configured to provide virus signatures to ClamAV clients,"
-		print "you may want to enable ClamAV Server"
-		choice = raw_input("Enable ClamAV Server [y/N]: ")
+		print "you may want to enable Proxy Server"
+		choice = raw_input("\tEnable Proxy Server [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^clamavServer.*'
 			targetPattern = "clamavServer = 1"
@@ -224,7 +248,7 @@ def clamavConfig():
 		print "/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
 		print "Current configuration::"
 		print clamscanDirs
-		choice = raw_input("Do you want to make a change [y/N]: ")
+		choice = raw_input("\tDo you want to make a change [y/N]: ")
 		if choice.upper() == 'Y':
 			choice = raw_input("List directories to scan: ")
 			srcPattern = '^clamscanDirs.*'
