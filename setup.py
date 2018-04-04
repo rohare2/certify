@@ -250,17 +250,19 @@ def clamavConfig():
 		for key in keylist:
 			print "%s\t\t%s" % (key, clamscan_list[key])
 
-		choice = raw_input("\tAdd, Modify , Remove ?: ")
-		if choice.upper() == 'A':
+		choice = raw_input("\t[Add, Modify, Remove, Skip] ?: ")
+		if (choice.upper() == 'A') or (choice.upper() == 'M'):
 			base_dir = raw_input("Base directory to add: ")
 			xdirs = raw_input("Exclude: ['dir1','dir2']: ")
-			clamscan_list["base_dir"] = xdirs
-
-		if choice.upper() == 'M':
-			print "Modify a directory"
+			clamscan_list[base_dir] = xdirs
 
 		if choice.upper() == 'R':
-			print "Remove a directory"
+			base_dir = raw_input("Base directory to remove: ")
+			clamscan_list.pop(base_dir)
+
+		srcPattern = '^clamscan_list.*'
+		targetPattern = "clamscan_list = " + str(clamscan_list)
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 
 done = 0

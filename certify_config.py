@@ -40,10 +40,11 @@ enableClamav = 1
 enableFreshclam = 1
 
 # Is this an HTTP server that provides virus signatures to clients.
-clamavServer = 0
+clamavServer = 1
 
 # Scan keys along with exclution lists
-clamscan_list = { '/':['/dev', '/proc', '/sys', '/tmp', '/var'], '/home':[], '/var':[] }
+#clamscan_list = { '/':['/dev', '/proc', '/sys', '/tmp', '/var'], '/home':[], '/var':[] }
+clamscan_list = {'/var': [], '/': ['/dev', '/proc', '/sys', '/tmp', '/var'], '/home': []}
 
 # cracklib options
 cracklib = {
