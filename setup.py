@@ -244,17 +244,24 @@ def clamavConfig():
 
 	if set_dirs == 1:
 		print "\n## Directories to scan ##"
-		print "By default these directories are scanned:"
-		print "/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
-		print "Current configuration::"
-		print clamscanDirs
-		choice = raw_input("\tDo you want to make a change [y/N]: ")
-		if choice.upper() == 'Y':
-			choice = raw_input("List directories to scan: ")
-			srcPattern = '^clamscanDirs.*'
-			targetPattern = 'clamscanDirs = "' + choice + '"'
-			alterFile(file,'replace',srcPattern,targetPattern,boundary)
-	
+		print "Directory\t[Excluded Directories]"
+		keylist = clamscan_list.keys()
+		keylist.sort()
+		for key in keylist:
+			print "%s\t\t%s" % (key, clamscan_list[key])
+
+		choice = raw_input("\tAdd, Modify , Remove ?: ")
+		if choice.upper() == 'A':
+			base_dir = raw_input("Base directory to add: ")
+			xdirs = raw_input("Exclude: ['dir1','dir2']: ")
+			clamscan_list["base_dir"] = xdirs
+
+		if choice.upper() == 'M':
+			print "Modify a directory"
+
+		if choice.upper() == 'R':
+			print "Remove a directory"
+
 
 done = 0
 while not done:

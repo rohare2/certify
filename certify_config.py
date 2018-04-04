@@ -34,16 +34,16 @@ use_logwatch = 0
 
 #### ClamAV Config ####
 # Enable ClamAV service
-enableClamav = 0
+enableClamav = 1
 
 # Can the host get updates from the internet
-enableFreshclam = 0
+enableFreshclam = 1
 
 # Is this an HTTP server that provides virus signatures to clients.
 clamavServer = 0
 
-# Check these directories
-clamscanDirs = "/bin /boot /etc /home /lib /lib64 /opt /root /sbin /usr /var"
+# Scan keys along with exclution lists
+clamscan_list = { '/':['/dev', '/proc', '/sys', '/tmp', '/var'], '/home':[], '/var':[] }
 
 # cracklib options
 cracklib = {

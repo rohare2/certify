@@ -3,18 +3,13 @@
 # By: Rich O'Hare
 
 logger -t clamav "Starting clamscan.sh"
-#ret=`/bin/find ${dir} -type f ! -fstype nfs -mtime -2 -print0 | xargs -0 -r clamscan -i | grep '^Infected' 2>&1`
-#logger -t clamav "${ret}"
 
-# Main search
-echo "scanning main"
-find / \( -path /dev -o -path /proc -o -path /sys -o -path /tmp -o -path /var -o -path /home \) -prune -o ! -fstype nfs  -mtime -2 -print0 | xargs -0 -r clamscan -i | grep '^Infected' &
+# Root search
+find / \( -path /dev -o -path /proc -o -path /sys -o -path /tmp -o -path /var -o -path /home \) -prune -o \( ! -fstype nfs -a ! -type p -a ! -type s \)  -mtime -2 -print0 | xargs -0 -r clamscan -i | grep '^Infected' | logger -t clamav:main  &
 
 # /home
-echo "scanning home"
-find /home ! -fstype nfs -mtime -2 -print0 | xargs -0 -r clamscan -i | grep '^Infected' &
+find /home \( ! -fstype nfs -a ! -type p -a ! -type s \) -mtime -2 -print0 | xargs -0 -r clamscan -i | grep '^Infected' | logger -t clamav:home &
 
 # /var
-echo "scanning var"
-find /var ! -fstype nfs -mtime -2 -print0 | xargs -0 -r clamscan -i | grep '^Infected' &
+find /var \( ! -fstype nfs -a ! -type p -a ! -type s \) -mtime -2 -print0 | xargs -0 -r clamscan -i | grep '^Infected' | logger -t clamav:var &
 
