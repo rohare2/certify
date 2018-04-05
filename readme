@@ -64,7 +64,6 @@ rpm and use localinstall as follows.
 /usr/local/certify/savedfiles
 /etc/logrotate.d/certify
 /usr/sbin/aide_check
-/usr/local/sbin/clamscan.sh
 /usr/share/doc/certify-%{Version}/readme
 /usr/share/doc/certify-%{Version}/changelog
 /usr/share/doc/certify-%{Version}/banner.png.llnl

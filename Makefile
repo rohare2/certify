@@ -37,7 +37,7 @@ CRON_FILES= certify.cron
 FIREWALLD_FILES= simpana.xml \
 	splunk.xml
 
-SBIN_FILES= clamscan.sh
+SBIN_FILES=
 
 rpmbuild: specfile source
 	rpmbuild -bb --buildroot ${RPM_BUILD_ROOT} ${RPMBUILD}/SPECS/${Name}-${Version}-${Release}.spec

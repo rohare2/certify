@@ -54,7 +54,6 @@ exit 0
 %attr(740, root, root) /usr/local/certify/harden.py
 %attr(740, root, root) /usr/local/certify/check.py
 %attr(740, root, root) /usr/local/certify/setup.py
-%config(noreplace) %attr(750, root, root) /usr/local/sbin/clamscan.sh
 %attr(740, root, root) /usr/local/certify/testPassword.py
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
 /etc/gdm/banner.png

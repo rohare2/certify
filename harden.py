@@ -1109,7 +1109,7 @@ def clamavConfig():
 		f = open(file, 'w')
 		s = "#!/bin/bash\n# clamscan.sh\n# By: Rich O'Hare\n\n"
 		f.write(s)
-		s = "logger -t clamav 'Starting clamscan.sh'\n"
+		s = "logger -t clamav 'Starting clamscan.sh'\n\n"
 		f.write(s)
 
 		keylist = clamscan_list.keys()
@@ -1121,12 +1121,17 @@ def clamavConfig():
 			for item in clamscan_list[key]:
 				if i == 1:
 					s = s + " \( -path " + item
-				elif i < cnt:
+				elif i <= cnt:
 						s = s + " -o -path " + item
-				elif i == cnt:
-						s = s + " " + item + " \)"
 				i+=1
-			print s
+
+			if cnt <> 0:
+				s = s + " \) -prune -o "
+
+			s = s + " \( ! -fstype nfs -a ! -type p -a ! -type s \) -mtime -2 -print0 | xargs -0 -r clamscan -i | grep '^Infected' | logger -t clamav:"
+			s = s + key + ' &' + "\n\n"
+			#print s
+			f.write(s)
 
 		f.close()
 
