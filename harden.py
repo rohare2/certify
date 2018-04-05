@@ -1106,10 +1106,29 @@ def clamavConfig():
 		file = "/usr/local/sbin/clamscan.sh"
 		backup(file)
 		pr(file)
-		boundary = '### No boundary ###'
-		srcPattern = '^clamscanDirs.*'
-		targetPattern = 'clamscanDirs="' + clamscanDirs + '"'
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+		f = open(file, 'w')
+		s = "#!/bin/bash\n# clamscan.sh\n# By: Rich O'Hare\n\n"
+		f.write(s)
+		s = "logger -t clamav 'Starting clamscan.sh'\n"
+		f.write(s)
+
+		keylist = clamscan_list.keys()
+		keylist.sort()
+		for key in keylist:
+			s = "find " + key
+			cnt = len(clamscan_list[key])
+			i = 1
+			for item in clamscan_list[key]:
+				if i == 1:
+					s = s + " \( -path " + item
+				elif i < cnt:
+						s = s + " -o -path " + item
+				elif i == cnt:
+						s = s + " " + item + " \)"
+				i+=1
+			print s
+
+		f.close()
 
 
 def logwatchConfig():
