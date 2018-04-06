@@ -44,7 +44,7 @@ clamavServer = 1
 
 # Scan keys along with exclution lists
 #clamscan_list = { '/':['/dev', '/proc', '/sys', '/tmp', '/var'], '/home':[], '/var':[] }
-clamscan_list = {'/var': [], '/': ['/dev', '/proc', '/sys', '/tmp', '/var'], '/home': []}
+clamscan_list = { '/':['/dev', '/proc', '/sys', '/tmp', '/var'], '/home':[], '/var':[] }
 
 # cracklib options
 cracklib = {
