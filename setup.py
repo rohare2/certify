@@ -243,41 +243,56 @@ def clamavConfig():
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 	if set_dirs == 1:
-		print "\n## Directories to scan ##"
-		print "Directory\t[Excluded Directories]"
-
 		done = 0
 		while not done:
+			print "\n## Directories to scan ##"
+			print "Directory\t[Excluded Directories]"
 			keylist = clamscan_list.keys()
 			keylist.sort()
 			for key in keylist:
 				print "%s\t\t%s" % (key, clamscan_list[key])
 
-			choice = raw_input("\t[Add, Modify, Delete] or 'q' to quit: ")
-			if choice == 'q':
-				done = 1
-			elif (choice.upper() == 'A') or (choice.upper() == 'M'):
-				base_dir = raw_input("Base directory or <return> to quit: ")
-				exclude = "['"
+			choice = raw_input("\tAdd, Modify, or Delete base directory [quit]: ")
+
+			if choice.upper() == 'A':
+				base_dir = raw_input("\tDirectory name to add? ")
+				clamscan_list[base_dir] = []
+
+			elif choice.upper() == 'M':
+				base_dir = raw_input("\tChoose base directory [quit]: ")
+				last = 0
 				while not last:
-					if base_dir == '':
+					if (base_dir == ''):
 						last = 1
 					else:
-						d = raw_input("Directory to exclude: ")
-						exclude = exclude + d + "'"
+						print "%s\t\t%s" % (base_dir, clamscan_list[base_dir])
+						choice = raw_input("\tAdd, Delete, [Quit]: ")
+						if choice.upper() == 'A':
+							ex_dir = raw_input("\tExclude directory name to add? ")
+							if ex_dir == '':
+								exit
+							clamscan_list[base_dir].append(ex_dir)
+						elif choice.upper() == 'D':
+							ex_dir = raw_input("\tExclude directory name to remove: ")
+							if ex_dir == '':
+								exit
+							clamscan_list[base_dir].remove(ex_dir)
+						else:
+							last = 1
+						print "\n"
 
-				exclude = exclude + "]"
-				clamscan_list[base_dir] = exclude
-
-			if choice.upper() == 'D':
+			elif choice.upper() == 'D':
 				base_dir = raw_input("Base directory to remove: ")
 				clamscan_list.pop(base_dir)
 
-		#srcPattern = '^clamscan_list.*'
-		#targetPattern = "clamscan_list = " + str(clamscan_list)
-		#alterFile(file,'replace',srcPattern,targetPattern,boundary)
+			else:
+				done = 1
 
+		srcPattern = '^clamscan_list.*'
+		targetPattern = "clamscan_list = " + str(clamscan_list)
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
+# Main menu
 done = 0
 while not done:
 	choice = ''
