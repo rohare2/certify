@@ -12,9 +12,10 @@ Unlike "Fortify", which overrides many operating system settings,
 certify manages security posture.  Certify attempts to make sure
 vendor supplied tools are properly implemented.
 
-It contains two primary Python scripts, "harden.py" & "check.py",
-for managing security settings.  Harden applies security settings,
-while check reports on security findings.
+It contains three primary Python scripts, "harden.py", "check.py"
+& "setup.py"; for managing security settings.  Harden applies
+security settings, while check reports on security findings.  The
+setup script customization.
 
 The original driving force for developing certify was an interest
 in simplifying the process of system certification.  Before certify
@@ -63,12 +64,20 @@ rpm and use localinstall as follows.
 /usr/local/certify/savedfiles
 /etc/logrotate.d/certify
 /usr/sbin/aide_check
-/usr/local/sbin/clamscan.sh
 /usr/share/doc/certify-%{Version}/readme
 /usr/share/doc/certify-%{Version}/changelog
 /usr/share/doc/certify-%{Version}/banner.png.llnl
 /usr/share/doc/certify-%{Version}/banner.png.sample
 /usr/share/doc/certify-%{Version}/certify_config.py
+
+# Customize configuration
+./setup.py -h
+
+Certify Setup
+     1: AIDE
+     2: Authentication
+     3: ClamAV
+Enter choice or 'q' to quit:
 
 # System Hardening:
 ./harden.py -h
