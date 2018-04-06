@@ -1083,7 +1083,7 @@ def clamavConfig():
 
 		if enableFreshclam == 0:
 			s = 'wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate '
-			s = s + '"https://zdiv-yum/software/VendorSoftware/clam/ "'
+			s = s + '"https://zdiv-yum/software/VendorSoftware/clam/" '
 			s = s + '-P "/var/lib/clamav" -A "*.cvd"'
 			s = s + "\n\n"
 			f.write(s)
