@@ -245,24 +245,37 @@ def clamavConfig():
 	if set_dirs == 1:
 		print "\n## Directories to scan ##"
 		print "Directory\t[Excluded Directories]"
-		keylist = clamscan_list.keys()
-		keylist.sort()
-		for key in keylist:
-			print "%s\t\t%s" % (key, clamscan_list[key])
 
-		choice = raw_input("\t[Add, Modify, Remove, Skip] ?: ")
-		if (choice.upper() == 'A') or (choice.upper() == 'M'):
-			base_dir = raw_input("Base directory to add: ")
-			xdirs = raw_input("Exclude: ['dir1','dir2']: ")
-			clamscan_list[base_dir] = xdirs
+		done = 0
+		while not done:
+			keylist = clamscan_list.keys()
+			keylist.sort()
+			for key in keylist:
+				print "%s\t\t%s" % (key, clamscan_list[key])
 
-		if choice.upper() == 'R':
-			base_dir = raw_input("Base directory to remove: ")
-			clamscan_list.pop(base_dir)
+			choice = raw_input("\t[Add, Modify, Delete] or 'q' to quit: ")
+			if choice == 'q':
+				done = 1
+			elif (choice.upper() == 'A') or (choice.upper() == 'M'):
+				base_dir = raw_input("Base directory or <return> to quit: ")
+				exclude = "['"
+				while not last:
+					if base_dir == '':
+						last = 1
+					else:
+						d = raw_input("Directory to exclude: ")
+						exclude = exclude + d + "'"
 
-		srcPattern = '^clamscan_list.*'
-		targetPattern = "clamscan_list = " + str(clamscan_list)
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+				exclude = exclude + "]"
+				clamscan_list[base_dir] = exclude
+
+			if choice.upper() == 'D':
+				base_dir = raw_input("Base directory to remove: ")
+				clamscan_list.pop(base_dir)
+
+		#srcPattern = '^clamscan_list.*'
+		#targetPattern = "clamscan_list = " + str(clamscan_list)
+		#alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 
 done = 0
