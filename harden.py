@@ -1060,7 +1060,7 @@ def clamavConfig():
 		yumInstall('clamav')
 	else:
 		pr("Removing ClamAV")
-		subprocess.call(["/bin/yum", "-yq", "remove", "clamav*"])
+		subprocess.call(["/usr/bin/yum", "-yq", "remove", "clamav*"])
 
 	if release in ['el7']:
 		if enableFreshclam == 1 and enableClamav == 1:
@@ -1101,7 +1101,7 @@ def clamavConfig():
 	else:
 		os.remove(file)
 
-	# Identify which directories to scan
+	# Build clamscan.sh
 	if enableClamav == 1:
 		# file
 		file = "/usr/local/sbin/clamscan.sh"
@@ -1109,6 +1109,14 @@ def clamavConfig():
 		pr(file)
 		f = open(file, 'w')
 		s = "#!/bin/bash\n# clamscan.sh\n# By: Rich O'Hare\n\n"
+		f.write(s)
+		s = "if [ -f \"/var/run/clamscan.pid\" ]; then"
+		f.write(s)
+		s = "\techo 'File \"/var/run/clamscan.pid\" already exists'"
+		f.write(s)
+		s = "\texit 0"
+		f.write(s)
+		s = "fi\n"
 		f.write(s)
 		s = "logger -t clamav 'Starting clamscan.sh'\n\n"
 		f.write(s)
@@ -1136,6 +1144,8 @@ def clamavConfig():
 			#print s
 			f.write(s)
 
+		s = "wait"
+		f.write(s)
 		f.close()
 
 
