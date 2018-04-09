@@ -181,10 +181,13 @@ def authConfig():
 
 
 def clamavConfig():
+	global enableClamav
+	global enableFreshclam
+	global clamavServer
+	global clamavCheckDays
 	print "\n  #### ClamAV Setup ####\n"
 	file = "certify_config.py"
 	boundary = '### No boundary ###'
-	set_dirs = 1
 	
 	print "## ClamAV ##"
 	if enableClamav == 1:
@@ -195,7 +198,17 @@ def clamavConfig():
 			srcPattern = '^enableClamav.*'
 			targetPattern = "enableClamav = 0"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
-			set_dirs = 0
+
+			srcPattern = '^enableFreshclam.*'
+			targetPattern = "enableFreshclam = 0"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+			srcPattern = '^clamavServer.*'
+			targetPattern = "clamavServer = 0"
+			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+			enableClamav = 0
+			return 0
 	else:
 		print "ClamAV is currently disabled (default)"
 		choice = raw_input("\tEnable ClamAV [y/N]: ")
@@ -203,27 +216,46 @@ def clamavConfig():
 			srcPattern = '^enableClamav.*'
 			targetPattern = "enableClamav = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
-			set_dirs = 1
+			enableClamav = 1
+		else:
+			return 0
+
+	print "\n\tBy default all files modified within the past two days are checked"
+	print "\tThe current setting is " + str(clamavCheckDays) + " days"
+	choice = raw_input("Days? [2] ")
+	if choice == '':
+		srcPattern = '^clamavCheckDays.*'
+		targetPattern = "clamavCheckDays = 2"
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+		clamavCheckDays = 2
+	else:
+		srcPattern = '^clamavCheckDays.*'
+		targetPattern = "clamavCheckDays = " + str(choice)
+		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+		clamavCheckDays = choice
+
 
 	print "\n## Freshclam ##"
 	if enableFreshclam == 1:
-		print "Freshclam is enabled"
-		print "By default Freshclam is disabled"
+		print "Freshclam is enabled (default)"
 		choice = raw_input("\tDisable Freshclam [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableFreshclam.*'
 			targetPattern = "enableFreshclam = 0"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+			enableFreshclam = 0
 	else:
-		print "Freshclam is currently disabled (default)"
+		print "Freshclam is currently disabled"
+		print "By default Freshclam is enabled"
 		print "If this host can get updates from the internet you may want to enable Freshclam"
 		choice = raw_input("\tEnable Freshclam? [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableFreshclam.*'
 			targetPattern = "enableFreshclam = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+			enableFreshclam = 1
 		else:
-			print "The current clamav proxy server is " + clamavProxyURL
+			print "\tThe current clamav proxy server is " + clamavProxyURL
 			choice = raw_input("\tChange proxy server? [y/N]: ")
 			if choice.upper() == 'Y':
 				choice = raw_input("\tNew proxy URL? : ")
@@ -240,6 +272,7 @@ def clamavConfig():
 			srcPattern = '^clamavServer.*'
 			targetPattern = "clamavServer = 0"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+			clamavServer = 0
 	else:
 		print "ClamAV Proxy Server is currently disabled (default)"
 		print "If this host is an HTTP server configured to provide virus signatures to ClamAV clients,"
@@ -249,6 +282,7 @@ def clamavConfig():
 			srcPattern = '^clamavServer.*'
 			targetPattern = "clamavServer = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+			clamavServer = 1
 
 			print "The current proxy server file location is" + clamavWebDir
 			choice = raw_input("\tChange proxy file location [y/N]: ")
@@ -258,55 +292,54 @@ def clamavConfig():
 				targetPattern = "clamavWebDir = " + choice
 				alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
-	if set_dirs == 1:
-		done = 0
-		while not done:
-			print "\n## Directories to scan ##"
-			print "Directory\t[Excluded Directories]"
-			keylist = clamscan_list.keys()
-			keylist.sort()
-			for key in keylist:
-				print "%s\t\t%s" % (key, clamscan_list[key])
+	done = 0
+	while not done:
+		print "\n## Directories to scan ##"
+		print "Directory\t[Excluded Directories]"
+		keylist = clamscan_list.keys()
+		keylist.sort()
+		for key in keylist:
+			print "%s\t\t%s" % (key, clamscan_list[key])
 
-			choice = raw_input("\tAdd, Modify, or Delete base directory [quit]: ")
+		choice = raw_input("\tAdd, Modify, or Delete base directory [quit]: ")
 
-			if choice.upper() == 'A':
-				base_dir = raw_input("\tDirectory name to add? ")
-				clamscan_list[base_dir] = []
+		if choice.upper() == 'A':
+			base_dir = raw_input("\tDirectory name to add? ")
+			clamscan_list[base_dir] = []
 
-			elif choice.upper() == 'M':
-				base_dir = raw_input("\tChoose base directory [quit]: ")
-				last = 0
-				while not last:
-					if (base_dir == ''):
-						last = 1
+		elif choice.upper() == 'M':
+			base_dir = raw_input("\tChoose base directory [quit]: ")
+			last = 0
+			while not last:
+				if (base_dir == ''):
+					last = 1
+				else:
+					print "%s\t\t%s" % (base_dir, clamscan_list[base_dir])
+					choice = raw_input("\tAdd, Delete, [Quit]: ")
+					if choice.upper() == 'A':
+						ex_dir = raw_input("\tExclude directory name to add? ")
+						if ex_dir == '':
+							exit
+						clamscan_list[base_dir].append(ex_dir)
+					elif choice.upper() == 'D':
+						ex_dir = raw_input("\tExclude directory name to remove: ")
+						if ex_dir == '':
+							exit
+						clamscan_list[base_dir].remove(ex_dir)
 					else:
-						print "%s\t\t%s" % (base_dir, clamscan_list[base_dir])
-						choice = raw_input("\tAdd, Delete, [Quit]: ")
-						if choice.upper() == 'A':
-							ex_dir = raw_input("\tExclude directory name to add? ")
-							if ex_dir == '':
-								exit
-							clamscan_list[base_dir].append(ex_dir)
-						elif choice.upper() == 'D':
-							ex_dir = raw_input("\tExclude directory name to remove: ")
-							if ex_dir == '':
-								exit
-							clamscan_list[base_dir].remove(ex_dir)
-						else:
-							last = 1
-						print "\n"
+						last = 1
+					print "\n"
 
-			elif choice.upper() == 'D':
-				base_dir = raw_input("Base directory to remove: ")
-				clamscan_list.pop(base_dir)
+		elif choice.upper() == 'D':
+			base_dir = raw_input("Base directory to remove: ")
+			clamscan_list.pop(base_dir)
 
-			else:
-				done = 1
+		else:
+			done = 1
 
-		srcPattern = '^clamscan_list.*'
-		targetPattern = "clamscan_list = " + str(clamscan_list)
-		alterFile(file,'replace',srcPattern,targetPattern,boundary)
+	srcPattern = '^clamscan_list.*'
+	targetPattern = "clamscan_list = " + str(clamscan_list)
+	alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 # Main menu
 done = 0

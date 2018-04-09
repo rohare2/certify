@@ -35,9 +35,12 @@ use_logwatch = 0
 #### ClamAV Config ####
 # Enable ClamAV service
 enableClamav = 1
+#   Check file newer than clamavCheckDays days
+clamavCheckDays = 2
 
 # Can the host get updates from the internet
 enableFreshclam = 1
+#   If freshclam is disabled use this URL to get virus files
 clamavProxyURL = "https://zdiv-yum/software/VendorSoftware/clam/"
 
 # Is this an HTTP server that provides virus signatures to clients.

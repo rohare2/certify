@@ -1081,15 +1081,16 @@ def clamavConfig():
 		s = "# clamav\n\n"
 		f.write(s)
 
-		if enableFreshclam == 1 and release in ['el6']:
+		if enableFreshclam == 0:
 			s = 'wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate '
-			s = s + '"https://zdiv-yum/software/VendorSoftware/clam/" '
-			s = s + '-P "/var/lib/clamav" -A "*.cvd"'
+			s = s + '"' + clamavProxyURL + '" '
+			s = s + '-P "/var/lib/clamav" -A "*.c*d"'
 			s = s + "\n\n"
 			f.write(s)
 
 		if clamavServer == 1:
-			s = "/bin/cp -f /var/lib/clamav/*.cvd /var/www/html/software/VendorSoftware/clam/\n\n"
+			s = "/bin/cp -f /var/lib/clamav/* "
+			s = clamavWebDir + "\n\n"
 			f.write(s)
 
 		s = "/usr/local/sbin/clamscan.sh &\n"
@@ -1128,7 +1129,9 @@ def clamavConfig():
 			if cnt <> 0:
 				s = s + " \) -prune -o "
 
-			s = s + " \( ! -fstype nfs -a ! -type p -a ! -type s \) -mtime -2 -print0 | xargs -0 -r clamscan -i | grep '^Infected' | logger -t clamav:"
+			s = s + " \( ! -fstype nfs -a ! -type p -a ! -type s \)"
+			s = s + " -mtime -" + str(clamavCheckDays)
+			s = s + " -print0 | xargs -0 -r clamscan -i | grep '^Infected' | logger -t clamav:"
 			s = s + key + ' &' + "\n\n"
 			#print s
 			f.write(s)
