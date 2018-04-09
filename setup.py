@@ -217,11 +217,19 @@ def clamavConfig():
 	else:
 		print "Freshclam is currently disabled (default)"
 		print "If this host can get updates from the internet you may want to enable Freshclam"
-		choice = raw_input("\tEnable Freshclam [y/N]: ")
+		choice = raw_input("\tEnable Freshclam? [y/N]: ")
 		if choice.upper() == 'Y':
 			srcPattern = '^enableFreshclam.*'
 			targetPattern = "enableFreshclam = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+		else:
+			print "The current clamav proxy server is " + clamavProxyURL
+			choice = raw_input("\tChange proxy server? [y/N]: ")
+			if choice.upper() == 'Y':
+				choice = raw_input("\tNew proxy URL? : ")
+				srcPattern = '^clamavProxyURL.*'
+				targetPattern = "clamavProxyURL = " + choice
+				alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 	print "\n## ClamAV Proxy Server ##"
 	if clamavServer == 1:
@@ -241,6 +249,14 @@ def clamavConfig():
 			srcPattern = '^clamavServer.*'
 			targetPattern = "clamavServer = 1"
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
+
+			print "The current proxy server file location is" + clamavWebDir
+			choice = raw_input("\tChange proxy file location [y/N]: ")
+			if choice.upper() == 'Y':
+				choice = raw_input("\tNew location? ")
+				srcPattern = '^clamavWebDir.*'
+				targetPattern = "clamavWebDir = " + choice
+				alterFile(file,'replace',srcPattern,targetPattern,boundary)
 
 	if set_dirs == 1:
 		done = 0

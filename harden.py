@@ -1062,7 +1062,7 @@ def clamavConfig():
 		pr("Removing ClamAV")
 		subprocess.call(["/bin/yum", "-yq", "remove", "clamav*"])
 
-	if release in [ 'el7']:
+	if release in ['el7']:
 		if enableFreshclam == 1 and enableClamav == 1:
 			pr("Installing clamav-update")
 			yumInstall('clamav-update')
@@ -1081,7 +1081,7 @@ def clamavConfig():
 		s = "# clamav\n\n"
 		f.write(s)
 
-		if enableFreshclam == 0:
+		if enableFreshclam == 1 and release in ['el6']:
 			s = 'wget -r -l1 -np -nH --cut-dirs=3 --no-check-certificate '
 			s = s + '"https://zdiv-yum/software/VendorSoftware/clam/" '
 			s = s + '-P "/var/lib/clamav" -A "*.cvd"'

@@ -38,13 +38,15 @@ enableClamav = 1
 
 # Can the host get updates from the internet
 enableFreshclam = 1
+clamavProxyURL = "https://zdiv-yum/software/VendorSoftware/clam/"
 
 # Is this an HTTP server that provides virus signatures to clients.
-clamavServer = 1
+clamavServer = 0
+clamavWebDir = "/var/www/html/software/VendorSoftware/clam/"
 
 # Scan keys along with exclution lists
 #clamscan_list = { '/':['/dev', '/proc', '/sys', '/tmp', '/var'], '/home':[], '/var':[] }
-clamscan_list = { '/':['/dev', '/proc', '/sys', '/tmp', '/var'], '/home':[], '/var':[] }
+clamscan_list = {'/var': [], '/': ['/dev', '/proc', '/sys', '/tmp', '/var'], '/home': []}
 
 # cracklib options
 cracklib = {

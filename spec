@@ -7,12 +7,12 @@
 #
 %define Name certify
 %define Version 3.8
-%define Release 19%{?dist}
+%define Release 20%{?dist}
 
 Name: %{Name}
 Version: %{Version}
 Release: %{Release}
-Source: certify-3.8-19.tgz
+Source: certify-3.8-20.tgz
 License: GPLv2
 Group: Applications/System
 URL: https://github.com/rohare2/certify
