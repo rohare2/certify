@@ -1090,7 +1090,7 @@ def clamavConfig():
 
 		if clamavServer == 1:
 			s = "/bin/cp -f /var/lib/clamav/* "
-			s = clamavWebDir + "\n\n"
+			s = s + clamavWebDir + "\n\n"
 			f.write(s)
 
 		s = "/usr/local/sbin/clamscan.sh &\n"

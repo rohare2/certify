@@ -284,7 +284,7 @@ def clamavConfig():
 			alterFile(file,'replace',srcPattern,targetPattern,boundary)
 			clamavServer = 1
 
-			print "The current proxy server file location is" + clamavWebDir
+			print "\tThe current proxy server file location is " + clamavWebDir
 			choice = raw_input("\tChange proxy file location [y/N]: ")
 			if choice.upper() == 'Y':
 				choice = raw_input("\tNew location? ")
