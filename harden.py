@@ -1097,7 +1097,7 @@ def clamavConfig():
 		f.write(s)
 
 		f.close()
-		os.chmod(file, 0700)
+		os.chmod(file, 0750)
 	else:
 		os.remove(file)
 
@@ -1152,6 +1152,7 @@ def clamavConfig():
 		s = "\trm /var/run/clamscan.pid\nfi\n"
 		f.write(s)
 		f.close()
+		os.chmod(file, 0754)
 
 
 def logwatchConfig():
