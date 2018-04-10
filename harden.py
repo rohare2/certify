@@ -1110,14 +1110,15 @@ def clamavConfig():
 		f = open(file, 'w')
 		s = "#!/bin/bash\n# clamscan.sh\n# By: Rich O'Hare\n\n"
 		f.write(s)
-		s = "if [ -f \"/var/run/clamscan.pid\" ]; then"
+		s = "if [ -f \"/var/run/clamscan.pid\" ]; then\n"
 		f.write(s)
-		s = "\techo 'File \"/var/run/clamscan.pid\" already exists'"
+		s = "\techo \"File /var/run/clamscan.pid already exists\"\n"
 		f.write(s)
-		s = "\texit 0"
+		s = "\texit 0\n"
 		f.write(s)
-		s = "fi\n"
+		s = "else\n\techo $$ > /var/run/clamscan.pid\nfi\n"
 		f.write(s)
+		
 		s = "logger -t clamav 'Starting clamscan.sh'\n\n"
 		f.write(s)
 
@@ -1144,7 +1145,11 @@ def clamavConfig():
 			#print s
 			f.write(s)
 
-		s = "wait"
+		s = "wait\n"
+		f.write(s)
+		s = "if [ -f \"/var/run/clamscan.pid\" ]; then\n"
+		f.write(s)
+		s = "\trm /var/run/clamscan.pid\nfi\n"
 		f.write(s)
 		f.close()
 
