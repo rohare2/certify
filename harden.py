@@ -1033,7 +1033,7 @@ def aideConfig():
 		backup(file)
 		pr(file)
 		action = 'after'
-		targetPattern = '5 3 * * * root /usr/sbin/aide -u > /dev/null 2>&1\n'
+		targetPattern = '5 3 * * * root /usr/sbin/aide -C > /dev/null 2>&1\n'
 		with open(file, 'r') as inF:
 			for line in inF:
 				if 'aide' in line: 
