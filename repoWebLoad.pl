@@ -7,7 +7,7 @@ use File::Copy;
 use File::Path qw(make_path remove_tree);
 
 my $debug = 0;
-my $BASE_DIR = "/var/www/html/software/zdiv";
+my $BASE_DIR = "/var/www/html/software/local";
 
 # RPMS source directory
 my $dir = $ARGV[0];

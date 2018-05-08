@@ -24,7 +24,7 @@ sysvList = ('el5', 'el6')
 systemdList = ('el7')
 
 # PAM Stack Options
-use_cracklib = 1 # $use_cracklib instead of passwdqc
+use_cracklib = 0 # $use_cracklib instead of passwdqc
 use_passwdqc = 0 # $use_passwdqc instead of cracklib
 use_pamtally = 0 # $use_pam_tally
 
@@ -41,7 +41,7 @@ clamavCheckDays = 2
 # Can the host get updates from the internet
 enableFreshclam = 0
 #   If freshclam is disabled use this URL to get virus files
-clamavProxyURL = "https://zdiv-yum/software/VendorSoftware/clam/"
+clamavProxyURL = "https://local-yum/software/VendorSoftware/clam/"
 
 # Is this an HTTP server that provides virus signatures to clients.
 clamavServer = 0
