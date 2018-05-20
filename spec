@@ -58,7 +58,7 @@ exit 0
 %attr(750, root, root) %dir /usr/local/certify/savedfiles
 /etc/gdm/banner.png
 /etc/logrotate.d/certify
-%attr(744, root, root) /etc/cron.d/certify.cron
+%attr(644, root, root) /etc/cron.d/certify.cron
 /etc/gconf/gconf.xml.mandatory/%gconf-tree.xml
 /usr/share/doc/%{Name}-%{Version}/readme
 /usr/share/doc/%{Name}-%{Version}/changelog
