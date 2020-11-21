@@ -1,3 +1,11 @@
+###############################################################
+# Certify has reached it's end of life. There are now several #
+# well known alternatives for system configuration management.#
+# The only advantage Certify has over other manageent systes  #
+# is that it does not depend on communication between nodes.  #
+# I am freezing development and transitioning to Ansible      #
+###############################################################
+
 # Description:
 Certify is a toolset for managing system security.  It includes
 scripts for hardening and checking system security. It can also
