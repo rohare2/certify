@@ -7,6 +7,8 @@ are provided to automate recurring tasks.
 Certify is intended for environments where security is routinely
 audited, such as government facilities with classified information.
 
+Certify has been tested on Red Hat and Centos versions 5 to 7.
+
 Certify is not an all encompassing security configuration tool.
 Unlike "Fortify", which overrides many operating system settings,
 certify manages security posture.  Certify attempts to make sure
