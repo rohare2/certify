@@ -6,6 +6,14 @@
 # I am freezing development and transitioning to Ansible      #
 ###############################################################
 
+# Status:
+Certify has been replaced by an internal Ansible project. For
+similar functionality on current distributions, see OpenSCAP with
+the ComplianceAsCode CIS / STIG profiles.
+
+The Python scripts below are kept for reference only; they require
+Python 2 and Red Hat / CentOS 5-7.
+
 # Description:
 Certify is a toolset for managing system security.  It includes
 scripts for hardening and checking system security. It can also
